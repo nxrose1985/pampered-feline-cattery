@@ -1,6 +1,21 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import KittenCard from "../components/KittenCard.astro";
+import { getKittens } from "../lib/sanity";
+import type { Kitten } from "../lib/sanity";
+
+// Fetch from Sanity (returns empty array if not configured)
+const sanityKittens = await getKittens();
+
+// Static fallback data
+const fallbackKittens = [
+  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Available" as const },
+  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Reserved" as const },
+  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Under Evaluation" as const },
+];
+
+// Use Sanity data if available, otherwise static fallback
+const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
 ---
 
 <BaseLayout title="Kittens & Adoption | Pampered Feline Maine Coons" description="View available Maine Coon kittens and learn about our adoption process. Limited litters from health-tested parents.">
@@ -24,27 +39,16 @@ import KittenCard from "../components/KittenCard.astro";
   <section class="py-16 md:py-24 bg-ivory">
     <div class="max-w-6xl mx-auto px-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <KittenCard
-          name="[PLACEHOLDER]"
-          sex="[PLACEHOLDER]"
-          color="[PLACEHOLDER]"
-          personality="[PLACEHOLDER — personality note]"
-          status="Available"
-        />
-        <KittenCard
-          name="[PLACEHOLDER]"
-          sex="[PLACEHOLDER]"
-          color="[PLACEHOLDER]"
-          personality="[PLACEHOLDER — personality note]"
-          status="Reserved"
-        />
-        <KittenCard
-          name="[PLACEHOLDER]"
-          sex="[PLACEHOLDER]"
-          color="[PLACEHOLDER]"
-          personality="[PLACEHOLDER — personality note]"
-          status="Under Evaluation"
-        />
+        {kittens.map((kitten: any) => (
+          <KittenCard
+            name={kitten.name}
+            sex={kitten.sex}
+            color={kitten.color}
+            personality={kitten.personality}
+            status={kitten.status}
+            image={kitten.image?.asset?.url}
+          />
+        ))}
       </div>
       <p class="text-center text-charcoal-light/60 text-sm mt-8">
         Kitten listings are updated as litters become available. Contact us to join our waitlist.

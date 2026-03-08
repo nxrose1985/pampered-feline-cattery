@@ -1,6 +1,26 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CatCard from "../components/CatCard.astro";
+import { getCats } from "../lib/sanity";
+import type { Cat } from "../lib/sanity";
+
+// Fetch from Sanity (returns empty array if not configured)
+const sanityCats = await getCats();
+
+// Static fallback data
+const fallbackKings = [
+  { name: "Rowan", color: "Silver Shaded Tabby", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
+  { name: "Aedion", color: "Black Silver Shaded", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
+];
+const fallbackQueens = [
+  { name: "Feyra", color: "Black Tortie with Tabby Markings, Polydactyl", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
+  { name: "Lilith", color: "Silver Shaded", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
+];
+
+// Use Sanity data if available, otherwise static fallback
+const useSanity = sanityCats.length > 0;
+const kings = useSanity ? sanityCats.filter((c: Cat) => c.role === "king") : fallbackKings;
+const queens = useSanity ? sanityCats.filter((c: Cat) => c.role === "queen") : fallbackQueens;
 ---
 
 <BaseLayout title="Our Cats | Pampered Feline Maine Coons" description="Meet the kings and queens of Pampered Feline. Each breeding cat is selected for temperament, health, and balanced European type.">
@@ -30,18 +50,15 @@ import CatCard from "../components/CatCard.astro";
         Our Studs
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <CatCard
-          name="Rowan"
-          color="Silver Shaded Tabby"
-          traits="[PLACEHOLDER — temperament notes]"
-          health="[PLACEHOLDER — health testing details]"
-        />
-        <CatCard
-          name="Aedion"
-          color="Black Silver Shaded"
-          traits="[PLACEHOLDER — temperament notes]"
-          health="[PLACEHOLDER — health testing details]"
-        />
+        {kings.map((cat: any) => (
+          <CatCard
+            name={cat.name}
+            color={cat.color}
+            traits={cat.traits}
+            health={cat.health}
+            image={cat.image?.asset?.url}
+          />
+        ))}
       </div>
     </div>
   </section>
@@ -56,18 +73,15 @@ import CatCard from "../components/CatCard.astro";
         Our Queens
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <CatCard
-          name="Feyra"
-          color="Black Tortie with Tabby Markings, Polydactyl"
-          traits="[PLACEHOLDER — temperament notes]"
-          health="[PLACEHOLDER — health testing details]"
-        />
-        <CatCard
-          name="Lilith"
-          color="Silver Shaded"
-          traits="[PLACEHOLDER — temperament notes]"
-          health="[PLACEHOLDER — health testing details]"
-        />
+        {queens.map((cat: any) => (
+          <CatCard
+            name={cat.name}
+            color={cat.color}
+            traits={cat.traits}
+            health={cat.health}
+            image={cat.image?.asset?.url}
+          />
+        ))}
       </div>
     </div>
   </section>
