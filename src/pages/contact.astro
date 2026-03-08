@@ -1,0 +1,50 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
+---
+
+<BaseLayout title="Contact | Pampered Feline Maine Coons" description="Get in touch with Pampered Feline Maine Coons. Fill out our contact form to inquire about available kittens or ask questions.">
+
+  <!-- Page Header -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+        Reach Out
+      </p>
+      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+        Contact Us
+      </h1>
+      <p class="text-charcoal-light text-lg leading-relaxed">
+        Interested in a kitten or have a question? Fill out the form below and we will be in touch.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="py-16 md:py-24 bg-ivory">
+    <div class="max-w-3xl mx-auto px-4">
+      <ContactForm />
+    </div>
+  </section>
+
+  <!-- Additional Contact Info -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-6">
+        Other Ways to Connect
+      </h2>
+      <div class="space-y-3">
+        <p class="text-charcoal-light">
+          Email: <span class="text-charcoal font-medium">[PLACEHOLDER]</span>
+        </p>
+        <p class="text-charcoal-light">
+          Instagram: <span class="text-charcoal font-medium">[PLACEHOLDER]</span>
+        </p>
+        <p class="text-charcoal-light text-sm mt-6">
+          Located in Northern Virginia
+        </p>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

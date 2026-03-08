@@ -1,0 +1,173 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import KittenCard from "../components/KittenCard.astro";
+---
+
+<BaseLayout title="Kittens & Adoption | Pampered Feline Maine Coons" description="View available Maine Coon kittens and learn about our adoption process. Limited litters from health-tested parents.">
+
+  <!-- Page Header -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+        Available Kittens
+      </p>
+      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+        Kittens & Adoption
+      </h1>
+      <p class="text-charcoal-light text-lg leading-relaxed">
+        We raise limited litters with intentional pairings. Each kitten is socialized from birth and placed with care.
+      </p>
+    </div>
+  </section>
+
+  <!-- Kitten Grid -->
+  <section class="py-16 md:py-24 bg-ivory">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <KittenCard
+          name="[PLACEHOLDER]"
+          sex="[PLACEHOLDER]"
+          color="[PLACEHOLDER]"
+          personality="[PLACEHOLDER — personality note]"
+          status="Available"
+        />
+        <KittenCard
+          name="[PLACEHOLDER]"
+          sex="[PLACEHOLDER]"
+          color="[PLACEHOLDER]"
+          personality="[PLACEHOLDER — personality note]"
+          status="Reserved"
+        />
+        <KittenCard
+          name="[PLACEHOLDER]"
+          sex="[PLACEHOLDER]"
+          color="[PLACEHOLDER]"
+          personality="[PLACEHOLDER — personality note]"
+          status="Under Evaluation"
+        />
+      </div>
+      <p class="text-center text-charcoal-light/60 text-sm mt-8">
+        Kitten listings are updated as litters become available. Contact us to join our waitlist.
+      </p>
+    </div>
+  </section>
+
+  <!-- What Comes With Your Kitten -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6 text-center">
+        Included
+      </p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-10 text-center leading-tight">
+        What Comes With Your Kitten
+      </h2>
+      <ul class="space-y-4">
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Written contract and health guarantee</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Age-appropriate vaccines</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Health certificate</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Microchip</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Registration papers (after proof of spay/neuter, if applicable)</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Starter food</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Familiar blanket</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <span class="text-charcoal-light leading-relaxed">Lifetime breeder support</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="py-16 md:py-24 bg-ivory">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+        Investment
+      </p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
+        Pricing
+      </h2>
+      <p class="text-charcoal-light text-lg leading-relaxed mb-4">
+        Pet kittens: <span class="font-medium text-charcoal">[PLACEHOLDER]</span>
+      </p>
+      <p class="text-charcoal-light text-lg leading-relaxed mb-4">
+        Reservation fee: <span class="font-medium text-charcoal">[PLACEHOLDER]</span>
+      </p>
+      <p class="text-charcoal-light/60 text-sm">
+        [PLACEHOLDER — payment methods and additional pricing details]
+      </p>
+    </div>
+  </section>
+
+  <!-- Adoption Steps -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="text-center mb-12 md:mb-16">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          The Process
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal leading-tight">
+          How Adoption Works
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">1</div>
+          <div>
+            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Application</h3>
+            <p class="text-charcoal-light leading-relaxed">Fill out a short form so we can learn about your home and lifestyle.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">2</div>
+          <div>
+            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Conversation</h3>
+            <p class="text-charcoal-light leading-relaxed">We follow up to answer your questions and confirm it is a good fit.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">3</div>
+          <div>
+            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Match & Reserve</h3>
+            <p class="text-charcoal-light leading-relaxed">We match kittens to families. A non-refundable reservation fee holds your spot.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">4</div>
+          <div>
+            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Updates & Pickup</h3>
+            <p class="text-charcoal-light leading-relaxed">We send photos and updates as kittens grow. Kittens go home between 12 and 16 weeks.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12 md:mt-16">
+        <a href="/contact" class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors">
+          Start Your Application
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

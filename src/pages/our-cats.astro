@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CatCard from "../components/CatCard.astro";
+---
+
+<BaseLayout title="Our Cats | Pampered Feline Maine Coons" description="Meet the kings and queens of Pampered Feline. Each breeding cat is selected for temperament, health, and balanced European type.">
+
+  <!-- Page Header -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+        Our Program
+      </p>
+      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+        Our Cats
+      </h1>
+      <p class="text-charcoal-light text-lg leading-relaxed">
+        Each breeding cat is selected for temperament, health, and balanced European type. We prefer lines known for bone, structure, strong muzzles, and clean profiles. Color and coat are secondary to what the cat is.
+      </p>
+    </div>
+  </section>
+
+  <!-- Kings -->
+  <section class="py-16 md:py-24 bg-ivory">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4 text-center">
+        Kings
+      </p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-12 text-center">
+        Our Studs
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <CatCard
+          name="Rowan"
+          color="Silver Shaded Tabby"
+          traits="[PLACEHOLDER — temperament notes]"
+          health="[PLACEHOLDER — health testing details]"
+        />
+        <CatCard
+          name="Aedion"
+          color="Black Silver Shaded"
+          traits="[PLACEHOLDER — temperament notes]"
+          health="[PLACEHOLDER — health testing details]"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Queens -->
+  <section class="py-16 md:py-24 bg-ivory-warm">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4 text-center">
+        Queens
+      </p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-12 text-center">
+        Our Queens
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <CatCard
+          name="Feyra"
+          color="Black Tortie with Tabby Markings, Polydactyl"
+          traits="[PLACEHOLDER — temperament notes]"
+          health="[PLACEHOLDER — health testing details]"
+        />
+        <CatCard
+          name="Lilith"
+          color="Silver Shaded"
+          traits="[PLACEHOLDER — temperament notes]"
+          health="[PLACEHOLDER — health testing details]"
+        />
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
