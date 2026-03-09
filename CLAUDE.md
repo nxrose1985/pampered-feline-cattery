@@ -409,3 +409,161 @@ Claude Code generates final title tags and meta descriptions once copy is confir
 - No em dashes, no semicolons
 - Specific over vague
 - Numbers 1-9 written as words, 10+ as numerals
+
+---
+
+## Session: 2026-03-08
+
+### Decisions
+- **Stack confirmed and built:** Astro 5.18 + Tailwind CSS v4 (via `@tailwindcss/vite` plugin) + Sanity CMS + Netlify. No deviations from CLAUDE.md spec.
+- **Tailwind v4 CSS-based config** instead of `tailwind.config.mjs`. Theme tokens defined in `src/styles/global.css` using `@theme {}` directive.
+- **Design tokens chosen:** Background `#FDFBF7` (ivory), text `#1C1917` (charcoal), accent `#C9A96E` / `#B8860B` (gold), green `#2D5016`. Fonts: Cormorant Garamond (headings), DM Sans (body).
+- **Sanity client uses lazy initialization** to avoid crashing when `SANITY_PROJECT_ID` env var is not set. Pages fall back to static placeholder content.
+- **Sanity Studio uses hosted approach** at manage.sanity.io rather than embedding in the Astro site. Simpler for Sara.
+- **FAQ uses native HTML `<details>` accordion** with CSS rotation on the icon. No JavaScript framework needed.
+- **Contact form uses Netlify Forms** with honeypot spam protection (`netlify-honeypot="bot-field"`).
+- **Sitemap** auto-generated via `@astrojs/sitemap` integration.
+- **Project directory** lives at `C:\Users\nxros\pampered-feline-cattery\` (not `C:\Projects\pampered-feline\` as originally noted in the spec).
+
+### Conventions
+- **File structure matches CLAUDE.md spec:** `src/layouts/`, `src/pages/`, `src/components/`, `src/styles/`, `src/lib/`, `sanity/schemas/`
+- **Component naming:** PascalCase `.astro` files (Nav, Hero, Footer, CatCard, KittenCard, ContactForm)
+- **Page naming:** kebab-case `.astro` files matching URL routes (our-cats, health-ethics)
+- **Mobile-first Tailwind:** Base styles target small screens, `md:` and `lg:` breakpoints for larger layouts
+- **Section pattern:** Alternating `bg-ivory` and `bg-ivory-warm` backgrounds for visual rhythm
+- **Label pattern:** Small caps gold label above each section heading (`tracking-[0.3em] uppercase text-gold-dark`)
+- **CTA pattern:** Primary = solid charcoal button, Secondary = outlined charcoal button
+- **Placeholder convention:** `[PLACEHOLDER]` or `[PLACEHOLDER — description]` for unconfirmed content
+- **Sanity schemas** live in `sanity/schemas/` with an `index.ts` barrel export
+- **Environment variables:** `SANITY_PROJECT_ID` and `SANITY_DATASET` in `.env` (gitignored), documented in `.env.example`
+- **Dev server config:** `.claude/launch.json` uses `node` with `node_modules/astro/astro.js` (full path to avoid Windows PATH issues with `npm`)
+
+### Fixes
+- **Astro scaffold directory issue:** `npm create astro@latest .` created a subdirectory (`tested-telescope`) because the directory was not empty. Fixed by moving files to project root.
+- **Sanity client crash on build:** `createClient()` threw `Configuration must contain projectId` when env var was empty. Fixed by making client creation lazy (only instantiate when `SANITY_PROJECT_ID` is present).
+- **Netlify preview_start npm not found:** The Claude Preview MCP tool could not resolve `npm` on Windows. Fixed by using `node node_modules/astro/astro.js` as the runtime command in `.claude/launch.json`.
+- **Google Fonts ERR_ABORTED:** Font request showed as failed in network tab. Confirmed it was a stale error from page navigation, not a real loading failure. Fonts render correctly.
+
+### Deferred
+- **Netlify environment variables:** User needs to add `SANITY_PROJECT_ID=k6e71wky` and `SANITY_DATASET=production` in Netlify site settings > Environment variables
+- **Sanity Studio schema deployment:** Schemas are defined in code but not yet deployed to Sanity Studio. Sara cannot add content until `npx sanity deploy` is run or schemas are pushed via CLI.
+- **Content from Sara:** Cat temperament notes, health testing details, kitten listings, pricing, reservation fee, email, Instagram, shipping policy, breeding rights policy, payment methods
+- **Real photography:** All cat/kitten images are placeholder (gray boxes with camera icon)
+- **GoDaddy domain connection:** `pamperedfelinemainecoons.com` not yet pointed to Netlify
+- **Google Workspace email:** Not yet set up for Sara
+- **Plausible analytics:** Not yet installed
+- **OG image:** Currently an SVG placeholder. Should be replaced with a proper PNG/JPG (1200x630) for best social media compatibility.
+- **Mobile testing on real device:** Responsive breakpoints built but not yet tested on an actual phone
+
+### Accounts and Services
+| Service | Account | Key Info |
+|---|---|---|
+| GitHub | nxrose1985 | Repo: `nxrose1985/pampered-feline-cattery` |
+| Netlify | Connected via GitHub | Site: `spiffy-dango-52f71b.netlify.app` |
+| Sanity | nxrose1985 (via GitHub) | Project ID: `k6e71wky`, Dataset: `production` |
+| Sanity webhook | Configured | Triggers Netlify rebuild on content changes |
+
+### Files Created/Modified This Session
+```
+CLAUDE.md                        (this file, session log appended)
+astro.config.mjs                 (Astro config with Tailwind + sitemap)
+package.json                     (dependencies: astro, tailwind, sanity, sitemap)
+.env                             (SANITY_PROJECT_ID, SANITY_DATASET — gitignored)
+.env.example                     (documents required env vars)
+.claude/launch.json              (dev server config for Claude Preview)
+src/styles/global.css            (Tailwind v4 theme tokens, font imports)
+src/layouts/BaseLayout.astro     (HTML shell, OG tags, fonts, nav + footer)
+src/components/Nav.astro         (sticky nav, mobile hamburger menu)
+src/components/Hero.astro        (full-width hero with CTAs)
+src/components/Footer.astro      (brand, location, placeholder email/instagram)
+src/components/CatCard.astro     (reusable cat profile card)
+src/components/KittenCard.astro  (reusable kitten card with status tag)
+src/components/ContactForm.astro (Netlify-ready form with honeypot)
+src/pages/index.astro            (Home: hero, pillars, editorial, health, adoption)
+src/pages/our-cats.astro         (Kings + Queens with Sanity fallback)
+src/pages/kittens.astro          (Kitten grid + adoption details with Sanity fallback)
+src/pages/health-ethics.astro    (Genetic testing, cardiac, daily care, ethics)
+src/pages/faq.astro              (Expandable accordion, 6 questions)
+src/pages/contact.astro          (Contact form + info)
+src/pages/404.astro              (Custom 404 page)
+src/lib/sanity.ts                (Sanity client, types, queries, fetchers)
+sanity.config.ts                 (Sanity Studio config)
+sanity/schemas/cat.ts            (Cat content type schema)
+sanity/schemas/kitten.ts         (Kitten content type schema)
+sanity/schemas/index.ts          (Schema barrel export)
+public/favicon.svg               (PF monogram favicon)
+public/images/og-default.svg     (OG social share image placeholder)
+```
+
+---
+
+## Session: 2026-03-09
+
+### Decisions
+- **Domain confirmed:** `pamperedfelinemainecoons.com` is correct. Previous registration at GoDaddy had a typo (`pamperedfelinemaincoons.com`, missing 'e' in Maine). Domain needs to be re-registered with correct spelling.
+- **Sanity Studio deployed** to `pampered-feline.sanity.studio` using hosted approach.
+- **OG image converted to PNG** from SVG for social media compatibility. SVG retained as source.
+- **CORS origins** are not strictly required for production (Astro fetches at build time, server-side). `localhost:4321` useful for local dev if client-side Sanity features are added later.
+- **Sanity Studio requires React** as a build dependency. Added `react`, `react-dom`, `react-is`, `styled-components` as devDependencies.
+
+### Conventions
+- **Sanity CLI config** lives in `sanity.cli.ts` (separate from `sanity.config.ts`). Required for CLI commands like `sanity deploy`.
+- **Sanity deploy hostname** set in `sanity.cli.ts` via `studioHost` property to avoid interactive prompt bug in CLI v5.
+- **Sanity deploy appId** stored in `sanity.cli.ts` under `deployment.appId` to avoid prompting on subsequent deploys.
+
+### Fixes
+- **Sanity CLI `deploy` command failed outside project directory.** User ran `npx sanity deploy` from `C:\Users\nxros` instead of project root. Fixed by `cd` to project directory.
+- **Sanity CLI missing `sanity.cli.ts`.** The `sanity deploy` command requires a `sanity.cli.ts` (or `.js`) file with `api.projectId`. Created the file.
+- **Sanity CLI interactive hostname prompt crashed** with `TypeError: Cannot read properties of undefined`. Known bug in Sanity CLI v5. Fixed by adding `studioHost: "pampered-feline"` to `sanity.cli.ts`.
+- **Sanity Studio build failed — missing React.** `Cannot find package 'react'` error. Astro project didn't have React installed. Fixed by adding `react`, `react-dom`, `react-is`, `styled-components` as devDependencies.
+
+### Completed This Session
+- Sanity Studio deployed to `https://pampered-feline.sanity.studio/`
+- OG image converted from SVG to PNG (1200x630, 12.7 KB)
+- BaseLayout updated to reference `og-default.png`
+- `robots.txt` created with sitemap reference
+- `sanity.cli.ts` created with project ID, dataset, studioHost, and deployment appId
+- Build verified — all 7 pages generate cleanly
+- Pre-launch checklist audited (see Deferred section for remaining items)
+
+### Deferred
+- **Domain registration:** Need to register `pamperedfelinemainecoons.com` (correct spelling) at GoDaddy, Cloudflare, Namecheap, or Porkbun
+- **Domain connection to Netlify:** Pending correct domain registration
+- **Netlify environment variables:** User reports they have been added (`SANITY_PROJECT_ID=k6e71wky`, `SANITY_DATASET=production`). Not yet verified.
+- **CORS origins in Sanity:** Low priority since Astro fetches at build time. User reported CORS origins link unclickable in Sanity dashboard — may be UI bug or trial limitation.
+- **Sanity → Netlify pipeline test:** Test cat created in Studio, need to verify it appears in local/production build.
+- **21 placeholder content items** still need Sara's input (see pre-launch audit below)
+- **Real photography:** All cat/kitten images are placeholder
+- **Google Workspace email:** Not yet set up
+- **Plausible analytics:** Not yet installed
+- **Mobile testing on real device:** Not yet done
+
+### Pre-Launch Content Audit (21 items needed from Sara)
+| Category | Count | Details |
+|---|---|---|
+| Cat profiles | 8 | Temperament notes + health testing for Rowan, Aedion, Feyra, Lilith |
+| Kitten listings | 6 | Names, sexes, colors, personalities (or manage via Sanity Studio) |
+| Pricing | 3 | Pet kitten price, reservation fee, payment methods |
+| FAQ policies | 3 | Shipping, breeding rights, payment methods |
+| Health protocol | 1 | Exact testing protocol verification |
+| Contact info | 2 | Professional email + Instagram handle (appears in contact page + footer) |
+
+### Accounts and Services
+| Service | Account | Key Info |
+|---|---|---|
+| GitHub | nxrose1985 | Repo: `nxrose1985/pampered-feline-cattery` |
+| Netlify | Connected via GitHub | Site: `spiffy-dango-52f71b.netlify.app` |
+| Sanity | nxrose1985 (via GitHub, login via Google) | Project ID: `k6e71wky`, Dataset: `production` |
+| Sanity Studio | Deployed | URL: `https://pampered-feline.sanity.studio/` |
+| Sanity webhook | Configured | Triggers Netlify rebuild on content changes |
+| Sanity deploy appId | `zh31ua465lxrktnjzmutijhs` | Stored in `sanity.cli.ts` |
+
+### Files Created/Modified This Session
+```
+CLAUDE.md                        (session log appended)
+sanity.cli.ts                    (NEW — Sanity CLI config with projectId, studioHost, appId)
+src/layouts/BaseLayout.astro     (OG image reference changed from .svg to .png)
+public/images/og-default.png     (NEW — PNG version of OG image, 1200x630)
+public/robots.txt                (NEW — robots.txt with sitemap reference)
+package.json                     (added react, react-dom, react-is, styled-components as devDeps)
+```
