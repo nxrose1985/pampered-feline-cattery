@@ -3,11 +3,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import KittenCard from "../components/KittenCard.astro";
 import AdoptionSteps from "../components/AdoptionSteps.astro";
 import CheckIcon from "../components/CheckIcon.astro";
-import { getKittens } from "../lib/sanity";
+import { getKittens, getSettings } from "../lib/sanity";
 import type { Kitten } from "../lib/sanity";
 
-// Fetch from Sanity (returns empty array if not configured)
-const sanityKittens = await getKittens();
+// Fetch from Sanity (returns empty array / fallback if not configured)
+const [sanityKittens, settings] = await Promise.all([getKittens(), getSettings()]);
 
 // Static fallback data
 const fallbackKittens = [
@@ -18,6 +18,17 @@ const fallbackKittens = [
 
 // Use Sanity data if available, otherwise static fallback
 const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
+
+function formatPriceRange(min?: number, max?: number): string {
+  if (!min && !max) return "[PLACEHOLDER]";
+  if (min && max) return `$${min.toLocaleString("en-US")} – $${max.toLocaleString("en-US")}`;
+  if (min) return `From $${min.toLocaleString("en-US")}`;
+  return `Up to $${max!.toLocaleString("en-US")}`;
+}
+
+const priceRange = formatPriceRange(settings.petKittenPriceMin, settings.petKittenPriceMax);
+const reservationFee = settings.reservationFee ? `$${settings.reservationFee.toLocaleString("en-US")}` : "[PLACEHOLDER]";
+const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment methods and additional pricing details]";
 ---
 
 <BaseLayout title="Kittens & Adoption | Pampered Feline Maine Coons" description="View available Maine Coon kittens and learn about our adoption process. Limited litters from health-tested parents.">
@@ -114,13 +125,13 @@ const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
         Pricing
       </h2>
       <p class="text-charcoal-light text-lg leading-relaxed mb-4">
-        Pet kittens: <span class="font-medium text-charcoal">[PLACEHOLDER]</span>
+        Pet kittens: <span class="font-medium text-charcoal">{priceRange}</span>
       </p>
       <p class="text-charcoal-light text-lg leading-relaxed mb-4">
-        Reservation fee: <span class="font-medium text-charcoal">[PLACEHOLDER]</span>
+        Reservation fee: <span class="font-medium text-charcoal">{reservationFee}</span>
       </p>
       <p class="text-charcoal-light/60 text-sm">
-        [PLACEHOLDER — payment methods and additional pricing details]
+        {paymentMethods}
       </p>
     </div>
   </section>

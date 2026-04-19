@@ -1,6 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ContactForm from "../components/ContactForm.astro";
+import { getSettings } from "../lib/sanity";
+
+const settings = await getSettings();
+const email = settings.contactEmail ?? "[PLACEHOLDER]";
+const instagram = settings.instagramHandle ? `@${settings.instagramHandle}` : "[PLACEHOLDER]";
 ---
 
 <BaseLayout title="Contact | Pampered Feline Maine Coons" description="Get in touch with Pampered Feline Maine Coons. Fill out our contact form to inquire about available kittens or ask questions.">
@@ -35,10 +40,10 @@ import ContactForm from "../components/ContactForm.astro";
       </h2>
       <div class="space-y-3">
         <p class="text-charcoal-light">
-          Email: <span class="text-charcoal font-medium">[PLACEHOLDER]</span>
+          Email: <span class="text-charcoal font-medium">{email}</span>
         </p>
         <p class="text-charcoal-light">
-          Instagram: <span class="text-charcoal font-medium">[PLACEHOLDER]</span>
+          Instagram: <span class="text-charcoal font-medium">{instagram}</span>
         </p>
         <p class="text-charcoal-light text-sm mt-6">
           Located in Northern Virginia
