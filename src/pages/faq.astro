@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ScrollReveal from "../components/ScrollReveal.astro";
 import { getFaqs } from "../lib/sanity";
 
 const faqs = await getFaqs();
@@ -8,53 +9,59 @@ const faqs = await getFaqs();
 <BaseLayout title="FAQ | Pampered Feline Maine Coons" description="Frequently asked questions about our Maine Coon kittens, adoption process, and cattery practices.">
 
   <!-- Page Header -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Common Questions
-      </p>
-      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
-        Frequently Asked Questions
-      </h1>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          Common Questions
+        </p>
+        <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+          Frequently Asked Questions
+        </h1>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- FAQ Items -->
   <section class="py-16 md:py-24 bg-ivory">
     <div class="max-w-3xl mx-auto px-4">
       <div class="divide-y divide-charcoal/10">
-        {faqs.map((faq) => (
-          <details class="group py-6">
-            <summary class="flex items-center justify-between cursor-pointer list-none">
-              <h2 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
-                {faq.question}
-              </h2>
-              <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
-              </svg>
-            </summary>
-            <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
-              {faq.answer}
-            </p>
-          </details>
+        {faqs.map((faq, i) => (
+          <ScrollReveal animation="fadeUp" delay={i * 0.07}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h2 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  {faq.question}
+                </h2>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                {faq.answer}
+              </p>
+            </details>
+          </ScrollReveal>
         ))}
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-6 leading-tight">
-        Still Have Questions?
-      </h2>
-      <p class="text-charcoal-light text-lg leading-relaxed mb-10">
-        We are happy to help. Reach out any time.
-      </p>
-      <a href="/contact" class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors">
-        Contact Us
-      </a>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-6 leading-tight">
+          Still Have Questions?
+        </h2>
+        <p class="text-charcoal-light text-lg leading-relaxed mb-10">
+          We are happy to help. Reach out any time.
+        </p>
+        <a href="/contact" class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors">
+          Contact Us
+        </a>
+      </div>
+    </section>
+  </ScrollReveal>
 
 </BaseLayout>

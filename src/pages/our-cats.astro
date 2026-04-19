@@ -1,13 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CatCard from "../components/CatCard.astro";
+import ScrollReveal from "../components/ScrollReveal.astro";
 import { getCats } from "../lib/sanity";
 import type { Cat } from "../lib/sanity";
 
-// Fetch from Sanity (returns empty array if not configured)
 const sanityCats = await getCats();
 
-// Static fallback data
 const fallbackKings = [
   { name: "Rowan", color: "Silver Shaded Tabby", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
   { name: "Aedion", color: "Black Silver Shaded", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
@@ -17,7 +16,6 @@ const fallbackQueens = [
   { name: "Lilith", color: "Silver Shaded", traits: "[PLACEHOLDER — temperament notes]", health: "[PLACEHOLDER — health testing details]" },
 ];
 
-// Use Sanity data if available, otherwise static fallback
 const useSanity = sanityCats.length > 0;
 const kings = useSanity ? sanityCats.filter((c: Cat) => c.role === "king") : fallbackKings;
 const queens = useSanity ? sanityCats.filter((c: Cat) => c.role === "queen") : fallbackQueens;
@@ -26,38 +24,46 @@ const queens = useSanity ? sanityCats.filter((c: Cat) => c.role === "queen") : f
 <BaseLayout title="Our Cats | Pampered Feline Maine Coons" description="Meet the kings and queens of Pampered Feline. Each breeding cat is selected for temperament, health, and balanced European type.">
 
   <!-- Page Header -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Our Program
-      </p>
-      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
-        Our Cats
-      </h1>
-      <p class="text-charcoal-light text-lg leading-relaxed">
-        Each breeding cat is selected for temperament, health, and balanced European type. We prefer lines known for bone, structure, strong muzzles, and clean profiles. Color and coat are secondary to what the cat is.
-      </p>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          Our Program
+        </p>
+        <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+          Our Cats
+        </h1>
+        <p class="text-charcoal-light text-lg leading-relaxed">
+          Each breeding cat is selected for temperament, health, and balanced European type. We prefer lines known for bone, structure, strong muzzles, and clean profiles. Color and coat are secondary to what the cat is.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- Kings -->
   <section class="py-16 md:py-24 bg-ivory">
     <div class="max-w-6xl mx-auto px-4">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4 text-center">
-        Kings
-      </p>
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-12 text-center">
-        Our Studs
-      </h2>
+      <ScrollReveal animation="fadeUp">
+        <div class="text-center mb-12">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4">
+            Kings
+          </p>
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal">
+            Our Studs
+          </h2>
+        </div>
+      </ScrollReveal>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {kings.map((cat: any) => (
-          <CatCard
-            name={cat.name}
-            color={cat.color}
-            traits={cat.traits}
-            health={cat.health}
-            image={cat.image?.asset?.url}
-          />
+        {kings.map((cat: any, i: number) => (
+          <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+            <CatCard
+              name={cat.name}
+              color={cat.color}
+              traits={cat.traits}
+              health={cat.health}
+              image={cat.image?.asset?.url}
+            />
+          </ScrollReveal>
         ))}
       </div>
     </div>
@@ -66,21 +72,27 @@ const queens = useSanity ? sanityCats.filter((c: Cat) => c.role === "queen") : f
   <!-- Queens -->
   <section class="py-16 md:py-24 bg-ivory-warm">
     <div class="max-w-6xl mx-auto px-4">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4 text-center">
-        Queens
-      </p>
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-12 text-center">
-        Our Queens
-      </h2>
+      <ScrollReveal animation="fadeUp">
+        <div class="text-center mb-12">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4">
+            Queens
+          </p>
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal">
+            Our Queens
+          </h2>
+        </div>
+      </ScrollReveal>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {queens.map((cat: any) => (
-          <CatCard
-            name={cat.name}
-            color={cat.color}
-            traits={cat.traits}
-            health={cat.health}
-            image={cat.image?.asset?.url}
-          />
+        {queens.map((cat: any, i: number) => (
+          <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+            <CatCard
+              name={cat.name}
+              color={cat.color}
+              traits={cat.traits}
+              health={cat.health}
+              image={cat.image?.asset?.url}
+            />
+          </ScrollReveal>
         ))}
       </div>
     </div>

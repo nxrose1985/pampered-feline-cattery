@@ -1,5 +1,6 @@
 ---
 import KittenCard from "./KittenCard.astro";
+import ScrollReveal from "./ScrollReveal.astro";
 import { getKittensByLitter } from "../lib/sanity";
 import type { Kitten } from "../lib/sanity";
 
@@ -58,29 +59,33 @@ const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
 
 <section class="py-16 md:py-24 bg-obsidian text-bone">
   <div class="max-w-6xl mx-auto px-4">
-    <div class="text-center mb-12 md:mb-16">
-      <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-4 leading-tight">
-        Current Litter
-      </h2>
-      <p class="text-bone/60 text-sm md:text-base tracking-wide">
-        Born March 12, 2026 · CFA x TICA · Ready June 4 – July 8
-      </p>
-    </div>
+    <ScrollReveal animation="fadeUp">
+      <div class="text-center mb-12 md:mb-16">
+        <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-4 leading-tight">
+          Current Litter
+        </h2>
+        <p class="text-bone/60 text-sm md:text-base tracking-wide">
+          Born March 12, 2026 · CFA x TICA · Ready June 4 – July 8
+        </p>
+      </div>
+    </ScrollReveal>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {kittens.map((kitten: any) => (
-        <KittenCard
-          name={kitten.name}
-          sex={kitten.sex}
-          color={kitten.color}
-          personality={kitten.personality}
-          status={kitten.status}
-          image={kitten.image?.asset?.url}
-          price={kitten.price}
-          isPolydactyl={kitten.isPolydactyl}
-          availableDate={kitten.availableDate}
-          variant="dark"
-        />
+      {kittens.map((kitten: any, i: number) => (
+        <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+          <KittenCard
+            name={kitten.name}
+            sex={kitten.sex}
+            color={kitten.color}
+            personality={kitten.personality}
+            status={kitten.status}
+            image={kitten.image?.asset?.url}
+            price={kitten.price}
+            isPolydactyl={kitten.isPolydactyl}
+            availableDate={kitten.availableDate}
+            variant="dark"
+          />
+        </ScrollReveal>
       ))}
     </div>
 

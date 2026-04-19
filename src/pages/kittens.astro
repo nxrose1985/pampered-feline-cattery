@@ -3,20 +3,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import KittenCard from "../components/KittenCard.astro";
 import AdoptionSteps from "../components/AdoptionSteps.astro";
 import CheckIcon from "../components/CheckIcon.astro";
+import ScrollReveal from "../components/ScrollReveal.astro";
 import { getKittens, getSettings } from "../lib/sanity";
 import type { Kitten } from "../lib/sanity";
 
-// Fetch from Sanity (returns empty array / fallback if not configured)
 const [sanityKittens, settings] = await Promise.all([getKittens(), getSettings()]);
 
-// Static fallback data
 const fallbackKittens = [
   { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Available" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
   { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Reserved" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
   { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Under Evaluation" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
 ];
 
-// Use Sanity data if available, otherwise static fallback
 const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
 
 function formatPriceRange(min?: number, max?: number): string {
@@ -34,33 +32,37 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment meth
 <BaseLayout title="Kittens & Adoption | Pampered Feline Maine Coons" description="View available Maine Coon kittens and learn about our adoption process. Limited litters from health-tested parents.">
 
   <!-- Page Header -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Available Kittens
-      </p>
-      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
-        Kittens & Adoption
-      </h1>
-      <p class="text-charcoal-light text-lg leading-relaxed">
-        We raise limited litters with intentional pairings. Each kitten is socialized from birth and placed with care.
-      </p>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          Available Kittens
+        </p>
+        <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+          Kittens & Adoption
+        </h1>
+        <p class="text-charcoal-light text-lg leading-relaxed">
+          We raise limited litters with intentional pairings. Each kitten is socialized from birth and placed with care.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- Kitten Grid -->
   <section class="py-16 md:py-24 bg-ivory">
     <div class="max-w-6xl mx-auto px-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {kittens.map((kitten: any) => (
-          <KittenCard
-            name={kitten.name}
-            sex={kitten.sex}
-            color={kitten.color}
-            personality={kitten.personality}
-            status={kitten.status}
-            image={kitten.image?.asset?.url}
-          />
+        {kittens.map((kitten: any, i: number) => (
+          <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+            <KittenCard
+              name={kitten.name}
+              sex={kitten.sex}
+              color={kitten.color}
+              personality={kitten.personality}
+              status={kitten.status}
+              image={kitten.image?.asset?.url}
+            />
+          </ScrollReveal>
         ))}
       </div>
       <p class="text-center text-charcoal-light/60 text-sm mt-8">
@@ -70,78 +72,84 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment meth
   </section>
 
   <!-- What Comes With Your Kitten -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6 text-center">
-        Included
-      </p>
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-10 text-center leading-tight">
-        What Comes With Your Kitten
-      </h2>
-      <ul class="space-y-4">
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Written contract and health guarantee</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Age-appropriate vaccines</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Health certificate</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Microchip</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Registration papers (after proof of spay/neuter, if applicable)</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Starter food</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Familiar blanket</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <CheckIcon />
-          <span class="text-charcoal-light leading-relaxed">Lifetime breeder support</span>
-        </li>
-      </ul>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6 text-center">
+          Included
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-10 text-center leading-tight">
+          What Comes With Your Kitten
+        </h2>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Written contract and health guarantee</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Age-appropriate vaccines</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Health certificate</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Microchip</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Registration papers (after proof of spay/neuter, if applicable)</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Starter food</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Familiar blanket</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Lifetime breeder support</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- Pricing -->
-  <section class="py-16 md:py-24 bg-ivory">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Investment
-      </p>
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
-        Pricing
-      </h2>
-      <p class="text-charcoal-light text-lg leading-relaxed mb-4">
-        Pet kittens: <span class="font-medium text-charcoal">{priceRange}</span>
-      </p>
-      <p class="text-charcoal-light text-lg leading-relaxed mb-4">
-        Reservation fee: <span class="font-medium text-charcoal">{reservationFee}</span>
-      </p>
-      <p class="text-charcoal-light/60 text-sm">
-        {paymentMethods}
-      </p>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          Investment
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
+          Pricing
+        </h2>
+        <p class="text-charcoal-light text-lg leading-relaxed mb-4">
+          Pet kittens: <span class="font-medium text-charcoal">{priceRange}</span>
+        </p>
+        <p class="text-charcoal-light text-lg leading-relaxed mb-4">
+          Reservation fee: <span class="font-medium text-charcoal">{reservationFee}</span>
+        </p>
+        <p class="text-charcoal-light/60 text-sm">
+          {paymentMethods}
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- Adoption Steps -->
-  <AdoptionSteps
-    label="The Process"
-    heading="How Adoption Works"
-    ctaHref="/contact"
-    ctaText="Start Your Application"
-  />
+  <ScrollReveal animation="fadeUp">
+    <AdoptionSteps
+      label="The Process"
+      heading="How Adoption Works"
+      ctaHref="/contact"
+      ctaText="Start Your Application"
+    />
+  </ScrollReveal>
 
 </BaseLayout>

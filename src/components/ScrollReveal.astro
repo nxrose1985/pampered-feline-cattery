@@ -1,0 +1,77 @@
+---
+interface Props {
+  animation?: "fadeUp" | "fadeIn" | "slideLeft" | "slideRight";
+  delay?: number;
+  duration?: number;
+  threshold?: number;
+  class?: string;
+}
+
+const {
+  animation = "fadeUp",
+  delay = 0,
+  duration = 0.8,
+  threshold = 0.15,
+  class: className,
+} = Astro.props;
+---
+
+<div
+  class={`scroll-reveal${className ? ` ${className}` : ""}`}
+  data-animation={animation}
+  data-delay={String(delay)}
+  data-duration={String(duration)}
+  data-threshold={String(threshold)}
+>
+  <slot />
+</div>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initScrollReveal() {
+    document.querySelectorAll<HTMLElement>(".scroll-reveal").forEach((el) => {
+      // Skip already-initialised elements
+      if (el.dataset.srInit) return;
+      el.dataset.srInit = "1";
+
+      const animation = el.dataset.animation ?? "fadeUp";
+      const delay = parseFloat(el.dataset.delay ?? "0");
+      const duration = parseFloat(el.dataset.duration ?? "0.8");
+      const threshold = parseFloat(el.dataset.threshold ?? "0.15");
+
+      const from: gsap.TweenVars = { opacity: 0, y: 0, x: 0 };
+      if (animation === "fadeUp") from.y = 32;
+      else if (animation === "slideLeft") from.x = -40;
+      else if (animation === "slideRight") from.x = 40;
+      // "fadeIn" keeps y:0, x:0 — opacity only
+
+      gsap.set(el, from);
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: `top ${Math.round((1 - threshold) * 100)}%`,
+        once: true,
+        onEnter() {
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            duration,
+            delay,
+            ease: "power2.out",
+          });
+        },
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initScrollReveal);
+  } else {
+    initScrollReveal();
+  }
+</script>
