@@ -45,6 +45,12 @@ export interface Kitten {
     };
   };
   order: number;
+  litter: string;
+  price?: number;
+  isPolydactyl?: boolean;
+  reservationFee?: number;
+  availableDate?: string;
+  breed?: string;
 }
 
 // ── Queries ────────────────────────────────────────────
@@ -59,15 +65,25 @@ const catQuery = `*[_type == "cat"] | order(order asc) {
   order
 }`;
 
-const kittenQuery = `*[_type == "kitten"] | order(order asc) {
+const kittenProjection = `{
   name,
   sex,
   color,
   personality,
   status,
   "image": image { asset-> { url } },
-  order
+  order,
+  litter,
+  price,
+  isPolydactyl,
+  reservationFee,
+  availableDate,
+  breed
 }`;
+
+const kittenQuery = `*[_type == "kitten"] | order(order asc) ${kittenProjection}`;
+
+const kittensByLitterQuery = `*[_type == "kitten" && litter == $litter] | order(order asc) ${kittenProjection}`;
 
 // ── Fetchers with Fallbacks ────────────────────────────
 
@@ -91,6 +107,18 @@ export async function getKittens(): Promise<Kitten[]> {
     return await client.fetch<Kitten[]>(kittenQuery);
   } catch (error) {
     console.error("Failed to fetch kittens from Sanity:", error);
+    return [];
+  }
+}
+
+export async function getKittensByLitter(litterId: string): Promise<Kitten[]> {
+  const client = getClient();
+  if (!client) return [];
+
+  try {
+    return await client.fetch<Kitten[]>(kittensByLitterQuery, { litter: litterId });
+  } catch (error) {
+    console.error("Failed to fetch kittens by litter from Sanity:", error);
     return [];
   }
 }

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import KittenCard from "../components/KittenCard.astro";
+import AdoptionSteps from "../components/AdoptionSteps.astro";
+import CheckIcon from "../components/CheckIcon.astro";
 import { getKittens } from "../lib/sanity";
 import type { Kitten } from "../lib/sanity";
 
@@ -9,9 +11,9 @@ const sanityKittens = await getKittens();
 
 // Static fallback data
 const fallbackKittens = [
-  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Available" as const },
-  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Reserved" as const },
-  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Under Evaluation" as const },
+  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Available" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
+  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Reserved" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
+  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Under Evaluation" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
 ];
 
 // Use Sanity data if available, otherwise static fallback
@@ -67,35 +69,35 @@ const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
       </h2>
       <ul class="space-y-4">
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Written contract and health guarantee</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Age-appropriate vaccines</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Health certificate</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Microchip</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Registration papers (after proof of spay/neuter, if applicable)</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Starter food</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Familiar blanket</span>
         </li>
         <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+          <CheckIcon />
           <span class="text-charcoal-light leading-relaxed">Lifetime breeder support</span>
         </li>
       </ul>
@@ -124,54 +126,11 @@ const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
   </section>
 
   <!-- Adoption Steps -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-4xl mx-auto px-4">
-      <div class="text-center mb-12 md:mb-16">
-        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-          The Process
-        </p>
-        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal leading-tight">
-          How Adoption Works
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">1</div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Application</h3>
-            <p class="text-charcoal-light leading-relaxed">Fill out a short form so we can learn about your home and lifestyle.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">2</div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Conversation</h3>
-            <p class="text-charcoal-light leading-relaxed">We follow up to answer your questions and confirm it is a good fit.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">3</div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Match & Reserve</h3>
-            <p class="text-charcoal-light leading-relaxed">We match kittens to families. A non-refundable reservation fee holds your spot.</p>
-          </div>
-        </div>
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">4</div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Updates & Pickup</h3>
-            <p class="text-charcoal-light leading-relaxed">We send photos and updates as kittens grow. Kittens go home between 12 and 16 weeks.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center mt-12 md:mt-16">
-        <a href="/contact" class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors">
-          Start Your Application
-        </a>
-      </div>
-    </div>
-  </section>
+  <AdoptionSteps
+    label="The Process"
+    heading="How Adoption Works"
+    ctaHref="/contact"
+    ctaText="Start Your Application"
+  />
 
 </BaseLayout>

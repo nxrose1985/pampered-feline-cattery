@@ -6,44 +6,118 @@ interface Props {
   personality?: string;
   status: "Available" | "Reserved" | "Under Evaluation";
   image?: string;
+  price?: number;
+  isPolydactyl?: boolean;
+  availableDate?: string;
+  variant?: "light" | "dark";
 }
 
-const { name, sex, color, personality, status, image } = Astro.props;
+const {
+  name,
+  sex,
+  color,
+  personality,
+  status,
+  image,
+  price,
+  isPolydactyl,
+  availableDate,
+  variant = "light",
+} = Astro.props;
 
-const statusColors: Record<string, string> = {
+const isDark = variant === "dark";
+
+const statusColorsLight: Record<string, string> = {
   "Available": "bg-green/10 text-green",
   "Reserved": "bg-gold/10 text-gold-dark",
   "Under Evaluation": "bg-charcoal/10 text-charcoal-light",
 };
+
+const statusColorsDark: Record<string, string> = {
+  "Available": "bg-green-light/25 text-bone",
+  "Reserved": "bg-gold/20 text-gold",
+  "Under Evaluation": "bg-bone/10 text-bone/70",
+};
+
+const statusClass = (isDark ? statusColorsDark : statusColorsLight)[status];
+
+function formatPrice(p?: number) {
+  if (p === undefined || p === null) return null;
+  if (p === 0) return "[PLACEHOLDER — price]";
+  return `$${p.toLocaleString("en-US")}`;
+}
+
+function formatDate(d?: string) {
+  if (!d) return null;
+  const match = /^\d{4}-\d{2}-\d{2}$/.test(d);
+  if (!match) return d;
+  const [y, m, day] = d.split("-").map(Number);
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[m - 1]} ${day}, ${y}`;
+}
+
+const priceLabel = formatPrice(price);
+const dateLabel = formatDate(availableDate);
 ---
 
-<div class="bg-ivory-warm rounded-sm overflow-hidden">
-  <div class="relative aspect-[4/5] bg-charcoal/5 flex items-center justify-center">
+<div class={`rounded-sm overflow-hidden ${isDark ? "bg-bone/[0.04] border border-bone/10" : "bg-ivory-warm"}`}>
+  <div class={`relative aspect-[4/5] flex items-center justify-center ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"}`}>
     {image ? (
       <img src={image} alt={`${name}, ${color} Maine Coon kitten`} class="w-full h-full object-cover" />
     ) : (
       <div class="text-center px-6">
-        <svg class="w-12 h-12 mx-auto text-charcoal/20 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class={`w-12 h-12 mx-auto mb-2 ${isDark ? "text-bone/20" : "text-charcoal/20"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <p class="text-xs text-charcoal/30 uppercase tracking-widest">Photo Coming Soon</p>
+        <p class={`text-xs uppercase tracking-widest ${isDark ? "text-bone/30" : "text-charcoal/30"}`}>Photo Coming Soon</p>
       </div>
     )}
-    <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${statusColors[status]}`}>
+
+    {isPolydactyl && (
+      <span class={`absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${isDark ? "bg-gold/20 text-gold" : "bg-charcoal text-ivory"}`}>
+        Polydactyl
+      </span>
+    )}
+
+    <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${statusClass}`}>
       {status}
     </span>
   </div>
+
   <div class="p-6">
-    <h3 class="font-heading text-2xl font-semibold text-charcoal mb-1">{name}</h3>
-    <p class="text-sm text-gold-dark uppercase tracking-widest mb-1">{color}</p>
-    <p class="text-sm text-charcoal-light/70 mb-4">{sex}</p>
-    {personality && (
-      <p class="text-charcoal-light leading-relaxed mb-4">{personality}</p>
+    <h3 class={`font-heading text-2xl font-semibold mb-1 ${isDark ? "text-bone" : "text-charcoal"}`}>{name}</h3>
+    <p class={`text-sm uppercase tracking-widest mb-1 ${isDark ? "text-gold" : "text-gold-dark"}`}>{color}</p>
+    <p class={`text-sm mb-4 ${isDark ? "text-bone/60" : "text-charcoal-light/70"}`}>{sex}</p>
+
+    {(priceLabel || dateLabel) && (
+      <dl class={`text-xs uppercase tracking-widest space-y-1 mb-4 ${isDark ? "text-bone/70" : "text-charcoal-light"}`}>
+        {priceLabel && (
+          <div class="flex justify-between gap-4">
+            <dt class={isDark ? "text-bone/40" : "text-charcoal-light/60"}>Price</dt>
+            <dd class="font-medium">{priceLabel}</dd>
+          </div>
+        )}
+        {dateLabel && (
+          <div class="flex justify-between gap-4">
+            <dt class={isDark ? "text-bone/40" : "text-charcoal-light/60"}>Ready</dt>
+            <dd class="font-medium">{dateLabel}</dd>
+          </div>
+        )}
+      </dl>
     )}
+
+    {personality && (
+      <p class={`leading-relaxed mb-4 ${isDark ? "text-bone/80" : "text-charcoal-light"}`}>{personality}</p>
+    )}
+
     {status === "Available" && (
       <a
         href="/contact"
-        class="inline-block px-6 py-2 border border-charcoal text-charcoal text-xs font-medium tracking-widest uppercase hover:bg-charcoal hover:text-ivory transition-colors"
+        class={`inline-block px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
+          isDark
+            ? "border-bone text-bone hover:bg-bone hover:text-obsidian"
+            : "border-charcoal text-charcoal hover:bg-charcoal hover:text-ivory"
+        }`}
       >
         Inquire
       </a>
