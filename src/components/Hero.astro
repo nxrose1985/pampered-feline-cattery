@@ -1,31 +1,60 @@
 ---
+interface Props {
+  heroImage?: string;
+}
 
+const { heroImage } = Astro.props;
 ---
 
-<section class="relative bg-ivory-warm">
-  <div class="max-w-6xl mx-auto px-4 py-24 md:py-36 lg:py-44 text-center">
-    <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-      Northern Virginia
-    </p>
-    <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-semibold text-charcoal leading-tight mb-6">
-      Pampered Feline Maine Coons
-    </h1>
-    <p class="text-lg md:text-xl text-charcoal-light max-w-2xl mx-auto mb-10 leading-relaxed">
-      European-type Maine Coons with presence, structure, and steady temperaments.
-    </p>
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a
-        href="/kittens"
-        class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors"
-      >
-        View Available Kittens
-      </a>
-      <a
-        href="/our-cats"
-        class="inline-block px-8 py-3 border border-charcoal text-charcoal text-sm font-medium tracking-widest uppercase hover:bg-charcoal hover:text-ivory transition-colors"
-      >
-        Meet Our Cats
-      </a>
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center bg-obsidian overflow-hidden">
+
+  {heroImage ? (
+    <div class="absolute inset-0">
+      <img src={heroImage} alt="" class="w-full h-full object-cover" aria-hidden="true" />
+      <div class="absolute inset-0 bg-obsidian/75"></div>
     </div>
+  ) : (
+    <div class="absolute inset-0 hero-bg" aria-hidden="true"></div>
+  )}
+
+  <div class="absolute inset-0 hero-grain pointer-events-none" aria-hidden="true"></div>
+
+  <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+    <h1 class="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-bone leading-[1.05] mb-8 tracking-tight">
+      Ready to meet your<br class="hidden sm:block" /> soul kitten?
+    </h1>
+    <p class="font-body text-base md:text-lg text-bone/55 max-w-sm mx-auto leading-relaxed tracking-wide">
+      Thoughtfully raised to be your best friend for life.
+    </p>
   </div>
+
+  <div class="absolute bottom-8 inset-x-0 flex flex-col items-center gap-2" aria-hidden="true">
+    <span class="text-[10px] tracking-[0.4em] uppercase font-body font-medium text-bone/40">Scroll</span>
+    <svg class="w-4 h-4 text-bone/40 scroll-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+
 </section>
+
+<style>
+  .hero-bg {
+    background: radial-gradient(ellipse at 38% 35%, #1c1410 0%, #0e0b09 45%, #0A0A0A 100%);
+  }
+
+  .hero-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+  }
+
+  .scroll-chevron {
+    animation: chevron-drift 2.4s ease-in-out infinite;
+  }
+
+  @keyframes chevron-drift {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(5px); opacity: 0.65; }
+  }
+</style>
