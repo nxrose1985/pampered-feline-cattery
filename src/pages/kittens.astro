@@ -1,75 +1,209 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import KittenCard from "../components/KittenCard.astro";
-import AdoptionSteps from "../components/AdoptionSteps.astro";
 import CheckIcon from "../components/CheckIcon.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
 import { getKittens, getSettings } from "../lib/sanity";
-import type { Kitten } from "../lib/sanity";
 
 const [sanityKittens, settings] = await Promise.all([getKittens(), getSettings()]);
 
+// Spring 2026 litter — placeholder cards until Sanity content is live
 const fallbackKittens = [
-  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Available" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
-  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Reserved" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
-  { name: "[PLACEHOLDER]", sex: "[PLACEHOLDER]", color: "[PLACEHOLDER]", personality: "[PLACEHOLDER — personality note]", status: "Under Evaluation" as const, litter: "[PLACEHOLDER — litter id]", price: 0, isPolydactyl: false, reservationFee: 500, availableDate: "[PLACEHOLDER — YYYY-MM-DD]", breed: "Maine Coon" },
+  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026" },
+  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026" },
+  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026" },
+  { name: "Blue Silver Tabby",   sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026" },
+  { name: "Red Tabby",           sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026" },
+  { name: "Black Tortie",        sex: "Female", color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026" },
+  { name: "Blue Tortie",         sex: "Female", color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026" },
 ];
 
 const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
 
-function formatPriceRange(min?: number, max?: number): string {
-  if (!min && !max) return "[PLACEHOLDER]";
-  if (min && max) return `$${min.toLocaleString("en-US")} – $${max.toLocaleString("en-US")}`;
-  if (min) return `From $${min.toLocaleString("en-US")}`;
-  return `Up to $${max!.toLocaleString("en-US")}`;
-}
-
-const priceRange = formatPriceRange(settings.petKittenPriceMin, settings.petKittenPriceMax);
-const reservationFee = settings.reservationFee ? `$${settings.reservationFee.toLocaleString("en-US")}` : "[PLACEHOLDER]";
-const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment methods and additional pricing details]";
+const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER]";
 ---
 
-<BaseLayout title="Kittens & Adoption | Pampered Feline Maine Coons" description="View available Maine Coon kittens and learn about our adoption process. Limited litters from health-tested parents.">
+<BaseLayout
+  title="Kittens & Adoption | Pampered Feline Maine Coons"
+  description="Spring 2026 litter — seven Maine Coon kittens available. Silver, smoke, polydactyl, and standard colors. CFA registered, HCM echo-negative parents, European lines. Northern Virginia."
+>
 
   <!-- Page Header -->
   <ScrollReveal animation="fadeUp">
     <section class="py-16 md:py-24 bg-ivory-warm">
       <div class="max-w-3xl mx-auto px-4 text-center">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-          Available Kittens
+          Spring 2026
         </p>
         <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
           Kittens & Adoption
         </h1>
         <p class="text-charcoal-light text-lg leading-relaxed">
-          We raise limited litters with intentional pairings. Each kitten is socialized from birth and placed with care.
+          Litter arrived March 12, 2026. Nine born, eight available. CFA registered, European lines, HCM echo-negative parents.
         </p>
       </div>
     </section>
   </ScrollReveal>
 
-  <!-- Kitten Grid -->
+  <!-- Reservations Open Banner -->
+  <div class="bg-charcoal py-5 px-4">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <p class="text-bone font-heading text-lg md:text-xl font-semibold leading-snug">
+        Reservations are now open for the Spring 2026 litter.
+      </p>
+      <a
+        href="/contact"
+        class="flex-shrink-0 inline-block px-7 py-3 border border-bone text-bone text-sm font-medium tracking-widest uppercase hover:bg-bone hover:text-charcoal transition-colors"
+      >
+        Reserve Your Kitten
+      </a>
+    </div>
+  </div>
+
+  <!-- Available Kittens Grid -->
   <section class="py-16 md:py-24 bg-ivory">
     <div class="max-w-6xl mx-auto px-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <ScrollReveal animation="fadeUp">
+        <div class="text-center mb-10 md:mb-14">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4">
+            Available Now
+          </p>
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal leading-tight">
+            Spring 2026 Kittens
+          </h2>
+        </div>
+      </ScrollReveal>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {kittens.map((kitten: any, i: number) => (
-          <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+          <ScrollReveal animation="fadeUp" delay={i * 0.08}>
             <KittenCard
               name={kitten.name}
               sex={kitten.sex}
-              color={kitten.color}
-              personality={kitten.personality}
+              color={kitten.color ?? ""}
               status={kitten.status}
               image={kitten.image?.asset?.url}
+              isPolydactyl={kitten.isPolydactyl}
             />
           </ScrollReveal>
         ))}
       </div>
-      <p class="text-center text-charcoal-light/60 text-sm mt-8">
-        Kitten listings are updated as litters become available. Contact us to join our waitlist.
+      <p class="text-center text-charcoal-light/50 text-sm mt-10">
+        Photos added as kittens are weaned and individual personalities emerge. Check back weekly.
       </p>
     </div>
   </section>
+
+  <!-- About This Litter -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-4xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6 text-center">
+          The Pairing
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-12 text-center leading-tight">
+          About This Litter
+        </h2>
+
+        <!-- Sire & Dam -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14">
+          <div class="border-l-2 border-gold/40 pl-6">
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold-dark mb-2">Sire</p>
+            <h3 class="font-heading text-2xl font-semibold text-charcoal mb-1">AS11</h3>
+            <p class="text-charcoal-light">Blue Shaded Silver Male. European lines. CFA registered.</p>
+          </div>
+          <div class="border-l-2 border-gold/40 pl-6">
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold-dark mb-2">Dam</p>
+            <h3 class="font-heading text-2xl font-semibold text-charcoal mb-1">F22</h3>
+            <p class="text-charcoal-light">Black Tortie Female. Polydactyl. European lines. CFA registered.</p>
+          </div>
+        </div>
+
+        <!-- Differentiators -->
+        <div class="space-y-10">
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal mb-3">Silver Inhibitor Gene</h3>
+            <p class="text-charcoal-light leading-relaxed">
+              AS11 carries the inhibitor gene that produces silver and smoke coloring. This litter has a high probability of silver-series kittens — shaded silver, smoke, and chinchilla expressions alongside standard solids and tabbies. Silver-series Maine Coons are among the most striking in the breed.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal mb-3">Polydactyl Trait</h3>
+            <p class="text-charcoal-light leading-relaxed">
+              F22 is a verified polydactyl queen. Three kittens in this litter carry extra toes, a naturally occurring trait associated with broader, well-rounded paws. Polydactyl Maine Coons are relatively rare outside specific bloodlines and carry a premium price as a result.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal mb-3">HCM Echo Testing</h3>
+            <p class="text-charcoal-light leading-relaxed">
+              Both parents have been echocardiographed by a board-certified cardiologist and returned normal results. HCM echo is the gold standard for cardiac screening in Maine Coons. DNA testing alone does not detect all forms of the disease. We do both.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal mb-3">Genetic Testing</h3>
+            <p class="text-charcoal-light leading-relaxed">
+              Both parents completed Wisdom Panel genetic screening covering HCM, SMA, PKDef, and additional markers relevant to the breed. Results on file and available on request.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <!-- Pricing -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-4xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6 text-center">
+          Investment
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-4 text-center leading-tight">
+          Pricing
+        </h2>
+        <p class="text-charcoal-light text-center mb-10 max-w-xl mx-auto">
+          All kittens are pet-only and CFA registered. Pricing reflects color rarity and polydactyl status.
+        </p>
+
+        <!-- Pricing Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+
+          <div class="border border-charcoal/10 p-6 bg-ivory-warm">
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold-dark mb-3">Standard</p>
+            <p class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-3">$3,600</p>
+            <p class="text-charcoal-light text-sm leading-relaxed">Standard pet kittens. Solid colors, tabbies, and non-silver patterns.</p>
+          </div>
+
+          <div class="border border-charcoal/10 p-6 bg-ivory-warm">
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold-dark mb-3">Rare Color</p>
+            <p class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-3">$4,000</p>
+            <p class="text-charcoal-light text-sm leading-relaxed">Silver, smoke, and shaded patterns. Rarer color expressions with the inhibitor gene.</p>
+          </div>
+
+          <div class="border border-charcoal/10 p-6 bg-ivory-warm">
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold-dark mb-3">Polydactyl</p>
+            <p class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-3">$4,200</p>
+            <p class="text-charcoal-light text-sm leading-relaxed">Standard-color kittens with extra toes. Broader paws, rare trait, limited availability.</p>
+          </div>
+
+          <div class="border border-gold/30 p-6 bg-ivory-warm relative">
+            <span class="absolute top-4 right-4 text-[10px] tracking-[0.2em] uppercase font-medium text-gold-dark bg-gold/10 px-2 py-0.5">Most Rare</span>
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold-dark mb-3">Rare Color Polydactyl</p>
+            <p class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-3">$4,500</p>
+            <p class="text-charcoal-light text-sm leading-relaxed">Silver or smoke coloring combined with polydactyl. The rarest combination in this litter.</p>
+          </div>
+
+        </div>
+
+        <div class="border-t border-charcoal/10 pt-8 text-center space-y-2">
+          <p class="text-charcoal-light">
+            Non-refundable deposit: <span class="font-medium text-charcoal">$400</span>, applied to the purchase price at pickup.
+          </p>
+          <p class="text-charcoal-light/60 text-sm">
+            Payment methods: {paymentMethods}
+          </p>
+        </div>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- What Comes With Your Kitten -->
   <ScrollReveal animation="fadeUp">
@@ -100,7 +234,11 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment meth
           </li>
           <li class="flex items-start gap-3">
             <CheckIcon />
-            <span class="text-charcoal-light leading-relaxed">Registration papers (after proof of spay/neuter, if applicable)</span>
+            <span class="text-charcoal-light leading-relaxed">CFA registration papers</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <CheckIcon />
+            <span class="text-charcoal-light leading-relaxed">Wisdom Panel genetic test results on file</span>
           </li>
           <li class="flex items-start gap-3">
             <CheckIcon />
@@ -108,7 +246,7 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment meth
           </li>
           <li class="flex items-start gap-3">
             <CheckIcon />
-            <span class="text-charcoal-light leading-relaxed">Familiar blanket</span>
+            <span class="text-charcoal-light leading-relaxed">Familiar blanket from home</span>
           </li>
           <li class="flex items-start gap-3">
             <CheckIcon />
@@ -119,37 +257,110 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER — payment meth
     </section>
   </ScrollReveal>
 
-  <!-- Pricing -->
+  <!-- Reservation Process -->
   <ScrollReveal animation="fadeUp">
     <section class="py-16 md:py-24 bg-ivory">
-      <div class="max-w-3xl mx-auto px-4 text-center">
-        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-          Investment
+      <div class="max-w-4xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6 text-center">
+          The Process
         </p>
-        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
-          Pricing
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-12 text-center leading-tight">
+          How to Reserve a Kitten
         </h2>
-        <p class="text-charcoal-light text-lg leading-relaxed mb-4">
-          Pet kittens: <span class="font-medium text-charcoal">{priceRange}</span>
-        </p>
-        <p class="text-charcoal-light text-lg leading-relaxed mb-4">
-          Reservation fee: <span class="font-medium text-charcoal">{reservationFee}</span>
-        </p>
-        <p class="text-charcoal-light/60 text-sm">
-          {paymentMethods}
-        </p>
+
+        <div class="space-y-8">
+
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
+              1
+            </div>
+            <div class="pt-1">
+              <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Review available kittens and tiers</h3>
+              <p class="text-charcoal-light leading-relaxed">
+                Browse the kitten cards above. Each card shows color, sex, and polydactyl status. Match the kitten type to the pricing tier that applies.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
+              2
+            </div>
+            <div class="pt-1">
+              <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Submit a contact form</h3>
+              <p class="text-charcoal-light leading-relaxed">
+                Fill out the contact form with your household details, kitten preference, and any questions. We read every submission carefully.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
+              3
+            </div>
+            <div class="pt-1">
+              <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">We follow up within 48 hours</h3>
+              <p class="text-charcoal-light leading-relaxed">
+                We reach out to answer questions and confirm fit. If it is a good match, we discuss available kittens and select one together.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
+              4
+            </div>
+            <div class="pt-1">
+              <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Pay the $400 deposit</h3>
+              <p class="text-charcoal-light leading-relaxed">
+                The deposit is non-refundable and applied to your purchase price at pickup. It removes your kitten from availability and confirms the reservation.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-5">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
+              5
+            </div>
+            <div class="pt-1">
+              <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Updates, pickup, or transport</h3>
+              <p class="text-charcoal-light leading-relaxed">
+                We send regular photo and video updates as kittens grow. Kittens go home at 12 weeks with all documentation. Flight nanny and shipping options: [PLACEHOLDER — shipping policy to be confirmed].
+              </p>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   </ScrollReveal>
 
-  <!-- Adoption Steps -->
+  <!-- Dual CTAs -->
   <ScrollReveal animation="fadeUp">
-    <AdoptionSteps
-      label="The Process"
-      heading="How Adoption Works"
-      ctaHref="/contact"
-      ctaText="Start Your Application"
-    />
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-4 leading-tight">
+          Ready to get started?
+        </h2>
+        <p class="text-charcoal-light text-lg leading-relaxed mb-10">
+          Reach out through the contact page to start the process, or visit the FAQ if you have questions first.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/contact"
+            class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors"
+          >
+            Contact Us
+          </a>
+          <a
+            href="/faq"
+            class="inline-block px-8 py-3 border border-charcoal text-charcoal text-sm font-medium tracking-widest uppercase hover:bg-charcoal hover:text-ivory transition-colors"
+          >
+            Read the FAQ
+          </a>
+        </div>
+      </div>
+    </section>
   </ScrollReveal>
 
 </BaseLayout>

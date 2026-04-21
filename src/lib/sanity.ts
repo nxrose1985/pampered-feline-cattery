@@ -156,13 +156,13 @@ export async function getKittensByLitter(litterId: string): Promise<Kitten[]> {
 }
 
 const fallbackSettings: SiteSettings = {
-  petKittenPriceMin: undefined,
-  petKittenPriceMax: undefined,
-  reservationFee: 500,
+  petKittenPriceMin: 3600,
+  petKittenPriceMax: 4500,
+  reservationFee: 400,
   paymentMethods: "[PLACEHOLDER — payment methods]",
   contactEmail: "[PLACEHOLDER — email]",
   instagramHandle: "[PLACEHOLDER — instagram]",
-  availabilityStatus: "Waitlist Open",
+  availabilityStatus: "Kittens Available",
 };
 
 export async function getSettings(): Promise<SiteSettings> {
@@ -180,11 +180,12 @@ export async function getSettings(): Promise<SiteSettings> {
 
 const fallbackFaqs: Faq[] = [
   { question: "Where are you located?", answer: "We are located in Northern Virginia.", order: 1 },
-  { question: "Do you ship kittens?", answer: "[PLACEHOLDER — shipping/transport policy wording to be confirmed by Sara]", order: 2 },
-  { question: "When do kittens go home?", answer: "Kittens go home between 12 and 16 weeks of age. This allows time for proper socialization, vaccines, and development.", order: 3 },
+  { question: "Do you ship kittens?", answer: "[PLACEHOLDER — shipping/transport policy to be confirmed by Sara]", order: 2 },
+  { question: "When do kittens go home?", answer: "Kittens go home at 12 weeks of age. This allows time for proper socialization, vaccines, and development.", order: 3 },
   { question: "How are kittens socialized?", answer: "Kittens are raised in our home with daily hands-on interaction from birth. They are exposed to household sounds, people, and gentle handling throughout their first weeks.", order: 4 },
   { question: "Do you offer breeding rights?", answer: "[PLACEHOLDER — breeding rights policy to be confirmed by Sara]", order: 5 },
-  { question: "What payment methods do you accept?", answer: "[PLACEHOLDER — payment methods to be confirmed by Sara]", order: 6 },
+  { question: "What does a kitten cost?", answer: "Pricing is tiered by color rarity and polydactyl status. Standard pet kittens start at $3,600. Rare color kittens (silver, smoke, shaded) are $4,000. Polydactyl kittens are $4,200. Rare color polydactyl kittens are $4,500. A $400 non-refundable deposit secures your reservation and is applied to the purchase price.", order: 6 },
+  { question: "What payment methods do you accept?", answer: "[PLACEHOLDER — payment methods to be confirmed by Sara]", order: 7 },
 ];
 
 export async function getFaqs(): Promise<Faq[]> {
