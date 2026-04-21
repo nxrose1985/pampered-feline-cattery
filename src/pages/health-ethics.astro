@@ -1,142 +1,155 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ScrollReveal from "../components/ScrollReveal.astro";
 ---
 
 <BaseLayout title="Health & Ethics | Pampered Feline Maine Coons" description="Our commitment to genetic testing, cardiac health monitoring, and ethical breeding practices for Maine Coons.">
 
   <!-- Page Header -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Our Standards
-      </p>
-      <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
-        Health, Ethics, and Care
-      </h1>
-      <p class="text-charcoal-light text-lg leading-relaxed">
-        We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.
-      </p>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          Our Standards
+        </p>
+        <h1 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+          Health, Ethics, and Care
+        </h1>
+        <p class="text-charcoal-light text-lg leading-relaxed">
+          We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- Genetic Testing -->
-  <section class="py-16 md:py-24 bg-ivory">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="flex items-start gap-4 mb-8">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-          <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-        </div>
-        <div>
-          <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Genetic Testing</h2>
-          <p class="text-charcoal-light leading-relaxed mb-4">
-            We DNA-test our breeding cats for the conditions most relevant to Maine Coons.
-          </p>
-          <ul class="space-y-3">
-            <li class="flex items-start gap-2">
-              <span class="text-gold-dark font-bold mt-0.5">HCM</span>
-              <span class="text-charcoal-light leading-relaxed">Hypertrophic cardiomyopathy. The most common heart disease in cats. We screen for the known genetic marker.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-gold-dark font-bold mt-0.5">SMA</span>
-              <span class="text-charcoal-light leading-relaxed">Spinal muscular atrophy. A neuromuscular condition. We test to ensure no affected kittens are produced.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-gold-dark font-bold mt-0.5">PKDef</span>
-              <span class="text-charcoal-light leading-relaxed">Pyruvate kinase deficiency. An enzyme disorder that can lead to anemia. We screen all breeding cats.</span>
-            </li>
-          </ul>
-          <p class="text-charcoal-light/60 text-sm mt-4">
-            [PLACEHOLDER — Sara to verify exact health testing protocol and provide any additional details]
-          </p>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="flex items-start gap-4 mb-8">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Genetic Testing</h2>
+            <p class="text-charcoal-light leading-relaxed mb-4">
+              We DNA-test our breeding cats for the conditions most relevant to Maine Coons.
+            </p>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-2">
+                <span class="text-gold-dark font-bold mt-0.5">HCM</span>
+                <span class="text-charcoal-light leading-relaxed">Hypertrophic cardiomyopathy. The most common heart disease in cats. We screen for the known genetic marker.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-gold-dark font-bold mt-0.5">SMA</span>
+                <span class="text-charcoal-light leading-relaxed">Spinal muscular atrophy. A neuromuscular condition. We test to ensure no affected kittens are produced.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-gold-dark font-bold mt-0.5">PKDef</span>
+                <span class="text-charcoal-light leading-relaxed">Pyruvate kinase deficiency. An enzyme disorder that can lead to anemia. We screen all breeding cats.</span>
+              </li>
+            </ul>
+            <p class="text-charcoal-light/60 text-sm mt-4">
+              [PLACEHOLDER — Sara to verify exact health testing protocol and provide any additional details]
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ScrollReveal>
 
   <!-- Heart & Joint Health -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="flex items-start gap-4 mb-8">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-          <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </div>
-        <div>
-          <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Heart and Joint Health</h2>
-          <p class="text-charcoal-light leading-relaxed mb-4">
-            DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.
-          </p>
-          <p class="text-charcoal-light leading-relaxed mb-4">
-            Hearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.
-          </p>
-          <p class="text-charcoal-light leading-relaxed">
-            Hip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.
-          </p>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="flex items-start gap-4 mb-8">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Heart and Joint Health</h2>
+            <p class="text-charcoal-light leading-relaxed mb-4">
+              DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.
+            </p>
+            <p class="text-charcoal-light leading-relaxed mb-4">
+              Hearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.
+            </p>
+            <p class="text-charcoal-light leading-relaxed">
+              Hip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ScrollReveal>
 
   <!-- Daily Care -->
-  <section class="py-16 md:py-24 bg-ivory">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="flex items-start gap-4 mb-8">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-          <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-        </div>
-        <div>
-          <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Daily Care</h2>
-          <p class="text-charcoal-light leading-relaxed mb-4">
-            Our cats live indoors in a clean, enriched environment. They receive a balanced diet formulated for the nutritional needs of Maine Coons.
-          </p>
-          <p class="text-charcoal-light leading-relaxed">
-            We limit litters per queen to protect their health and ensure each kitten gets the attention it deserves. Rest periods between litters are non-negotiable.
-          </p>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="flex items-start gap-4 mb-8">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Daily Care</h2>
+            <p class="text-charcoal-light leading-relaxed mb-4">
+              Our cats live indoors in a clean, enriched environment. They receive a balanced diet formulated for the nutritional needs of Maine Coons.
+            </p>
+            <p class="text-charcoal-light leading-relaxed">
+              We limit litters per queen to protect their health and ensure each kitten gets the attention it deserves. Rest periods between litters are non-negotiable.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ScrollReveal>
 
   <!-- Ethical Practices -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="flex items-start gap-4 mb-8">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-          <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div>
-          <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Ethical Practices</h2>
-          <ul class="space-y-3">
-            <li class="text-charcoal-light leading-relaxed">We do not declaw and require adopters to agree to the same.</li>
-            <li class="text-charcoal-light leading-relaxed">Retired breeding cats are placed in carefully selected pet homes where they can live out their years in comfort.</li>
-            <li class="text-charcoal-light leading-relaxed">We work with a feline-friendly veterinarian who understands breed-specific needs.</li>
-            <li class="text-charcoal-light leading-relaxed">Every kitten is sold with a written contract that protects the cat first.</li>
-          </ul>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="flex items-start gap-4 mb-8">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Ethical Practices</h2>
+            <ul class="space-y-3">
+              <li class="text-charcoal-light leading-relaxed">We do not declaw and require adopters to agree to the same.</li>
+              <li class="text-charcoal-light leading-relaxed">Retired breeding cats are placed in carefully selected pet homes where they can live out their years in comfort.</li>
+              <li class="text-charcoal-light leading-relaxed">We work with a feline-friendly veterinarian who understands breed-specific needs.</li>
+              <li class="text-charcoal-light leading-relaxed">Every kitten is sold with a written contract that protects the cat first.</li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ScrollReveal>
 
   <!-- CTA -->
-  <section class="py-16 md:py-24 bg-ivory">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-6 leading-tight">
-        Questions About Our Standards?
-      </h2>
-      <p class="text-charcoal-light text-lg leading-relaxed mb-10">
-        We are happy to share test results, discuss our practices, or answer any questions you have about how we care for our cats.
-      </p>
-      <a href="/contact" class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors">
-        Get in Touch
-      </a>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-6 leading-tight">
+          Questions About Our Standards?
+        </h2>
+        <p class="text-charcoal-light text-lg leading-relaxed mb-10">
+          We are happy to share test results, discuss our practices, or answer any questions you have about how we care for our cats.
+        </p>
+        <a href="/contact" class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors">
+          Get in Touch
+        </a>
+      </div>
+    </section>
+  </ScrollReveal>
 
 </BaseLayout>

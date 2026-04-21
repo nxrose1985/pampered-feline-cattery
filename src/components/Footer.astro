@@ -1,5 +1,11 @@
 ---
+import { getSettings } from "../lib/sanity";
+
+const settings = await getSettings();
 const currentYear = new Date().getFullYear();
+
+const email = settings.contactEmail ?? "[PLACEHOLDER]";
+const instagram = settings.instagramHandle ? `@${settings.instagramHandle}` : "[PLACEHOLDER]";
 ---
 
 <footer class="bg-charcoal text-ivory/80">
@@ -16,10 +22,10 @@ const currentYear = new Date().getFullYear();
 
       <div class="text-center md:text-right space-y-2">
         <p class="text-sm">
-          Email: <span class="text-ivory/60">[PLACEHOLDER]</span>
+          Email: <span class="text-ivory/60">{email}</span>
         </p>
         <p class="text-sm">
-          Instagram: <span class="text-ivory/60">[PLACEHOLDER]</span>
+          Instagram: <span class="text-ivory/60">{instagram}</span>
         </p>
       </div>
     </div>

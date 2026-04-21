@@ -61,6 +61,42 @@ export const kitten = defineType({
       type: "number",
       description: "Lower numbers appear first.",
     }),
+    defineField({
+      name: "litter",
+      title: "Litter",
+      type: "string",
+      description: 'Identifier for the litter, e.g. "march-2026".',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "price",
+      title: "Price (USD)",
+      type: "number",
+      description: "Kitten price in dollars.",
+    }),
+    defineField({
+      name: "isPolydactyl",
+      title: "Polydactyl",
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
+      name: "reservationFee",
+      title: "Reservation Fee (USD)",
+      type: "number",
+      initialValue: 500,
+    }),
+    defineField({
+      name: "availableDate",
+      title: "Earliest Go-Home Date",
+      type: "date",
+    }),
+    defineField({
+      name: "breed",
+      title: "Breed",
+      type: "string",
+      description: 'e.g. "Maine Coon".',
+    }),
   ],
   orderings: [
     {

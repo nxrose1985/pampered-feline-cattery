@@ -1,166 +1,65 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
+import CurrentLitter from "../components/CurrentLitter.astro";
+import AdoptionSteps from "../components/AdoptionSteps.astro";
+import ScrollReveal from "../components/ScrollReveal.astro";
 ---
 
 <BaseLayout title="Pampered Feline Maine Coons | European-Type Maine Coon Kittens in Northern Virginia">
 
   <Hero />
 
-  <!-- Three Pillars -->
-  <section class="py-16 md:py-24 bg-ivory">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+  <CurrentLitter />
 
-        <div class="text-center px-4">
-          <div class="w-12 h-12 mx-auto mb-6 flex items-center justify-center rounded-full bg-gold/10">
-            <svg class="w-6 h-6 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-semibold mb-3 text-charcoal">Raised in Our Home</h3>
-          <p class="text-charcoal-light leading-relaxed">
-            Raised in our home with hands-on social time from day one.
-          </p>
-        </div>
-
-        <div class="text-center px-4">
-          <div class="w-12 h-12 mx-auto mb-6 flex items-center justify-center rounded-full bg-gold/10">
-            <svg class="w-6 h-6 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-semibold mb-3 text-charcoal">Health Tested</h3>
-          <p class="text-charcoal-light leading-relaxed">
-            DNA-tested parents for key Maine Coon conditions.
-          </p>
-        </div>
-
-        <div class="text-center px-4">
-          <div class="w-12 h-12 mx-auto mb-6 flex items-center justify-center rounded-full bg-gold/10">
-            <svg class="w-6 h-6 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </div>
-          <h3 class="font-heading text-xl md:text-2xl font-semibold mb-3 text-charcoal">Steady Temperaments</h3>
-          <p class="text-charcoal-light leading-relaxed">
-            Temperaments selected for confidence and stability.
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </section>
+  <!-- Gradient bridge: obsidian → ivory-warm -->
+  <div aria-hidden="true" class="h-16 md:h-20 bg-gradient-to-b from-obsidian to-ivory-warm"></div>
 
   <!-- Editorial Block -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Our Philosophy
-      </p>
-      <h2 class="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-charcoal mb-8 leading-tight">
-        A Small Program With High Standards
-      </h2>
-      <p class="text-charcoal-light text-lg leading-relaxed">
-        Pampered Feline is a home-based Maine Coon cattery in Northern Virginia. We breed selectively, with limited litters, careful pairings, and hands-on care from birth. Every kitten leaves with a health guarantee, a written contract, and a family that knows their name.
-      </p>
-    </div>
-  </section>
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+          Our Philosophy
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+          A Small Program With High Standards
+        </h2>
+        <p class="text-charcoal-light text-lg leading-relaxed mb-6">
+          Pampered Feline is a home-based Maine Coon cattery in Northern Virginia. We breed selectively, with limited litters, careful pairings, and hands-on care from birth. Every kitten leaves with a health guarantee, a written contract, and a family that knows their name.
+        </p>
+        <p class="text-charcoal-light text-lg leading-relaxed">
+          Our kittens are raised underfoot from day one, with DNA-tested parents screened for the conditions that matter in the breed, and temperaments selected for confidence and steady company.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
 
   <!-- Health & Ethics Preview -->
-  <section class="py-16 md:py-24 bg-ivory">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-        Commitment to Care
-      </p>
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
-        Health, Ethics, and Care
-      </h2>
-      <p class="text-charcoal-light text-lg leading-relaxed mb-10">
-        We DNA-test our breeding cats for HCM, SMA, and PKDef. Hearts are monitored as cats mature. We follow a transparent, written ethical standard and work with a feline-friendly veterinarian.
-      </p>
-      <a
-        href="/health-ethics"
-        class="inline-block px-8 py-3 border border-charcoal text-charcoal text-sm font-medium tracking-widest uppercase hover:bg-charcoal hover:text-ivory transition-colors"
-      >
-        Learn More
-      </a>
-    </div>
-  </section>
-
-  <!-- Adoption Process Preview -->
-  <section class="py-16 md:py-24 bg-ivory-warm">
-    <div class="max-w-4xl mx-auto px-4">
-      <div class="text-center mb-12 md:mb-16">
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4 text-center">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-          How It Works
+          Commitment to Care
         </p>
-        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal leading-tight">
-          Bringing Home a Pampered Feline Kitten
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
+          Health, Ethics, and Care
         </h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
-            1
-          </div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Application</h3>
-            <p class="text-charcoal-light leading-relaxed">
-              Fill out a short form so we can learn about your home and lifestyle.
-            </p>
-          </div>
-        </div>
-
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
-            2
-          </div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Conversation</h3>
-            <p class="text-charcoal-light leading-relaxed">
-              We follow up to answer your questions and confirm it is a good fit.
-            </p>
-          </div>
-        </div>
-
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
-            3
-          </div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Match & Reserve</h3>
-            <p class="text-charcoal-light leading-relaxed">
-              We match kittens to families. A non-refundable reservation fee holds your spot.
-            </p>
-          </div>
-        </div>
-
-        <div class="flex gap-4">
-          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-charcoal text-ivory flex items-center justify-center font-heading text-lg font-semibold">
-            4
-          </div>
-          <div>
-            <h3 class="font-heading text-xl font-semibold text-charcoal mb-2">Updates & Pickup</h3>
-            <p class="text-charcoal-light leading-relaxed">
-              We send photos and updates as kittens grow. Kittens go home between 12 and 16 weeks.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="text-center mt-12 md:mt-16">
+        <p class="text-charcoal-light text-lg leading-relaxed mb-10">
+          We DNA-test our breeding cats for HCM, SMA, and PKDef. Hearts are monitored as cats mature. We follow a transparent, written ethical standard and work with a feline-friendly veterinarian.
+        </p>
         <a
-          href="/kittens"
-          class="inline-block px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors"
+          href="/health-ethics"
+          class="inline-block px-8 py-3 border border-charcoal text-charcoal text-sm font-medium tracking-widest uppercase hover:bg-charcoal hover:text-ivory transition-colors"
         >
-          View Available Kittens
+          Learn More
         </a>
       </div>
-    </div>
-  </section>
+    </section>
+  </ScrollReveal>
+
+  <ScrollReveal animation="fadeUp">
+    <AdoptionSteps />
+  </ScrollReveal>
 
 </BaseLayout>
