@@ -159,8 +159,8 @@ const fallbackSettings: SiteSettings = {
   petKittenPriceMin: 3600,
   petKittenPriceMax: 4500,
   reservationFee: 400,
-  paymentMethods: "[PLACEHOLDER — payment methods]",
-  contactEmail: "[PLACEHOLDER — email]",
+  paymentMethods: "We accept Zelle and bank wire transfer. A $400 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.",
+  contactEmail: "pamperedfelinemainecoons@gmail.com",
   instagramHandle: "[PLACEHOLDER — instagram]",
   availabilityStatus: "Kittens Available",
 };
@@ -180,12 +180,12 @@ export async function getSettings(): Promise<SiteSettings> {
 
 const fallbackFaqs: Faq[] = [
   { question: "Where are you located?", answer: "We are located in Northern Virginia.", order: 1 },
-  { question: "Do you ship kittens?", answer: "[PLACEHOLDER — shipping/transport policy to be confirmed by Sara]", order: 2 },
+  { question: "Do you ship kittens?", answer: "We do not ship kittens as air cargo. Kittens travel with a professional flight nanny in-cabin, or can be picked up in person at our Northern Virginia location. Flight nanny fees vary by destination and are the buyer's responsibility. We serve families nationwide. Contact us to discuss transport options for your location.", order: 2 },
   { question: "When do kittens go home?", answer: "Kittens go home at 12 weeks of age. This allows time for proper socialization, vaccines, and development.", order: 3 },
   { question: "How are kittens socialized?", answer: "Kittens are raised in our home with daily hands-on interaction from birth. They are exposed to household sounds, people, and gentle handling throughout their first weeks.", order: 4 },
-  { question: "Do you offer breeding rights?", answer: "[PLACEHOLDER — breeding rights policy to be confirmed by Sara]", order: 5 },
+  { question: "Do you offer breeding rights?", answer: "All kittens are sold on a spay/neuter contract as pet-only companions unless otherwise agreed in writing prior to purchase. Breeding rights are available on a case-by-case basis to approved CFA or TICA registered catteries with documented health testing programs. Breeding rights kittens are priced separately. Contact us to discuss.", order: 5 },
   { question: "What does a kitten cost?", answer: "Pricing is tiered by color rarity and polydactyl status. Standard pet kittens start at $3,600. Rare color kittens (silver, smoke, shaded) are $4,000. Polydactyl kittens are $4,200. Rare color polydactyl kittens are $4,500. A $400 non-refundable deposit secures your reservation and is applied to the purchase price.", order: 6 },
-  { question: "What payment methods do you accept?", answer: "[PLACEHOLDER — payment methods to be confirmed by Sara]", order: 7 },
+  { question: "What payment methods do you accept?", answer: "We accept Zelle and bank wire transfer. A $400 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.", order: 7 },
 ];
 
 export async function getFaqs(): Promise<Faq[]> {
