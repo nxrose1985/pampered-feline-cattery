@@ -526,12 +526,14 @@ public/images/og-default.svg     (OG social share image placeholder)
 - Build verified — all 7 pages generate cleanly
 - Pre-launch checklist audited (see Deferred section for remaining items)
 
+### Completed Mid-Session
+- **Domain registered:** `pamperedfelinemainecoons.com` registered at GoDaddy for 3 years.
+- **Domain connected to Netlify:** Netlify DNS set up. GoDaddy nameservers changed to `dns1-4.p01.nsone.net`. DNS propagated and SSL provisioned. Site live at `https://pamperedfelinemainecoons.com`.
+- **Netlify environment variables:** Added by user (`SANITY_PROJECT_ID=k6e71wky`, `SANITY_DATASET=production`).
+- **CORS origins in Sanity:** Added by user for production domain, Netlify subdomain, and localhost.
+- **Sanity → Netlify pipeline verified:** Test cat created in Studio, confirmed fetching and rendering in local dev build.
+
 ### Deferred
-- **Domain registration:** Need to register `pamperedfelinemainecoons.com` (correct spelling) at GoDaddy, Cloudflare, Namecheap, or Porkbun
-- **Domain connection to Netlify:** Pending correct domain registration
-- **Netlify environment variables:** User reports they have been added (`SANITY_PROJECT_ID=k6e71wky`, `SANITY_DATASET=production`). Not yet verified.
-- **CORS origins in Sanity:** Low priority since Astro fetches at build time. User reported CORS origins link unclickable in Sanity dashboard — may be UI bug or trial limitation.
-- **Sanity → Netlify pipeline test:** Test cat created in Studio, need to verify it appears in local/production build.
 - **21 placeholder content items** still need Sara's input (see pre-launch audit below)
 - **Real photography:** All cat/kitten images are placeholder
 - **Google Workspace email:** Not yet set up
@@ -552,7 +554,9 @@ public/images/og-default.svg     (OG social share image placeholder)
 | Service | Account | Key Info |
 |---|---|---|
 | GitHub | nxrose1985 | Repo: `nxrose1985/pampered-feline-cattery` |
-| Netlify | Connected via GitHub | Site: `spiffy-dango-52f71b.netlify.app` |
+| Netlify | Connected via GitHub | Site: `spiffy-dango-52f71b.netlify.app`, Custom domain: `pamperedfelinemainecoons.com` |
+| Netlify DNS | Nameservers configured | `dns1-4.p01.nsone.net` (set in GoDaddy) |
+| GoDaddy | Domain registrar | `pamperedfelinemainecoons.com`, 3-year registration |
 | Sanity | nxrose1985 (via GitHub, login via Google) | Project ID: `k6e71wky`, Dataset: `production` |
 | Sanity Studio | Deployed | URL: `https://pampered-feline.sanity.studio/` |
 | Sanity webhook | Configured | Triggers Netlify rebuild on content changes |
@@ -566,4 +570,60 @@ src/layouts/BaseLayout.astro     (OG image reference changed from .svg to .png)
 public/images/og-default.png     (NEW — PNG version of OG image, 1200x630)
 public/robots.txt                (NEW — robots.txt with sitemap reference)
 package.json                     (added react, react-dom, react-is, styled-components as devDeps)
+```
+
+---
+
+## Session: 2026-04-21
+
+### Decisions
+- **Email confirmed:** `pamperedfelinemainecoons@gmail.com` is Sara's contact email. Updated everywhere the placeholder appeared.
+- **Instagram deferred:** Sara has not confirmed a handle. All Instagram fields remain `[PLACEHOLDER — instagram]`.
+- **Payment methods confirmed:** Zelle and bank wire transfer. $400 non-refundable deposit due on signing the purchase agreement. Balance due one week before pickup.
+- **Shipping policy confirmed:** No air cargo. Flight nanny in-cabin only, or in-person pickup in Northern Virginia. Flight nanny fees are the buyer's responsibility. Nationwide service.
+- **Breeding rights policy confirmed:** All kittens sold on spay/neuter contract as default. Breeding rights available case-by-case to approved CFA or TICA registered catteries with documented health testing programs. Priced separately.
+- **Health testing protocol confirmed:** Echo by board-certified cardiologist — annually for males, biennially for females. Full Wisdom Panel covering 50 conditions. Both parents' results documented and provided at pickup. Old placeholder paragraph replaced with approved copy.
+- **Cat profiles confirmed:** Temperament and health text filled in for Aedion, Rowan, and Feyra. Lilith removed from the fallback array — she is spayed and no longer in the breeding program.
+- **Cat schema verified complete:** `name`, `role`, `color`, `traits` (temperament), `health`, `image` (hotspot enabled), `order`. No schema changes needed.
+- **Sanity Studio entry deferred to Sara:** Step-by-step paste-ready instructions provided for entering the three cats with real photos. Sara must do this manually.
+- **Webhook confirmed active:** Sanity → Netlify webhook was configured in the March 2026 session. Verification steps provided (manage.sanity.io → project k6e71wky → API → Webhooks).
+
+### Conventions
+- **Fallback data is now real copy, not placeholders.** The fallback arrays in `sanity.ts` and `our-cats.astro` now contain approved content and serve as an accurate backstop if Sanity is unreachable. Future content changes should go through Sanity Studio first; update fallbacks only if the content is finalized and permanent.
+- **Sanity Studio display order:** Aedion = 1, Rowan = 2, Feyra = 3. Set the Display Order field when entering each cat in Studio so ordering is deterministic.
+
+### Deferred
+- **Sanity Studio cat entry:** Sara needs to log into pampered-feline.sanity.studio, create three Cat documents (Aedion, Rowan, Feyra), upload real photos, and publish. Once published, the Our Cats page pulls live data and fallback becomes unreachable backstop only.
+- **Instagram handle:** Still TBD. Update `fallbackSettings.instagramHandle` in `src/lib/sanity.ts` and the Sanity siteSettings document once confirmed.
+- **Google Workspace email:** Not yet set up for Sara.
+- **Plausible analytics:** Not yet installed.
+- **Mobile testing on real device:** Not yet done.
+- **Real photography:** Cat and kitten images are still placeholder (gray boxes). All three cat entries in Studio require real photos before the Our Cats page looks production-ready.
+
+### Pre-Launch Content Audit (updated)
+Items resolved this session are marked done. Remaining items still need Sara's input.
+
+| Category | Status | Details |
+|---|---|---|
+| Cat profiles — Aedion, Rowan, Feyra | Done (fallback filled, Studio entry pending) | Temperament + health copy finalized |
+| Cat profiles — Lilith | Done | Removed from program; removed from codebase |
+| Payment methods | Done | Zelle + wire, $400 deposit, balance 1 week before pickup |
+| Shipping policy | Done | Flight nanny in-cabin, no air cargo, nationwide |
+| Breeding rights | Done | Spay/neuter default; breeding rights case-by-case |
+| Health testing protocol | Done | Echo cadence + Wisdom Panel paragraph finalized |
+| Contact email | Done | pamperedfelinemainecoons@gmail.com |
+| Kitten listings | Pending | Names, sexes, colors, personalities (manage via Sanity Studio) |
+| Instagram handle | Pending | Sara to confirm; update sanity.ts fallback + Studio siteSettings |
+| Google Workspace email | Pending | Separate from Gmail; $6/month via Google Workspace |
+| Plausible analytics | Pending | Not yet installed |
+| Real photography | Pending | Needed for all cat and kitten cards |
+| Mobile testing on real device | Pending | Responsive breakpoints built but not tested on phone |
+
+### Files Changed This Session (PR #3 — merged)
+```
+src/lib/sanity.ts                (fallbackSettings: email + paymentMethods; FAQ q2, q5, q7 answers)
+src/pages/health-ethics.astro   (health protocol placeholder replaced with approved paragraph)
+src/pages/kittens.astro         (step 5 shipping text updated)
+src/pages/our-cats.astro        (Aedion, Rowan, Feyra fallback filled in; Lilith removed)
+CLAUDE.md                       (session log appended)
 ```
