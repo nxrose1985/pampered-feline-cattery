@@ -627,3 +627,26 @@ src/pages/kittens.astro         (step 5 shipping text updated)
 src/pages/our-cats.astro        (Aedion, Rowan, Feyra fallback filled in; Lilith removed)
 CLAUDE.md                       (session log appended)
 ```
+
+---
+
+## Session: 2026-04-22 (hotfix — Sanity Studio schema missing)
+
+### Root Cause
+The `personalityAssessment` field did not appear in Sanity Studio after the April 22 session because the Studio was deployed **before** `git pull` was run on the local main branch. The PR #4 squash-merge landed on `origin/main` but the local working copy was still at `c210078` (the pre-PR commit). Running `npx sanity deploy` in the previous session pushed the old schema, not the new one.
+
+### Fix
+1. `git pull origin main` — fast-forwarded local main to `4f5b477` (PR #4 squash merge)
+2. `npx sanity build` — Studio compiled cleanly in ~30s with the `personalityAssessment` object present
+3. `npx sanity deploy` — deployed to `https://pampered-feline.sanity.studio/`
+
+No code was changed. The schema was already correct on `origin/main`.
+
+### Conventions (updated)
+- **Always `git pull` before `npx sanity deploy`.** The local repo may lag behind `origin/main` if work was done in a worktree and merged via PR. The worktree is cleaned up after merge; the origin repo is the source of truth for deploys.
+
+### Deferred
+- Same as previous session: Instagram handle, Google Workspace email, Plausible analytics, real photography, mobile testing on device, entering kitten records in Studio.
+
+### Files Changed This Session
+None. Fix was `git pull` + `npx sanity deploy` only.
