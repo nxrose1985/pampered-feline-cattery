@@ -627,3 +627,41 @@ src/pages/kittens.astro         (step 5 shipping text updated)
 src/pages/our-cats.astro        (Aedion, Rowan, Feyra fallback filled in; Lilith removed)
 CLAUDE.md                       (session log appended)
 ```
+
+---
+
+## Session: 2026-04-22
+
+### Decisions
+- **personalityAssessment schema confirmed:** 10-field object added directly to the Sanity `kitten` document type. No separate document type needed. Fields: assessmentDate, confidenceLevel (1–10 with validation), energyLevel (Low/Medium/High), approachesHumans, lapCat, toyDrive (max 200 chars), hotDogTest, goodWithKids, goodWithDogs, personalitySummary (max 500 chars).
+- **Confidence level displayed as dots:** 10 filled/unfilled dots (gold-filled up to the score), not a raw number. More legible and on-brand than a fraction. The numeric score is shown alongside as secondary text.
+- **personalitySummary takes precedence over legacy personality field:** When a `personalityAssessment.personalitySummary` exists on a kitten, the old `personality` text is suppressed. Both fields coexist safely in the schema and data.
+- **Contract page uses accordion pattern:** Matches the FAQ page exactly — `<details>` elements with CSS icon rotation. 8 sections total. No new design patterns introduced.
+- **FAQ fallback extended to 10 entries:** Three new entries appended to `fallbackFaqs` in `sanity.ts`. FAQ 8 covers pricing rationale, FAQ 9 covers what's included, FAQ 10 covers the contract. These entries should also be added to Sanity Studio FAQ documents for consistency.
+- **Sanity Studio kitten schema deployed:** The `personalityAssessment` fields require a schema push to Sanity Studio before Sara can use them. Run `npx sanity deploy` from the project root after merging.
+
+### Conventions
+- **personalityAssessment is optional at every field level.** The section in KittenCard renders only when the object exists and has at least one of: personalitySummary, confidenceLevel, or energyLevel. All trait fields inside are individually conditional.
+- **Contract page slug is `/contract`.** Added to Nav between FAQ and Contact.
+
+### Deferred
+- **Sanity Studio schema push:** Run `npx sanity deploy` so the `personalityAssessment` fields appear in the Studio kitten editor.
+- **FAQ Studio entries:** Add FAQ 8, 9, 10 as documents in Sanity Studio so they appear in Studio-managed FAQ order, not only fallback.
+- **Kitten listings with personality data:** Sara needs to enter actual kitten records in Studio (names, colors, photos, personalityAssessment) for the assessment display to be exercised on the live site.
+- **Instagram handle:** Still TBD.
+- **Google Workspace email:** Not yet set up for Sara.
+- **Plausible analytics:** Not yet installed.
+- **Real photography:** Still placeholder for all cats and kittens.
+- **Mobile testing on real device:** Not yet done.
+
+### Files Changed This Session (PR #4 — merged)
+```
+sanity/schemas/kitten.ts         (personalityAssessment object with 10 fields added)
+src/lib/sanity.ts                (PersonalityAssessment type added; Kitten type extended; kittenProjection updated; 3 new fallbackFaqs entries)
+src/components/KittenCard.astro  (personalityAssessment prop + display: dot confidence bar, trait grid, assessed-at date)
+src/components/Nav.astro         (Contract link added between FAQ and Contact)
+src/components/CurrentLitter.astro (personalityAssessment prop passed through to KittenCard)
+src/pages/kittens.astro          (personality + personalityAssessment passed through to KittenCard)
+src/pages/contract.astro         (NEW — /contract page with 8-section accordion and footer CTA)
+CLAUDE.md                        (session log appended)
+```
