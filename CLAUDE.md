@@ -650,3 +650,44 @@ No code was changed. The schema was already correct on `origin/main`.
 
 ### Files Changed This Session
 None. Fix was `git pull` + `npx sanity deploy` only.
+
+---
+
+## Session: 2026-04-22 (PR #5 — SEO optimization, kittens hero redesign, content fixes)
+
+### Decisions
+- **Kittens hero redesigned:** Replaced light `bg-ivory-warm` hero + separate dark charcoal banner with a single dark obsidian hero section matching the homepage style. Includes film grain texture, gradient bridge to ivory below, integrated "Reservations are now open" line, and "Reserve Your Kitten" CTA.
+- **Litter size copy removed:** "Nine born, eight available" removed from kittens page hero. New subtitle: "Seven kittens available. CFA registered, European lines, HCM echo-negative parents. Ready to go home June through July."
+- **Kitten card prices added:** All seven fallback kitten cards now show prices ($4,000 standard silver, $4,500 rare color polydactyl, $4,200 polydactyl, $3,600 standard). Price prop passed to KittenCard component.
+- **Microchip updated:** "Microchip" changed to "Microchip (if applicable)" in the What Comes With Your Kitten list.
+- **Instagram placeholder removed:** Footer and contact page no longer show Instagram line when handle is unconfirmed. The `instagram` variable removed from Footer.astro and contact.astro. Only email and location shown.
+- **Page titles updated:** All 7 pages now have keyword-rich SEO titles targeting Maine Coon + Northern Virginia + CFA registered buyer-intent queries.
+- **Meta descriptions updated:** All 7 pages have new targeted meta descriptions aligned with SEO title themes.
+- **og:site_name added:** BaseLayout now includes `<meta property="og:site_name" content="Pampered Feline Maine Coons" />`.
+- **LocalBusiness JSON-LD:** Added to BaseLayout — appears on every page. Includes name, description, URL, email, address (VA, US), price range ($3,600–$4,500).
+- **FAQPage JSON-LD:** Added to faq.astro. Serialized dynamically from the Sanity/fallback FAQ array using `set:html`. All 10 questions and answers included.
+- **Sitemap and canonical URLs confirmed already present:** `@astrojs/sitemap` configured in astro.config.mjs with site URL; canonical link in BaseLayout; robots.txt in public/. No changes needed.
+- **Navigation confirmed complete:** All 7 nav items including Contract already present in Nav.astro. No changes needed.
+- **Our Cats page confirmed correct:** Aedion, Rowan, Feyra fallback data already filled from the April 21 session. Lilith already removed. No changes needed.
+- **Build verification:** `astro build` passes cleanly in worktree after `npm install`. All 8 pages generated. Sitemap generated at dist/sitemap-index.xml.
+
+### Deferred
+- **Instagram handle:** Still TBD. When confirmed, add `instagramHandle` to Sanity siteSettings document AND update footer/contact to render it again (or add conditionally).
+- **Sanity Studio kitten entry:** Sara still needs to enter kitten records in Studio. Fallback cards show correct data and prices.
+- **Real photography:** Cat and kitten images still placeholder.
+- **Google Workspace email:** Not yet set up.
+- **Plausible analytics:** Not yet installed.
+- **Mobile testing on real device:** Not yet done.
+
+### Files Changed This Session (PR #5 — merged)
+```
+src/layouts/BaseLayout.astro     (og:site_name added; LocalBusiness JSON-LD added)
+src/components/Footer.astro      (instagram variable and line removed)
+src/pages/index.astro            (title + description updated for SEO)
+src/pages/our-cats.astro         (title + description updated for SEO)
+src/pages/kittens.astro          (hero redesigned dark; prices on fallback kittens; price prop passed to KittenCard; Microchip -> Microchip (if applicable); title + description updated)
+src/pages/health-ethics.astro    (title + description updated for SEO)
+src/pages/faq.astro              (title + description updated; FAQPage JSON-LD added)
+src/pages/contract.astro         (title + description updated for SEO)
+src/pages/contact.astro          (instagram variable and line removed; title + description updated)
+```
