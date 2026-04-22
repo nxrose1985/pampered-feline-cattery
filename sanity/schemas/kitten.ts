@@ -97,6 +97,98 @@ export const kitten = defineType({
       type: "string",
       description: 'e.g. "Maine Coon".',
     }),
+    defineField({
+      name: "personalityAssessment",
+      title: "Personality Assessment",
+      type: "object",
+      fields: [
+        defineField({
+          name: "assessmentDate",
+          title: "Assessment Date",
+          type: "date",
+        }),
+        defineField({
+          name: "confidenceLevel",
+          title: "Confidence Level (1-10)",
+          type: "number",
+          description: "1 = hides under furniture, 10 = owns every room",
+          validation: (rule) => rule.min(1).max(10),
+        }),
+        defineField({
+          name: "energyLevel",
+          title: "Energy Level",
+          type: "string",
+          options: {
+            list: ["Low", "Medium", "High"],
+          },
+        }),
+        defineField({
+          name: "approachesHumans",
+          title: "Approaches Humans",
+          type: "string",
+          options: {
+            list: [
+              "Yes, immediately",
+              "Yes, after a moment",
+              "Cautiously",
+              "Prefers to observe",
+            ],
+          },
+        }),
+        defineField({
+          name: "lapCat",
+          title: "Lap Cat",
+          type: "string",
+          options: {
+            list: [
+              "Yes, settles right in",
+              "Sometimes, on their terms",
+              "Prefers to be nearby but not held",
+            ],
+          },
+        }),
+        defineField({
+          name: "toyDrive",
+          title: "Toy Drive",
+          type: "string",
+          description: "What kinds of play does this kitten enjoy? Max 200 characters.",
+          validation: (rule) => rule.max(200),
+        }),
+        defineField({
+          name: "hotDogTest",
+          title: "Hot Dog Test",
+          type: "string",
+          description: "Food motivation assessment",
+          options: {
+            list: ["Passed", "Interested but polite", "Not food motivated"],
+          },
+        }),
+        defineField({
+          name: "goodWithKids",
+          title: "Good With Kids",
+          type: "string",
+          options: {
+            list: ["Yes, loves them", "Yes, tolerant", "Not yet tested"],
+          },
+        }),
+        defineField({
+          name: "goodWithDogs",
+          title: "Good With Dogs",
+          type: "string",
+          options: {
+            list: ["Yes, confident", "Curious but cautious", "Not yet tested"],
+          },
+        }),
+        defineField({
+          name: "personalitySummary",
+          title: "Personality Summary",
+          type: "text",
+          description:
+            "Buyer-facing paragraph. Same voice as breeding cat profiles. Max 500 characters.",
+          validation: (rule) => rule.max(500),
+        }),
+      ],
+    }),
   ],
   orderings: [
     {
