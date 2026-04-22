@@ -35,6 +35,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://pampered
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(ogImage, Astro.site || "https://pamperedfelinemainecoons.com").href} />
+    <meta property="og:site_name" content="Pampered Feline Maine Coons" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -43,6 +44,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://pampered
     <meta name="twitter:image" content={new URL(ogImage, Astro.site || "https://pamperedfelinemainecoons.com").href} />
 
     <title>{title}</title>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Pampered Feline Maine Coons",
+        "description": "CFA-registered Maine Coon cattery in Northern Virginia specializing in European-line kittens with cardiac ultrasound and genetic health testing.",
+        "url": "https://pamperedfelinemainecoons.com",
+        "email": "pamperedfelinemainecoons@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "VA",
+          "addressCountry": "US"
+        },
+        "priceRange": "$3,600-$4,500"
+      }
+    </script>
   </head>
   <body class="min-h-screen flex flex-col">
     <Nav />
