@@ -4,9 +4,22 @@ import ScrollReveal from "../components/ScrollReveal.astro";
 import { getFaqs } from "../lib/sanity";
 
 const faqs = await getFaqs();
+
+const faqSchemaJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+});
 ---
 
-<BaseLayout title="FAQ | Pampered Feline Maine Coons" description="Frequently asked questions about our Maine Coon kittens, adoption process, and cattery practices.">
+<BaseLayout title="Maine Coon Kitten FAQ | Pricing, Health, Process | Pampered Feline" description="Answers to common questions about Maine Coon kitten pricing, health testing, deposits, shipping, and what comes with your Pampered Feline kitten.">
 
   <!-- Page Header -->
   <ScrollReveal animation="fadeUp">
@@ -63,5 +76,7 @@ const faqs = await getFaqs();
       </div>
     </section>
   </ScrollReveal>
+
+  <script type="application/ld+json" set:html={faqSchemaJson} />
 
 </BaseLayout>

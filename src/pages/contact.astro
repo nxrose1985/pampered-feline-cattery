@@ -5,10 +5,9 @@ import { getSettings } from "../lib/sanity";
 
 const settings = await getSettings();
 const email = settings.contactEmail ?? "[PLACEHOLDER]";
-const instagram = settings.instagramHandle ? `@${settings.instagramHandle}` : "[PLACEHOLDER]";
 ---
 
-<BaseLayout title="Contact | Pampered Feline Maine Coons" description="Get in touch with Pampered Feline Maine Coons. Fill out our contact form to inquire about available kittens or ask questions.">
+<BaseLayout title="Contact Us | Maine Coon Kittens Northern Virginia | Pampered Feline" description="Contact Pampered Feline Maine Coons in Northern Virginia. Inquire about available Maine Coon kittens, pricing, and reservations.">
 
   <!-- Page Header -->
   <section class="py-16 md:py-24 bg-ivory-warm">
@@ -41,9 +40,6 @@ const instagram = settings.instagramHandle ? `@${settings.instagramHandle}` : "[
       <div class="space-y-3">
         <p class="text-charcoal-light">
           Email: <span class="text-charcoal font-medium">{email}</span>
-        </p>
-        <p class="text-charcoal-light">
-          Instagram: <span class="text-charcoal font-medium">{instagram}</span>
         </p>
         <p class="text-charcoal-light text-sm mt-6">
           Located in Northern Virginia
