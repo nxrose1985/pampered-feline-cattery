@@ -7,15 +7,15 @@ import { getKittens, getSettings } from "../lib/sanity";
 
 const [sanityKittens, settings] = await Promise.all([getKittens(), getSettings()]);
 
-// Spring 2026 litter — placeholder cards until Sanity content is live
+// Spring 2026 litter — finalized slate
 const fallbackKittens = [
-  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 4000 },
-  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 4000 },
-  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4500 },
-  { name: "Blue Silver Tabby",   sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4200 },
-  { name: "Red Tabby",           sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4200 },
-  { name: "Black Tortie",        sex: "Female", color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 3600 },
-  { name: "Blue Tortie",         sex: "Female", color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 3600 },
+  { name: "Helion",   sex: "Male",   color: "Cream Shaded Silver", status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 4000 },
+  { name: "Tarquin",  sex: "Male",   color: "Cream Shaded Silver", status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 4000 },
+  { name: "Kallias",  sex: "Male",   color: "Cream Shaded Silver", status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4500 },
+  { name: "Azriel",   sex: "Male",   color: "Blue Silver Tabby",   status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4200 },
+  { name: "Lucien",   sex: "Male",   color: "Red Tabby",           status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4200 },
+  { name: "Morrigan", sex: "Female", color: "Blue Tortie",         status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 3600 },
+  { name: "Amren",    sex: "Female", color: "Blue Tortie",         status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 3600 },
 ];
 
 const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
