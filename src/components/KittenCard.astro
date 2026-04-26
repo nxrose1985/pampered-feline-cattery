@@ -19,6 +19,7 @@ interface Props {
   personality?: string;
   status: "Available" | "Reserved" | "Under Evaluation";
   image?: string;
+  gallery?: Array<{ asset: { url: string } }>;
   price?: number;
   isPolydactyl?: boolean;
   availableDate?: string;
@@ -33,12 +34,16 @@ const {
   personality,
   status,
   image,
+  gallery,
   price,
   isPolydactyl,
   availableDate,
   variant = "light",
   personalityAssessment,
 } = Astro.props;
+
+const galleryUrls = (gallery ?? []).map((g) => g.asset.url).filter(Boolean);
+const allImages = image ? [image, ...galleryUrls] : galleryUrls;
 
 const pa = personalityAssessment;
 const hasAssessment = pa && (pa.personalitySummary || pa.confidenceLevel || pa.energyLevel);
@@ -88,7 +93,14 @@ const dateLabel = formatDate(availableDate);
 ---
 
 <div class={`rounded-sm overflow-hidden ${isDark ? "bg-bone/[0.04] border border-bone/10" : "bg-ivory-warm"}`}>
-  <div class={`relative aspect-[4/5] flex items-center justify-center ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"}`}>
+  <div
+    class={`relative aspect-[4/5] flex items-center justify-center ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"} ${allImages.length > 0 ? "cursor-pointer" : ""}`}
+    {...allImages.length > 0 ? {
+      "data-lightbox-trigger": "",
+      "data-lightbox-images": JSON.stringify(allImages),
+      "data-lightbox-name": name,
+    } : {}}
+  >
     {image ? (
       <img src={image} alt={`${name}, ${color} Maine Coon kitten`} class="w-full h-full object-cover" />
     ) : (
@@ -110,6 +122,17 @@ const dateLabel = formatDate(availableDate);
       {status}
     </span>
   </div>
+
+  {galleryUrls.length > 0 && image && (
+    <button
+      class={`w-full text-center py-2 text-xs tracking-widest uppercase cursor-pointer border-t ${isDark ? "border-bone/10 text-gold hover:text-gold/70" : "border-charcoal/10 text-gold-dark hover:text-gold-dark/70"} transition-colors`}
+      data-lightbox-trigger=""
+      data-lightbox-images={JSON.stringify(allImages)}
+      data-lightbox-name={name}
+    >
+      View {allImages.length} photos
+    </button>
+  )}
 
   <div class="p-6">
     <h3 class={`font-heading text-2xl font-semibold mb-1 ${isDark ? "text-bone" : "text-charcoal"}`}>{name}</h3>
