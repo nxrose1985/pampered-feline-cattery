@@ -899,3 +899,44 @@ src/components/KittenCard.astro     (linkTo prop: onclick + cursor-pointer on ro
 src/components/CurrentLitter.astro  (linkTo="/kittens" passed to KittenCard)
 CLAUDE.md                           (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #17 — consolidate kittens onto homepage, remove /kittens page)
+
+### Decisions
+- **`/kittens` page deleted:** All kitten content consolidated onto the homepage. `src/pages/kittens.astro` removed. Sitemap automatically drops the route since `@astrojs/sitemap` reflects the live page files.
+- **All 8 kittens now shown in `CurrentLitter`:** Removed the `.filter(k.status === "Available")` guard. Elain (Reserved) is sorted first as a social proof / demand signal; the 7 available kittens follow in their existing display order.
+- **Sort logic added:** `sortKittens()` helper in `CurrentLitter.astro` puts Reserved kittens first, then sorts Available by `order` ascending. Works for both Sanity data and fallback.
+- **Lightbox ported to `CurrentLitter.astro`:** Full lightbox HTML (`#kitten-lightbox`) and JS (open/close/nav/swipe/keyboard) moved from `kittens.astro` into the component. Gallery carousel in `KittenCard` already emits `data-lightbox-trigger` attributes; the lightbox script in `CurrentLitter` registers listeners on those elements.
+- **`linkTo` prop removed from homepage cards:** Cards no longer navigate to `/kittens`. `linkTo` is not passed from `CurrentLitter`, so `KittenCard` renders the Inquire button for Available kittens as expected.
+- **Gallery prop now passed:** `CurrentLitter` passes `gallery={kitten.gallery}` to `KittenCard` — this was previously only in `kittens.astro`. Carousel and lightbox now work on the homepage for kittens with gallery photos.
+- **4-column grid on xl screens:** Grid updated to `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4` to match the former kittens page layout for 8 cards.
+- **Nav `KITTENS` link changed to `/#kittens`:** From any page, clicking KITTENS navigates to the homepage and scrolls to the `id="kittens"` section on `CurrentLitter`.
+- **`AdoptionSteps` CTA default updated to `/#kittens`:** Was `/kittens`. Existing callers that override `ctaHref` are unaffected.
+- **Homepage meta description updated:** Now includes kitten availability language and prices to target buyer-intent queries directly from the homepage.
+- **`public/_redirects` created:** `/kittens` and `/kittens/` both 301 to `/#kittens`. Netlify processes this file automatically; no `netlify.toml` changes needed.
+- **Build verified:** 7 pages generated cleanly. Sitemap generated. No TypeScript errors.
+
+### Conventions
+- **`id="kittens"` on `CurrentLitter` section:** The anchor target. Nav and any internal links use `/#kittens` to reach it.
+- **`sortKittens()` pattern:** Sort Reserved first, then by `order`. Add other statuses before "Available" if new statuses emerge.
+- **Lightbox lives in `CurrentLitter.astro`:** Co-located with the kitten grid. If `KittenCard` is ever used outside `CurrentLitter`, the calling context needs to provide its own lightbox.
+
+### Deferred
+- **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root (carry-forward from PR #11). Sara cannot see the gallery upload field in Studio until this is done.
+- **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` to populate gallery arrays in Sanity (carry-forward from PR #11).
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carousel, lightbox, and 8-card grid should be tested on an actual phone.
+
+### Files Changed This Session (PR #17 — merged)
+```
+src/components/CurrentLitter.astro  (rewritten: all 8 kittens, Elain first, sortKittens(), lightbox HTML+JS, gallery prop, 4-col grid, id="kittens", no linkTo)
+src/components/Nav.astro            (/kittens → /#kittens)
+src/components/AdoptionSteps.astro  (ctaHref default: /kittens → /#kittens)
+src/pages/index.astro               (meta description updated with kitten availability language)
+src/pages/kittens.astro             (DELETED)
+public/_redirects                   (NEW — /kittens and /kittens/ → /#kittens 301)
+CLAUDE.md                           (session log appended)
+```
