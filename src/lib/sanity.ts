@@ -65,6 +65,7 @@ export interface Kitten {
   availableDate?: string;
   breed?: string;
   personalityAssessment?: PersonalityAssessment;
+  gallery?: Array<{ asset: { url: string } }>;
 }
 
 export interface SiteSettings {
@@ -109,7 +110,8 @@ const kittenProjection = `{
   reservationFee,
   availableDate,
   breed,
-  personalityAssessment
+  personalityAssessment,
+  "gallery": gallery[].asset->{ url }
 }`;
 
 const kittenQuery = `*[_type == "kitten"] | order(order asc) ${kittenProjection}`;
