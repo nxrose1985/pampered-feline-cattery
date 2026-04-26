@@ -714,3 +714,40 @@ src/pages/kittens.astro          (fallbackKittens: names added, colors corrected
 src/components/CurrentLitter.astro (fallbackKittens: updated to Kallias / Azriel / Morrigan with real data)
 CLAUDE.md                        (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #8 — Sanity kitten upload, live data wiring, OG image)
+
+### Decisions
+- **All 8 kitten photos uploaded to Sanity:** Hero photos for Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren, and Elain uploaded as Sanity image assets. Eight published kitten documents created with correct field mapping.
+- **Elain added as 8th kitten:** Blue Shaded Silver female, status Reserved, no price/reservationFee. Order 8. Not previously in the fallback array.
+- **Litter ID corrected to `march-2026`:** Previous fallback used `spring-2026`. Correct identifier is `march-2026` matching the `CurrentLitter` component default and the upload script.
+- **Kittens page wired to Sanity:** `kittens.astro` already imported `getKittens()` — the fallback was updated to the full 8-kitten slate with real names, colors, `reservationFee`, `availableDate`, and `order` fields. Sanity data takes precedence when available.
+- **CurrentLitter updated to filter Available + show first 3:** Component now filters kittens by `status === "Available"` and slices to 3 before rendering. Fallback updated to Helion, Tarquin, Kallias (first 3 available by display order).
+- **OG image replaced:** Created `public/images/og-image.jpg` (1200x630 JPEG, 90% quality) by center-cropping `Kallias_HERO.jpg` (2048x2048 source) with `sharp`. `BaseLayout.astro` default `ogImage` prop updated from `/images/og-default.png` to `/images/og-image.jpg`.
+- **Upload script written:** `scripts/upload-kittens.mjs` handles future re-uploads. Searches for hero images in the worktree and the main project root (3 levels up). Requires `SANITY_WRITE_TOKEN` env var. Falls back to Sanity CLI auth token stored at `~/.config/sanity/config.json`.
+- **Sanity auth token location confirmed:** `C:\Users\nxros\.config\sanity\config.json` contains the `authToken` used by the Sanity CLI. No separate write token needed as long as the CLI session is active.
+- **Dev server required `npm install` in worktree:** Worktrees have independent `node_modules`. Must run `npm install` in each new worktree before preview_start works.
+
+### Conventions
+- **Upload script path fallback:** `scripts/upload-kittens.mjs` searches `public/images/kittens` in both the worktree root and the main project root (`../../../` from worktree = `pampered-feline-cattery/`). Set `IMAGES_DIR` env var to override.
+- **Sanity document IDs for kittens:** Follows pattern `kitten-{name.toLowerCase()}` (e.g. `kitten-helion`). Used for `createOrReplace` to allow safe re-runs.
+- **CurrentLitter always shows Available kittens only:** The `filter(status === "Available").slice(0, 3)` pattern ensures reserved kittens never appear in the homepage preview regardless of order.
+
+### Deferred
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos entered in Studio. Our Cats page falls back to hardcoded copy.
+- **Instagram handle:** Still TBD. Update `fallbackSettings.instagramHandle` in `src/lib/sanity.ts` and the Sanity siteSettings document once confirmed.
+- **Google Workspace email:** Not yet set up.
+- **Plausible analytics:** Not yet installed.
+- **Mobile testing on real device:** Not yet done.
+
+### Files Changed This Session (PR #8 — merged)
+```
+scripts/upload-kittens.mjs       (NEW — uploads hero photos + creates kitten documents in Sanity)
+public/images/og-image.jpg       (NEW — 1200x630 crop of Kallias_HERO.jpg for social OG image)
+src/layouts/BaseLayout.astro     (default ogImage changed from og-default.png to og-image.jpg)
+src/pages/kittens.astro          (fallbackKittens: full 8-kitten slate with Elain, march-2026 litter ID)
+src/components/CurrentLitter.astro (fallbackKittens: Helion/Tarquin/Kallias; filters Available + slices to 3)
+CLAUDE.md                        (session log appended)
+```

@@ -7,15 +7,16 @@ import { getKittens, getSettings } from "../lib/sanity";
 
 const [sanityKittens, settings] = await Promise.all([getKittens(), getSettings()]);
 
-// Spring 2026 litter — placeholder cards until Sanity content is live
+// Spring 2026 litter — accurate fallback until Sanity content is live
 const fallbackKittens = [
-  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 4000 },
-  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 4000 },
-  { name: "Cream Shaded Silver", sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4500 },
-  { name: "Blue Silver Tabby",   sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4200 },
-  { name: "Red Tabby",           sex: "Male",   color: "",  status: "Available" as const, isPolydactyl: true,  litter: "spring-2026", price: 4200 },
-  { name: "Black Tortie",        sex: "Female", color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 3600 },
-  { name: "Blue Tortie",         sex: "Female", color: "",  status: "Available" as const, isPolydactyl: false, litter: "spring-2026", price: 3600 },
+  { name: "Helion",   color: "Cream Shaded Silver", sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1 },
+  { name: "Tarquin",  color: "Cream Shaded Silver", sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2 },
+  { name: "Kallias",  color: "Cream Shaded Silver", sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: "march-2026", price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3 },
+  { name: "Azriel",   color: "Blue Silver Tabby",   sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 4 },
+  { name: "Lucien",   color: "Red Tabby",           sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 5 },
+  { name: "Morrigan", color: "Blue Tortie",         sex: "Female", status: "Available" as const, isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 400, availableDate: "2026-06-04", order: 6 },
+  { name: "Amren",    color: "Blue Tortie",         sex: "Female", status: "Available" as const, isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 400, availableDate: "2026-06-04", order: 7 },
+  { name: "Elain",    color: "Blue Shaded Silver",  sex: "Female", status: "Reserved"  as const, isPolydactyl: false, litter: "march-2026", price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8 },
 ];
 
 const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
