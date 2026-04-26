@@ -13,48 +13,15 @@ const { litterId = "march-2026" } = Astro.props;
 const sanityKittens = await getKittensByLitter(litterId);
 
 const fallbackKittens = [
-  {
-    name: "Kallias",
-    sex: "Male",
-    color: "Cream Shaded Silver",
-    personality: "",
-    status: "Available" as const,
-    litter: litterId,
-    price: 4500,
-    isPolydactyl: true,
-    reservationFee: 400,
-    availableDate: "2026-06-04",
-    breed: "Maine Coon",
-  },
-  {
-    name: "Azriel",
-    sex: "Male",
-    color: "Blue Silver Tabby",
-    personality: "",
-    status: "Available" as const,
-    litter: litterId,
-    price: 4200,
-    isPolydactyl: true,
-    reservationFee: 400,
-    availableDate: "2026-06-18",
-    breed: "Maine Coon",
-  },
-  {
-    name: "Morrigan",
-    sex: "Female",
-    color: "Blue Tortie",
-    personality: "",
-    status: "Available" as const,
-    litter: litterId,
-    price: 3600,
-    isPolydactyl: false,
-    reservationFee: 400,
-    availableDate: "2026-07-08",
-    breed: "Maine Coon",
-  },
+  { name: "Helion",  color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 1 },
+  { name: "Tarquin", color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 2 },
+  { name: "Kallias", color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 3 },
 ];
 
-const kittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
+const allKittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
+const kittens = allKittens
+  .filter((k: any) => k.status === "Available")
+  .slice(0, 3);
 ---
 
 <section class="py-16 md:py-24 bg-obsidian text-bone">
