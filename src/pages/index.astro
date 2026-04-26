@@ -2,8 +2,44 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import CurrentLitter from "../components/CurrentLitter.astro";
-import AdoptionSteps from "../components/AdoptionSteps.astro";
+import CatCard from "../components/CatCard.astro";
+import ContactForm from "../components/ContactForm.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
+import { getCats, getFaqs, getSettings } from "../lib/sanity";
+import type { Cat } from "../lib/sanity";
+
+const [sanityCats, faqs, settings] = await Promise.all([
+  getCats(),
+  getFaqs(),
+  getSettings(),
+]);
+
+const fallbackKings = [
+  { name: "Aedion", color: "Black Silver Shaded", traits: "Aedion is our foundation sire and the heart of our program. He is deeply affectionate, endlessly patient, and completely at ease with children, other cats, and household chaos. He follows his people from room to room, greets every visitor like an old friend, and has never met a lap he didn't want to occupy. His temperament sets the tone for every kitten we produce.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+  { name: "Rowan", color: "Silver Shaded Tabby", traits: "Rowan is a gentle giant in every sense. He is calm, affectionate, and wonderfully tolerant, the kind of cat who settles beside you without being asked and stays as long as you'll have him. He is exceptional with children and adapts easily to new people and environments.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+];
+const fallbackQueens = [
+  { name: "Feyra", color: "Black Tortie with Tabby Markings, Polydactyl", traits: "Feyra is everything a Maine Coon queen should be. She is warm, social, and openly affectionate with everyone she meets. She raises her kittens with the same gentle confidence she brings to every interaction, and her kittens are handled daily from birth. Children adore her. She adores them back.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+];
+
+const useSanity = sanityCats.length > 0;
+const kings = useSanity ? sanityCats.filter((c: Cat) => c.role === "king") : fallbackKings;
+const queens = useSanity ? sanityCats.filter((c: Cat) => c.role === "queen") : fallbackQueens;
+
+const email = settings.contactEmail ?? "[PLACEHOLDER]";
+
+const faqSchemaJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+});
 ---
 
 <BaseLayout
@@ -13,7 +49,18 @@ import ScrollReveal from "../components/ScrollReveal.astro";
 
   <Hero />
 
+  <!-- Kittens (id is set inside CurrentLitter component on its root <section>) -->
   <CurrentLitter />
+
+  <!-- Meet the Parents bridge -->
+  <div class="bg-obsidian pb-12 text-center">
+    <a
+      href="#our-cats"
+      class="inline-block px-8 py-3 border border-bone/20 text-bone/60 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone/90 transition-colors"
+    >
+      Meet the Parents
+    </a>
+  </div>
 
   <!-- Gradient bridge: obsidian → ivory-warm -->
   <div aria-hidden="true" class="h-16 md:h-20 bg-gradient-to-b from-obsidian to-ivory-warm"></div>
@@ -38,31 +85,484 @@ import ScrollReveal from "../components/ScrollReveal.astro";
     </section>
   </ScrollReveal>
 
-  <!-- Health & Ethics Preview -->
-  <ScrollReveal animation="fadeUp">
-    <section class="py-16 md:py-24 bg-ivory">
+  <!-- ═══════════════════════════════════════
+       MEET THE PARENTS  id="our-cats"
+  ════════════════════════════════════════ -->
+  <section id="our-cats">
+
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-20 bg-ivory">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+            Our Program
+          </p>
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+            Meet the Parents
+          </h2>
+          <p class="text-charcoal-light text-lg leading-relaxed">
+            Each breeding cat is selected for temperament, health, and balanced European type. We prefer lines known for bone, structure, strong muzzles, and clean profiles. Color and coat are secondary to what the cat is.
+          </p>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Kings -->
+    <div class="pb-16 md:pb-24 bg-ivory">
+      <div class="max-w-6xl mx-auto px-4">
+        <ScrollReveal animation="fadeUp">
+          <div class="text-center mb-12">
+            <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4">Kings</p>
+            <h3 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal">Our Studs</h3>
+          </div>
+        </ScrollReveal>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {kings.map((cat: any, i: number) => (
+            <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+              <CatCard
+                name={cat.name}
+                color={cat.color}
+                traits={cat.traits}
+                health={cat.health}
+                image={cat.image?.asset?.url}
+              />
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Queens -->
+    <div class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-6xl mx-auto px-4">
+        <ScrollReveal animation="fadeUp">
+          <div class="text-center mb-12">
+            <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-4">Queens</p>
+            <h3 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal">Our Queens</h3>
+          </div>
+        </ScrollReveal>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {queens.map((cat: any, i: number) => (
+            <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+              <CatCard
+                name={cat.name}
+                color={cat.color}
+                traits={cat.traits}
+                health={cat.health}
+                image={cat.image?.asset?.url}
+              />
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       HEALTH & ETHICS  id="health"
+  ════════════════════════════════════════ -->
+  <section id="health">
+
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+            Our Standards
+          </p>
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+            Health, Ethics, and Care
+          </h2>
+          <p class="text-charcoal-light text-lg leading-relaxed">
+            We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.
+          </p>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Genetic Testing -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory-warm">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Genetic Testing</h3>
+              <p class="text-charcoal-light leading-relaxed mb-4">
+                We DNA-test our breeding cats for the conditions most relevant to Maine Coons.
+              </p>
+              <ul class="space-y-3">
+                <li class="flex items-start gap-2">
+                  <span class="text-gold-dark font-bold mt-0.5">HCM</span>
+                  <span class="text-charcoal-light leading-relaxed">Hypertrophic cardiomyopathy. The most common heart disease in cats. We screen for the known genetic marker.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-gold-dark font-bold mt-0.5">SMA</span>
+                  <span class="text-charcoal-light leading-relaxed">Spinal muscular atrophy. A neuromuscular condition. We test to ensure no affected kittens are produced.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-gold-dark font-bold mt-0.5">PKDef</span>
+                  <span class="text-charcoal-light leading-relaxed">Pyruvate kinase deficiency. An enzyme disorder that can lead to anemia. We screen all breeding cats.</span>
+                </li>
+              </ul>
+              <p class="text-charcoal-light leading-relaxed mt-4">
+                Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions. Every kitten leaves with documentation of both parents' test results.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Heart & Joint Health -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Heart and Joint Health</h3>
+              <p class="text-charcoal-light leading-relaxed mb-4">
+                DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.
+              </p>
+              <p class="text-charcoal-light leading-relaxed mb-4">
+                Hearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.
+              </p>
+              <p class="text-charcoal-light leading-relaxed">
+                Hip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Daily Care -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory-warm">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Daily Care</h3>
+              <p class="text-charcoal-light leading-relaxed mb-4">
+                Our cats live indoors in a clean, enriched environment. They receive a balanced diet formulated for the nutritional needs of Maine Coons.
+              </p>
+              <p class="text-charcoal-light leading-relaxed">
+                We limit litters per queen to protect their health and ensure each kitten gets the attention it deserves. Rest periods between litters are non-negotiable.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Ethical Practices -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-4">Ethical Practices</h3>
+              <ul class="space-y-3">
+                <li class="text-charcoal-light leading-relaxed">We do not declaw and require adopters to agree to the same.</li>
+                <li class="text-charcoal-light leading-relaxed">Retired breeding cats are placed in carefully selected pet homes where they can live out their years in comfort.</li>
+                <li class="text-charcoal-light leading-relaxed">We work with a feline-friendly veterinarian who understands breed-specific needs.</li>
+                <li class="text-charcoal-light leading-relaxed">Every kitten is sold with a written contract that protects the cat first.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FAQ  id="faq"
+  ════════════════════════════════════════ -->
+  <section id="faq">
+
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory-warm">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+            Common Questions
+          </p>
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+            Frequently Asked Questions
+          </h2>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <div class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="divide-y divide-charcoal/10">
+          {faqs.map((faq, i) => (
+            <ScrollReveal animation="fadeUp" delay={i * 0.05}>
+              <details class="group py-6">
+                <summary class="flex items-center justify-between cursor-pointer list-none">
+                  <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                    {faq.question}
+                  </h3>
+                  <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                  </svg>
+                </summary>
+                <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                  {faq.answer}
+                </p>
+              </details>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CONTRACT  id="contract"
+  ════════════════════════════════════════ -->
+  <section id="contract">
+
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-ivory-warm">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
+            Terms of Sale
+          </p>
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+            Our Purchase Agreement
+          </h2>
+          <p class="text-charcoal-light text-lg leading-relaxed">
+            Every Pampered Feline kitten is sold with a written purchase agreement. The contract protects the kitten first. Here is a summary of our terms.
+          </p>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <div class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="divide-y divide-charcoal/10">
+
+          <ScrollReveal animation="fadeUp" delay={0}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  Deposit and Payment
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                A $400 non-refundable deposit is due upon signing your purchase agreement. This deposit secures your reservation and is applied toward the total purchase price. The remaining balance is due one week before your kitten goes home. We accept Zelle and bank wire transfer only.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.07}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  Spay/Neuter
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                All pet kittens are sold on a spay/neuter contract. Alteration is required by 10 months of age for both sexes. CFA pedigree papers are withheld until you submit documentation of the procedure from your veterinarian.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.14}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  Health Guarantee
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                A veterinary exam is required within 72 hours of pickup. We provide a one-year guarantee against hereditary or congenital conditions. FeLV/FIV testing is required within 72 hours of pickup as a condition of the guarantee. Kittens leave health-checked and current on vaccinations.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.21}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  Indoor Only
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                All Pampered Feline kittens are placed as indoor-only companions. Free-roaming outdoor access is not permitted. Supervised harness walks and enclosed catios are acceptable. This protects the health, safety, and longevity of your cat.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.28}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  No Declawing
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                Declawing is prohibited under our contract. It is an amputation procedure with documented long-term physical and behavioral consequences. Any buyer who declaw their kitten is required to return the cat to us immediately. Regular nail trimming and quality scratching posts are the appropriate alternatives.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.35}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  Rehoming
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                We retain first right of refusal if you can no longer keep your cat at any point in its life. Surrendering a Pampered Feline cat to a shelter or rescue is not permitted. Transfers to another household require our written approval. We take this responsibility seriously and will work with you to find the right solution.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.42}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  Breeding Restriction
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <p class="text-charcoal-light leading-relaxed mt-4 pr-10">
+                All kittens are sold as pet-only companions unless a separate written breeding rights agreement is executed prior to purchase. Breeding rights are available on a case-by-case basis to approved CFA or TICA registered catteries with documented health testing programs. Unauthorized breeding is a breach of contract.
+              </p>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={0.49}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-charcoal pr-4">
+                  What Comes With Your Kitten
+                </h3>
+                <svg class="w-5 h-5 text-charcoal-light flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <div class="mt-4 pr-10">
+                <p class="text-charcoal-light leading-relaxed mb-4">
+                  Every Pampered Feline kitten goes home with the following:
+                </p>
+                <ul class="space-y-2">
+                  {[
+                    "Veterinary health certificate",
+                    "Vaccination records",
+                    "Both parents' health testing documentation (HCM echocardiogram results and Wisdom Panel genetic reports)",
+                    "Signed purchase agreement",
+                    "Kitten care guide",
+                    "Food sample",
+                    "Transition litter",
+                    "Familiar toy or blanket",
+                    "Personality assessment card describing your kitten's temperament",
+                    "CFA pedigree papers after proof of spay/neuter",
+                  ].map((item) => (
+                    <li class="flex items-start gap-3">
+                      <svg class="w-4 h-4 text-gold-dark flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span class="text-charcoal-light leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+          </ScrollReveal>
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CONTACT  id="contact"
+  ════════════════════════════════════════ -->
+  <section id="contact">
+
+    <div class="py-16 md:py-24 bg-ivory-warm">
       <div class="max-w-3xl mx-auto px-4 text-center">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold-dark mb-6">
-          Commitment to Care
+          Reach Out
         </p>
-        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-charcoal mb-8 leading-tight">
-          Health, Ethics, and Care
+        <h2 class="font-heading text-4xl md:text-5xl font-semibold text-charcoal mb-8 leading-tight">
+          Contact Us
         </h2>
-        <p class="text-charcoal-light text-lg leading-relaxed mb-10">
-          We DNA-test our breeding cats for HCM, SMA, and PKDef. Hearts are monitored as cats mature. We follow a transparent, written ethical standard and work with a feline-friendly veterinarian.
+        <p class="text-charcoal-light text-lg leading-relaxed">
+          Interested in a kitten or have a question? Fill out the form below and we will be in touch.
         </p>
-        <a
-          href="/health-ethics"
-          class="inline-block px-8 py-3 border border-charcoal text-charcoal text-sm font-medium tracking-widest uppercase hover:bg-charcoal hover:text-ivory transition-colors"
-        >
-          Learn More
-        </a>
       </div>
-    </section>
-  </ScrollReveal>
+    </div>
 
-  <ScrollReveal animation="fadeUp">
-    <AdoptionSteps />
-  </ScrollReveal>
+    <div class="py-16 md:py-24 bg-ivory">
+      <div class="max-w-3xl mx-auto px-4">
+        <ContactForm />
+      </div>
+    </div>
+
+    <div class="py-16 md:py-24 bg-ivory-warm">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <h3 class="font-heading text-2xl md:text-3xl font-semibold text-charcoal mb-6">
+          Other Ways to Connect
+        </h3>
+        <div class="space-y-3">
+          <p class="text-charcoal-light">
+            Email: <span class="text-charcoal font-medium">{email}</span>
+          </p>
+          <p class="text-charcoal-light text-sm mt-6">
+            Located in Northern Virginia
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <script type="application/ld+json" set:html={faqSchemaJson} />
 
 </BaseLayout>
