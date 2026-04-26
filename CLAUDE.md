@@ -940,3 +940,44 @@ src/pages/kittens.astro             (DELETED)
 public/_redirects                   (NEW — /kittens and /kittens/ → /#kittens 301)
 CLAUDE.md                           (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #18 — single-page layout with scroll navigation)
+
+### Decisions
+- **Homepage is now a single-page app:** All site content lives as scrollable sections on `index.astro`. Standalone pages (`our-cats.astro`, `health-ethics.astro`, `faq.astro`, `contract.astro`, `contact.astro`) are kept as fallbacks but all redirect to homepage anchors.
+- **Meet the Parents section added (`id="our-cats"`):** Pulls from Sanity `getCats()` with hardcoded fallback for Aedion (Black Silver Shaded, King), Rowan (Silver Shaded Tabby, King), and Feyra (Black Tortie Polydactyl, Queen). Uses existing `CatCard` component. Kings shown on `bg-ivory`, Queens on `bg-ivory-warm`.
+- **"Meet the Parents" CTA link added:** A centered anchor link (`href="#our-cats"`) placed at the bottom of the Current Litter obsidian section, before the gradient bridge to ivory. This replaces the old "Meet the Full Litter" button removed in PR #17.
+- **All page content ported to homepage as sections:** Health & Ethics (4 sub-sections with icon blocks), FAQ (accordion from `getFaqs()`), Contract (7 accordion items), Contact (form + info). Content and styling copied verbatim from the standalone pages.
+- **Nav fully converted to anchor links:** All 7 nav links now use `/#anchor` hrefs. When user is on a standalone page and clicks nav, it navigates to homepage + scrolls to section. When on homepage, it smooth-scrolls in place.
+- **`scroll-padding-top: 80px` added to `html` in `global.css`:** `scroll-behavior: smooth` was already there. The padding-top ensures sections clear the sticky nav header when scrolled to.
+- **`public/_redirects` expanded:** Added 301 redirects for `/our-cats`, `/health-ethics`, `/faq`, `/contract`, `/contact` (and trailing-slash variants) pointing to their respective homepage anchors. Netlify processes this at the CDN edge.
+- **FAQ JSON-LD schema retained on homepage:** `<script type="application/ld+json" set:html={faqSchemaJson} />` added at the bottom of `index.astro`. The FAQ page retains its own schema; the homepage now also carries it for direct URL visitors.
+- **Editorial block kept:** "A Small Program With High Standards" section preserved between the gradient bridge and the Meet the Parents section. Provides philosophy context before introducing the cats.
+- **AdoptionSteps component removed from homepage:** Removed from `index.astro`. The Contact section at the bottom serves the same CTA function, and the single-page flow is the new adoption journey.
+- **CTA links within sections updated to anchors:** Health, FAQ, and Contract CTAs that previously linked to `/contact` now implicitly link to `#contact` — they link within the same page. (The standalone page versions retain the original `/contact` hrefs.)
+- **Build verified:** 7 pages generated cleanly. Same page count — standalone pages still exist.
+- **Rebase required:** PR #18 branch had a conflict because PR #17 was squash-merged after the branch was created. Resolved with `git rebase --onto origin/main 3785ab0 HEAD` to carry only new commits forward.
+
+### Conventions
+- **Section ID pattern on `index.astro`:** `id` attributes on wrapper `<section>` elements (`id="our-cats"`, `id="health"`, `id="faq"`, `id="contract"`, `id="contact"`). Nav links and `_redirects` targets match these IDs.
+- **Data fetching pattern:** All Sanity calls collected in a single `Promise.all([getCats(), getFaqs(), getSettings()])` at the top of the frontmatter. Each has a hardcoded fallback in case Sanity is unavailable.
+- **Standalone pages as fallbacks:** The 301 redirects mean Netlify handles the redirect at the edge before the page even loads. The standalone page HTML is never served to real users unless the redirect fails. Keep standalone pages in sync with homepage content if content changes.
+
+### Deferred
+- **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root (carry-forward from PR #11). Sara cannot see the gallery upload field in Studio until this is done.
+- **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` (carry-forward from PR #11).
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos. The Meet the Parents section falls back to text-only cards until photos are added.
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Mobile testing on real device:** The single-page layout with long scroll should be tested on an actual phone.
+- **CTA links in standalone page fallbacks:** The standalone pages still link to `/contact` (the page). If someone lands on `/faq` directly (before the 301 fires), the CTA takes them to the standalone contact page, not the homepage anchor. This is acceptable as the standalone contact page still works.
+
+### Files Changed This Session (PR #18 — merged)
+```
+src/pages/index.astro            (MAJOR rewrite: all sections added — our-cats, health, faq, contract, contact; CatCard, ContactForm, getCats/getFaqs/getSettings imports; FAQ JSON-LD; Meet the Parents CTA link; Editorial block kept; AdoptionSteps removed)
+src/components/Nav.astro         (all links converted to anchor hrefs: /#our-cats, /#health, /#faq, /#contract, /#contact)
+src/styles/global.css            (scroll-padding-top: 80px added to html rule)
+public/_redirects                (expanded: our-cats, health-ethics, faq, contract, contact all 301 to homepage anchors)
+CLAUDE.md                        (session log appended)
+```
