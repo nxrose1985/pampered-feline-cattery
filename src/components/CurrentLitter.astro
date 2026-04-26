@@ -15,7 +15,7 @@ const sanityKittens = await getKittensByLitter(litterId);
 const fallbackKittens = [
   { name: "Helion",  color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 1 },
   { name: "Tarquin", color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 2 },
-  { name: "Kallias", color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 3 },
+  { name: "Kallias", color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 3 },
 ];
 
 const allKittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
