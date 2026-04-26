@@ -751,3 +751,40 @@ src/pages/kittens.astro          (fallbackKittens: full 8-kitten slate with Elai
 src/components/CurrentLitter.astro (fallbackKittens: Helion/Tarquin/Kallias; filters Available + slices to 3)
 CLAUDE.md                        (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #10 — polydactyl color descriptions and Elain flag fix)
+
+### Decisions
+- **Polydactyl color descriptions updated:** All four polydactyl kittens now have color strings that prepend "Poly" and append toe counts in parentheses. This surfaces the poly trait and toe count directly in the color field visible on each kitten card, without requiring a separate field.
+  - Kallias: "Poly Cream Shaded Silver (6/6/6/6)"
+  - Azriel: "Poly Blue Silver Tabby (6/6/6/6)"
+  - Lucien: "Poly Red Tabby (7/7/6/6)"
+  - Elain: "Poly Blue Shaded Silver (6/6/6/6)"
+- **Elain `isPolydactyl` corrected to true:** Was incorrectly set to false in both the PR #8 Sanity upload and the fallback array. Patched in Sanity and updated in both fallback files.
+- **Sanity patched directly via script:** Used inline Node.js script with `@sanity/client` and the CLI auth token at `~/.config/sanity/config.json`. No new script file committed — patch was a one-off operation.
+- **Worktree approach used:** `.worktrees/` directory added to `.gitignore` and worktree created at `.worktrees/poly-kitten-update`. This is the first use of project-local `.worktrees/` convention.
+
+### Conventions
+- **Toe counts in color field:** The pattern `Poly [Color] (FR/FL/RR/RL)` encodes front-right, front-left, rear-right, rear-left toe counts directly in the color string. This is display-only data that belongs with the color description rather than a dedicated schema field.
+- **Worktree directory:** `.worktrees/` (project-local, gitignored) is the established convention for this project going forward.
+
+### Deferred
+- Same as previous session: Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on real device.
+
+### Files Changed This Session (PR #10 — merged)
+```
+.gitignore                         (added .worktrees/ entry)
+src/pages/kittens.astro            (color updated for Kallias, Azriel, Lucien, Elain; Elain isPolydactyl → true)
+src/components/CurrentLitter.astro (color updated for Kallias fallback)
+CLAUDE.md                          (session log appended)
+```
+
+### Sanity Documents Patched This Session
+```
+kitten-kallias   color → "Poly Cream Shaded Silver (6/6/6/6)"
+kitten-azriel    color → "Poly Blue Silver Tabby (6/6/6/6)"
+kitten-lucien    color → "Poly Red Tabby (7/7/6/6)"
+kitten-elain     color → "Poly Blue Shaded Silver (6/6/6/6)", isPolydactyl → true
+```
