@@ -317,12 +317,27 @@ const dateLabel = formatDate(availableDate);
       el.addEventListener('mouseenter', () => { paused = true; });
       el.addEventListener('mouseleave', () => { paused = false; });
 
+      // Track touch delta to distinguish tap vs swipe
+      let touchStartXC = 0;
+      let touchMoved = false;
+
+      el.addEventListener('touchstart', (e) => {
+        touchStartXC = (e as TouchEvent).touches[0].clientX;
+        touchMoved = false;
+      }, { passive: true });
+
+      el.addEventListener('touchmove', (e) => {
+        const dx = Math.abs((e as TouchEvent).touches[0].clientX - touchStartXC);
+        if (dx > 10) touchMoved = true;
+      }, { passive: true });
+
       let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
       el.addEventListener('touchstart', () => {
         paused = true;
         if (resumeTimeout) clearTimeout(resumeTimeout);
       }, { passive: true });
       el.addEventListener('touchend', () => {
+        el.dataset.swipedLast = touchMoved ? '1' : '0';
         if (resumeTimeout) clearTimeout(resumeTimeout);
         resumeTimeout = setTimeout(() => { paused = false; }, 1000);
       }, { passive: true });
