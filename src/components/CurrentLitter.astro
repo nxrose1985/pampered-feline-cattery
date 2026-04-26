@@ -13,24 +13,35 @@ const { litterId = "march-2026" } = Astro.props;
 const sanityKittens = await getKittensByLitter(litterId);
 
 const fallbackKittens = [
-  { name: "Helion",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 1 },
-  { name: "Tarquin", color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 2 },
-  { name: "Kallias", color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 3 },
-  { name: "Azriel",  color: "Poly Blue Silver Tabby (6/6/6/6)",  sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 4 },
-  { name: "Lucien",  color: "Poly Red Tabby (7/7/6/6)",          sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-07-08", breed: "Maine Coon", order: 5 },
-  { name: "Morrigan", color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", breed: "Maine Coon", order: 6 },
-  { name: "Amren",   color: "Blue Tortie",                        sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", breed: "Maine Coon", order: 7 },
-  { name: "Elain",   color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: undefined, breed: "Maine Coon", order: 8 },
+  { name: "Elain",   color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8 },
+  { name: "Helion",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1 },
+  { name: "Tarquin", color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2 },
+  { name: "Kallias", color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3 },
+  { name: "Azriel",  color: "Poly Blue Silver Tabby (6/6/6/6)",  sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 4 },
+  { name: "Lucien",  color: "Poly Red Tabby (7/7/6/6)",          sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-07-08", order: 5 },
+  { name: "Morrigan", color: "Blue Tortie",                      sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 6 },
+  { name: "Amren",   color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7 },
 ];
 
-const allKittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
-const kittens = allKittens.filter((k: any) => k.status === "Available");
+// Sort: Reserved first (credibility/demand signal), then Available by display order
+function sortKittens(list: any[]) {
+  return [...list].sort((a, b) => {
+    if (a.status === "Reserved" && b.status !== "Reserved") return -1;
+    if (a.status !== "Reserved" && b.status === "Reserved") return 1;
+    return (a.order ?? 99) - (b.order ?? 99);
+  });
+}
+
+const kittens = sortKittens(sanityKittens.length > 0 ? sanityKittens : fallbackKittens);
 ---
 
-<section class="py-16 md:py-24 bg-obsidian text-bone">
+<section id="kittens" class="py-16 md:py-24 bg-obsidian text-bone">
   <div class="max-w-6xl mx-auto px-4">
     <ScrollReveal animation="fadeUp">
       <div class="text-center mb-12 md:mb-16">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">
+          Spring 2026
+        </p>
         <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-4 leading-tight">
           Current Litter
         </h2>
@@ -40,34 +51,131 @@ const kittens = allKittens.filter((k: any) => k.status === "Available");
       </div>
     </ScrollReveal>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {kittens.map((kitten: any, i: number) => (
-        <ScrollReveal animation="fadeUp" delay={i * 0.1}>
+        <ScrollReveal animation="fadeUp" delay={i * 0.08}>
           <KittenCard
             name={kitten.name}
             sex={kitten.sex}
-            color={kitten.color}
+            color={kitten.color ?? ""}
             personality={kitten.personality}
             status={kitten.status}
             image={kitten.image?.asset?.url}
+            gallery={kitten.gallery}
             price={kitten.price}
             isPolydactyl={kitten.isPolydactyl}
             availableDate={kitten.availableDate}
             variant="dark"
             personalityAssessment={kitten.personalityAssessment}
-            linkTo="/kittens"
           />
         </ScrollReveal>
       ))}
     </div>
 
-    <div class="text-center mt-12 md:mt-16">
-      <a
-        href="/kittens"
-        class="inline-block px-8 py-3 border border-bone text-bone text-sm font-medium tracking-widest uppercase hover:bg-bone hover:text-obsidian transition-colors"
-      >
-        Meet the Full Litter
-      </a>
-    </div>
+    <p class="text-center text-bone/30 text-sm mt-10">
+      Photos added as kittens are weaned and individual personalities emerge. Check back weekly.
+    </p>
   </div>
 </section>
+
+<!-- Lightbox -->
+<div id="kitten-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90" aria-modal="true" role="dialog">
+  <button id="lightbox-close" class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl leading-none" aria-label="Close">&times;</button>
+  <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Previous">&#8249;</button>
+  <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Next">&#8250;</button>
+  <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[85vw] object-contain" />
+  <div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-sm tracking-widest"></div>
+</div>
+
+<script>
+  const lightbox = document.getElementById('kitten-lightbox') as HTMLElement;
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxCounter = document.getElementById('lightbox-counter') as HTMLElement;
+  let images: string[] = [];
+  let currentIndex = 0;
+  let lastFocusedElement: HTMLElement | null = null;
+
+  function openLightbox(imgs: string[], idx: number, name: string) {
+    images = imgs;
+    currentIndex = idx;
+    lastFocusedElement = document.activeElement as HTMLElement;
+    showImage();
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    lightboxImg.alt = name + ' Maine Coon kitten';
+    document.getElementById('lightbox-close')!.focus();
+  }
+
+  function showImage() {
+    lightboxImg.src = images[currentIndex];
+    const prev = document.getElementById('lightbox-prev') as HTMLElement;
+    const next = document.getElementById('lightbox-next') as HTMLElement;
+    if (images.length > 1) {
+      lightboxCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+      prev.style.display = '';
+      next.style.display = '';
+    } else {
+      lightboxCounter.textContent = '';
+      prev.style.display = 'none';
+      next.style.display = 'none';
+    }
+  }
+
+  function closeLightbox() {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+    document.body.style.overflow = '';
+    images = [];
+    lastFocusedElement?.focus();
+  }
+
+  document.getElementById('lightbox-close')!.addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-prev')!.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage();
+  });
+  document.getElementById('lightbox-next')!.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage();
+  });
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') { currentIndex = (currentIndex - 1 + images.length) % images.length; showImage(); }
+    if (e.key === 'ArrowRight') { currentIndex = (currentIndex + 1) % images.length; showImage(); }
+  });
+
+  let touchStartX = 0;
+  lightbox.addEventListener('touchstart', (e) => { touchStartX = (e as TouchEvent).touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', (e) => {
+    const dx = (e as TouchEvent).changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50 && images.length > 1) {
+      if (dx < 0) { currentIndex = (currentIndex + 1) % images.length; }
+      else { currentIndex = (currentIndex - 1 + images.length) % images.length; }
+      showImage();
+    }
+  });
+
+  document.querySelectorAll('[data-lightbox-trigger]').forEach(el => {
+    el.addEventListener('click', () => {
+      if ((el as HTMLElement).dataset.carousel !== undefined && (el as HTMLElement).dataset.swipedLast === '1') {
+        return;
+      }
+      const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
+      const name = (el as HTMLElement).dataset.lightboxName || '';
+      const startIdx = parseInt((el as HTMLElement).dataset.lightboxIndex || '0', 10);
+      if (imgs.length > 0) openLightbox(imgs, startIdx, name);
+    });
+    el.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        e.preventDefault();
+        const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
+        const name = (el as HTMLElement).dataset.lightboxName || '';
+        const startIdx = parseInt((el as HTMLElement).dataset.lightboxIndex || '0', 10);
+        if (imgs.length > 0) openLightbox(imgs, startIdx, name);
+      }
+    });
+  });
+</script>
