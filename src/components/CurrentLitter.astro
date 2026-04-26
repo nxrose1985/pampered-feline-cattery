@@ -13,15 +13,18 @@ const { litterId = "march-2026" } = Astro.props;
 const sanityKittens = await getKittensByLitter(litterId);
 
 const fallbackKittens = [
-  { name: "Helion",  color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 1 },
-  { name: "Tarquin", color: "Cream Shaded Silver", sex: "Male",  status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 2 },
+  { name: "Helion",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 1 },
+  { name: "Tarquin", color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 2 },
   { name: "Kallias", color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 3 },
+  { name: "Azriel",  color: "Poly Blue Silver Tabby (6/6/6/6)",  sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-06-04", breed: "Maine Coon", order: 4 },
+  { name: "Lucien",  color: "Poly Red Tabby (7/7/6/6)",          sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-07-08", breed: "Maine Coon", order: 5 },
+  { name: "Morrigan", color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", breed: "Maine Coon", order: 6 },
+  { name: "Amren",   color: "Blue Tortie",                        sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", breed: "Maine Coon", order: 7 },
+  { name: "Elain",   color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: undefined, breed: "Maine Coon", order: 8 },
 ];
 
 const allKittens = sanityKittens.length > 0 ? sanityKittens : fallbackKittens;
-const kittens = allKittens
-  .filter((k: any) => k.status === "Available")
-  .slice(0, 3);
+const kittens = allKittens.filter((k: any) => k.status === "Available");
 ---
 
 <section class="py-16 md:py-24 bg-obsidian text-bone">
@@ -62,7 +65,7 @@ const kittens = allKittens
         href="/kittens"
         class="inline-block px-8 py-3 border border-bone text-bone text-sm font-medium tracking-widest uppercase hover:bg-bone hover:text-obsidian transition-colors"
       >
-        View Full Details
+        Meet the Full Litter
       </a>
     </div>
   </div>
