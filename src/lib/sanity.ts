@@ -111,7 +111,7 @@ const kittenProjection = `{
   availableDate,
   breed,
   personalityAssessment,
-  "gallery": gallery[].asset->{ url }
+  "gallery": gallery[] { asset-> { url } }
 }`;
 
 const kittenQuery = `*[_type == "kitten"] | order(order asc) ${kittenProjection}`;
