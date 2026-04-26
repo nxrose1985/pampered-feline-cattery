@@ -788,3 +788,39 @@ kitten-azriel    color → "Poly Blue Silver Tabby (6/6/6/6)"
 kitten-lucien    color → "Poly Red Tabby (7/7/6/6)"
 kitten-elain     color → "Poly Blue Shaded Silver (6/6/6/6)", isPolydactyl → true
 ```
+
+---
+
+## Session: 2026-04-26 (PR #11 — photo gallery field and lightbox)
+
+### Decisions
+- **Gallery field added to Sanity kitten schema:** New `gallery` field (array of hotspot-enabled images) added to the `kitten` document type in `sanity/schemas/kitten.ts`, after the existing `image` (hero) field.
+- **TypeScript type and GROQ projection updated:** `Kitten` interface in `src/lib/sanity.ts` gains `gallery?: Array<{ asset: { url: string } }>`. The `kittenProjection` query uses `"gallery": gallery[] { asset-> { url } }` — same nested dereference pattern as the existing `image` field.
+- **Upload script written:** `scripts/upload-gallery.mjs` handles all non-HERO photos. Groups files by kitten name using prefix-before-underscore matching with case-insensitive `startsWith` fallback (handles files like `Helion2.jpg`). Searches both worktree and main project root. Deduplicates by filename. Patches each Sanity document with `client.patch(docId).set({ gallery }).commit()`.
+- **Lightbox is a single global element:** One `<div id="kitten-lightbox">` added to `kittens.astro`, not per-card. Each kitten card's hero image gets `data-lightbox-trigger` with a JSON array of all image URLs (hero first, then gallery).
+- **Lightbox toggled with `hidden`/`flex` class pair:** Tailwind v4 requires both — `hidden` sets `display: none`, adding `flex` overrides it. Removing `hidden` alone does not make the flex layout work.
+- **Accessibility handled:** Image container div gets `role="button"`, `tabindex="0"`, and `aria-label`. Keydown handler (Enter/Space) fires the lightbox. Focus moves to close button on open and returns to the trigger on close.
+- **Swipe guard on single image:** Touchend handler has `&& images.length > 1` guard to avoid re-rendering the same image on swipe when no navigation is needed.
+- **Mobile button sizing:** Prev/next buttons use `text-3xl md:text-5xl` to avoid overlapping the image on small screens.
+
+### Conventions
+- **Gallery GROQ pattern:** `"gallery": gallery[] { asset-> { url } }` — array map with nested asset dereference. Consistent with the `image` field pattern.
+- **Kitten document IDs:** `kitten-{name.toLowerCase()}` — same as upload-kittens.mjs. Gallery script uses the same ID to patch.
+- **Upload script auth:** Same `SANITY_WRITE_TOKEN` env var + same `createClient` pattern as `upload-kittens.mjs`. No CLI auth fallback in code.
+
+### Deferred
+- **Run `node scripts/upload-gallery.mjs`:** Must be run from project root after Netlify deploys to populate gallery images in Sanity. Requires `SANITY_WRITE_TOKEN` in `.env`.
+- **Run `npx sanity deploy`:** Must be run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated Studio schema with the gallery field. Sara will not see the gallery upload UI in Studio until this is done.
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos entered in Studio.
+- **Mobile testing on real device:** Not yet done.
+
+### Files Changed This Session (PR #11 — merged)
+```
+sanity/schemas/kitten.ts         (gallery field added after image field)
+src/lib/sanity.ts                (Kitten type + kittenProjection updated with gallery)
+scripts/upload-gallery.mjs       (NEW — uploads non-HERO photos and patches gallery array in Sanity)
+src/components/KittenCard.astro  (gallery prop added; hero div gets lightbox trigger attributes + a11y)
+src/pages/kittens.astro          (gallery prop passed to KittenCard; lightbox HTML + JS added)
+CLAUDE.md                        (session log appended)
+```
