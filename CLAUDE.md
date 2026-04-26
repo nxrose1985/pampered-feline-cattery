@@ -857,3 +857,45 @@ src/components/KittenCard.astro  (carousel replaces static image; "View N photos
 src/pages/kittens.astro          (lightbox handlers read data-lightbox-index; swipe guard added)
 CLAUDE.md                        (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #15 — all kittens on homepage, smoother carousel)
+
+### Decisions
+- **CurrentLitter shows all available kittens:** Removed `.slice(0, 3)` cap. Homepage now shows all available kittens (7 with current litter: Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren). Elain is Reserved and correctly excluded by the `status === "Available"` filter.
+- **Fallback expanded to full 8-kitten slate:** CurrentLitter fallback previously only had 3 kittens. Expanded to all 8 with correct names, colors, sexes, prices, `isPolydactyl`, and `availableDate` values matching the kittens.astro fallback.
+- **CTA text updated:** "VIEW FULL DETAILS" changed to "MEET THE FULL LITTER". Link to `/kittens` unchanged.
+- **Carousel crossfade smoother:** `transition-opacity duration-700` changed to `duration-[1200ms] ease-in-out`. Both images animate simultaneously (true crossfade). Auto-advance interval remains 4 seconds.
+
+### Deferred
+- Same as previous session: Sanity Studio deploy for gallery field, gallery upload script run, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session (PR #15 — merged)
+```
+src/components/CurrentLitter.astro  (removed slice(0,3); expanded fallback to 8 kittens; CTA text updated)
+src/components/KittenCard.astro     (carousel transition: duration-700 → duration-[1200ms] ease-in-out)
+CLAUDE.md                           (session log appended)
+```
+
+---
+
+## Session: 2026-04-26 (PR #16 — homepage cards clickable, smoother carousel dissolve)
+
+### Decisions
+- **Homepage kitten cards now clickable:** Added `linkTo?: string` prop to `KittenCard`. When set, the root div gets `onclick="window.location='/kittens'"` and `cursor-pointer`. `CurrentLitter` passes `linkTo="/kittens"` to every card, so clicking anywhere on a homepage kitten card navigates to the kittens page.
+- **Inquire button hidden when `linkTo` is set:** The Inquire button renders only when `status === "Available" && !linkTo`. On the homepage the card itself is the CTA; on the kittens page `linkTo` is not passed so the Inquire button is unchanged.
+- **Carousel crossfade extended and linearized:** `duration-[1200ms] ease-in-out` changed to `duration-[2000ms] ease-linear`. Linear timing dissolves both images at a constant rate — no acceleration peak — which reads as more subtle and professional. The simultaneous crossfade architecture is unchanged.
+
+### Conventions
+- **`linkTo` suppresses Inquire:** Any context that passes `linkTo` to `KittenCard` should not expect an Inquire button. The two behaviors are mutually exclusive by design.
+
+### Deferred
+- Same carry-forward: Sanity Studio deploy, gallery upload, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session (PR #16 — merged)
+```
+src/components/KittenCard.astro     (linkTo prop: onclick + cursor-pointer on root; Inquire hidden when linkTo set; carousel 2000ms ease-linear)
+src/components/CurrentLitter.astro  (linkTo="/kittens" passed to KittenCard)
+CLAUDE.md                           (session log appended)
+```
