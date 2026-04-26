@@ -93,48 +93,80 @@ const dateLabel = formatDate(availableDate);
 ---
 
 <div class={`rounded-sm overflow-hidden ${isDark ? "bg-bone/[0.04] border border-bone/10" : "bg-ivory-warm"}`}>
-  <div
-    class={`relative aspect-[4/5] flex items-center justify-center ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"} ${allImages.length > 0 ? "cursor-pointer" : ""}`}
-    {...allImages.length > 0 ? {
-      "data-lightbox-trigger": "",
-      "data-lightbox-images": JSON.stringify(allImages),
-      "data-lightbox-name": name,
-      "role": "button",
-      "tabindex": "0",
-      "aria-label": `View photos of ${name}`,
-    } : {}}
-  >
-    {image ? (
-      <img src={image} alt={`${name}, ${color} Maine Coon kitten`} class="w-full h-full object-cover" />
-    ) : (
-      <div class="text-center px-6">
-        <svg class={`w-12 h-12 mx-auto mb-2 ${isDark ? "text-bone/20" : "text-charcoal/20"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <p class={`text-xs uppercase tracking-widest ${isDark ? "text-bone/30" : "text-charcoal/30"}`}>Photo Coming Soon</p>
-      </div>
-    )}
-
-    {isPolydactyl && (
-      <span class={`absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${isDark ? "bg-gold/20 text-gold" : "bg-charcoal text-ivory"}`}>
-        Polydactyl
-      </span>
-    )}
-
-    <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${statusClass}`}>
-      {status}
-    </span>
-  </div>
-
-  {galleryUrls.length > 0 && image && (
-    <button
-      class={`w-full text-center py-2 text-xs tracking-widest uppercase cursor-pointer border-t ${isDark ? "border-bone/10 text-gold hover:text-gold/70" : "border-charcoal/10 text-gold-dark hover:text-gold-dark/70"} transition-colors`}
-      data-lightbox-trigger=""
+  {allImages.length > 1 ? (
+    <div
+      class={`relative aspect-[4/5] overflow-hidden ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"} cursor-pointer`}
+      data-carousel={JSON.stringify(allImages)}
+      data-carousel-name={name}
       data-lightbox-images={JSON.stringify(allImages)}
       data-lightbox-name={name}
+      data-lightbox-trigger=""
+      data-lightbox-index="0"
+      role="button"
+      tabindex="0"
+      aria-label={`View photos of ${name}`}
     >
-      View {allImages.length} photos
-    </button>
+      {allImages.map((src, i) => (
+        <img
+          src={src}
+          alt={`${name}, ${color} Maine Coon kitten`}
+          class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${i === 0 ? "opacity-100" : "opacity-0"}`}
+          data-carousel-slide={i}
+        />
+      ))}
+
+      {isPolydactyl && (
+        <span class={`absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-10 ${isDark ? "bg-gold/20 text-gold" : "bg-charcoal text-ivory"}`}>
+          Polydactyl
+        </span>
+      )}
+
+      <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-10 ${statusClass}`}>
+        {status}
+      </span>
+
+      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10" data-carousel-dots>
+        {allImages.map((_, i) => (
+          <span
+            class={`w-1.5 h-1.5 rounded-full transition-opacity duration-300 ${i === 0 ? "bg-white opacity-90" : "bg-white opacity-30"}`}
+            data-carousel-dot={i}
+          />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div
+      class={`relative aspect-[4/5] flex items-center justify-center ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"} ${allImages.length > 0 ? "cursor-pointer" : ""}`}
+      {...allImages.length > 0 ? {
+        "data-lightbox-trigger": "",
+        "data-lightbox-images": JSON.stringify(allImages),
+        "data-lightbox-name": name,
+        "role": "button",
+        "tabindex": "0",
+        "aria-label": `View photos of ${name}`,
+      } : {}}
+    >
+      {image ? (
+        <img src={image} alt={`${name}, ${color} Maine Coon kitten`} class="w-full h-full object-cover" />
+      ) : (
+        <div class="text-center px-6">
+          <svg class={`w-12 h-12 mx-auto mb-2 ${isDark ? "text-bone/20" : "text-charcoal/20"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p class={`text-xs uppercase tracking-widest ${isDark ? "text-bone/30" : "text-charcoal/30"}`}>Photo Coming Soon</p>
+        </div>
+      )}
+
+      {isPolydactyl && (
+        <span class={`absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${isDark ? "bg-gold/20 text-gold" : "bg-charcoal text-ivory"}`}>
+          Polydactyl
+        </span>
+      )}
+
+      <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm ${statusClass}`}>
+        {status}
+      </span>
+    </div>
   )}
 
   <div class="p-6">
@@ -247,3 +279,61 @@ const dateLabel = formatDate(availableDate);
     )}
   </div>
 </div>
+
+<script>
+  function initCarousels() {
+    document.querySelectorAll('[data-carousel]').forEach(container => {
+      const el = container as HTMLElement;
+      const images = el.querySelectorAll<HTMLElement>('[data-carousel-slide]');
+      const dots = el.querySelectorAll<HTMLElement>('[data-carousel-dot]');
+      const total = images.length;
+      if (total <= 1) return;
+
+      let idx = 0;
+      let timer: ReturnType<typeof setInterval> | null = null;
+      let paused = false;
+
+      function goTo(n: number) {
+        images[idx].classList.remove('opacity-100');
+        images[idx].classList.add('opacity-0');
+        dots[idx].classList.remove('opacity-90');
+        dots[idx].classList.add('opacity-30');
+
+        idx = (n + total) % total;
+
+        images[idx].classList.remove('opacity-0');
+        images[idx].classList.add('opacity-100');
+        dots[idx].classList.remove('opacity-30');
+        dots[idx].classList.add('opacity-90');
+
+        el.dataset.lightboxIndex = String(idx);
+      }
+
+      function startTimer() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => { if (!paused) goTo(idx + 1); }, 4000);
+      }
+
+      el.addEventListener('mouseenter', () => { paused = true; });
+      el.addEventListener('mouseleave', () => { paused = false; });
+
+      let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
+      el.addEventListener('touchstart', () => {
+        paused = true;
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+      }, { passive: true });
+      el.addEventListener('touchend', () => {
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+        resumeTimeout = setTimeout(() => { paused = false; }, 1000);
+      }, { passive: true });
+
+      startTimer();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCarousels);
+  } else {
+    initCarousels();
+  }
+</script>
