@@ -691,3 +691,26 @@ src/pages/faq.astro              (title + description updated; FAQPage JSON-LD a
 src/pages/contract.astro         (title + description updated for SEO)
 src/pages/contact.astro          (instagram variable and line removed; title + description updated)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #7 — kitten names finalized)
+
+### Decisions
+- **Kitten names confirmed:** Spring 2026 litter slate finalized. Seven kittens: Helion, Tarquin, Kallias (poly cream), Azriel (poly blue silver tabby), Lucien (poly red tabby), Morrigan (blue tortie), Amren (blue tortie).
+- **Name/color split fixed:** Previous fallback pattern stored color in the `name` field and left `color` empty. Corrected so `name` is the kitten's given name and `color` is the actual color description. KittenCard renders name as heading and color in gold beneath it.
+- **Homepage Current Litter preview updated:** Three featured preview cards now show Kallias, Azriel, and Morrigan — chosen for color variety (cream silver, blue silver tabby, tortie female) and visual contrast.
+- **Prices unchanged:** All prices carry forward from the PR #5 tier structure. Kallias $4,500 (rare color poly), Azriel $4,200 (poly), Lucien $4,200 (poly), Helion/Tarquin $4,000 (rare color), Morrigan/Amren $3,600 (standard).
+
+### Conventions
+- **Sanity data wins over fallback:** When Sara enters kitten records in Sanity Studio, they override the fallback array. Fallback serves as accurate backstop for name/color/price reference, not a display placeholder.
+
+### Deferred
+- Same as previous session: Instagram handle, Google Workspace email, Plausible analytics, real photography, mobile testing on device, entering kitten records in Studio.
+
+### Files Changed This Session (PR #7 — merged)
+```
+src/pages/kittens.astro          (fallbackKittens: names added, colors corrected, 7 kittens finalized)
+src/components/CurrentLitter.astro (fallbackKittens: updated to Kallias / Azriel / Morrigan with real data)
+CLAUDE.md                        (session log appended)
+```
