@@ -318,24 +318,23 @@ const dateLabel = formatDate(availableDate);
       el.addEventListener('mouseleave', () => { paused = false; });
 
       // Track touch delta to distinguish tap vs swipe
-      let touchStartXC = 0;
+      let touchStartX = 0;
       let touchMoved = false;
 
+      let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
       el.addEventListener('touchstart', (e) => {
-        touchStartXC = (e as TouchEvent).touches[0].clientX;
+        touchStartX = (e as TouchEvent).touches[0].clientX;
         touchMoved = false;
+        paused = true;
+        el.dataset.swipedLast = '0';
+        if (resumeTimeout) clearTimeout(resumeTimeout);
       }, { passive: true });
 
       el.addEventListener('touchmove', (e) => {
-        const dx = Math.abs((e as TouchEvent).touches[0].clientX - touchStartXC);
+        const dx = Math.abs((e as TouchEvent).touches[0].clientX - touchStartX);
         if (dx > 10) touchMoved = true;
       }, { passive: true });
 
-      let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
-      el.addEventListener('touchstart', () => {
-        paused = true;
-        if (resumeTimeout) clearTimeout(resumeTimeout);
-      }, { passive: true });
       el.addEventListener('touchend', () => {
         el.dataset.swipedLast = touchMoved ? '1' : '0';
         if (resumeTimeout) clearTimeout(resumeTimeout);
@@ -343,6 +342,9 @@ const dateLabel = formatDate(availableDate);
       }, { passive: true });
 
       startTimer();
+      document.addEventListener('astro:before-swap', () => {
+        if (timer) { clearInterval(timer); timer = null; }
+      }, { once: true });
     });
   }
 
