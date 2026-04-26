@@ -824,3 +824,36 @@ src/components/KittenCard.astro  (gallery prop added; hero div gets lightbox tri
 src/pages/kittens.astro          (gallery prop passed to KittenCard; lightbox HTML + JS added)
 CLAUDE.md                        (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #13 — auto-scrolling carousel on kitten cards)
+
+### Decisions
+- **Crossfade (opacity) transition chosen over slide:** All images are absolutely stacked within the card's `aspect-[4/5]` container. Only `opacity-100`/`opacity-0` swaps via `transition-opacity duration-700`. No layout shift, smooth luxury feel, simpler than a sliding approach.
+- **Carousel only when `allImages.length > 1`:** When a kitten has no gallery (only hero or no image at all), the static image path is preserved unchanged. No dots, no timer, no JS overhead for those cards.
+- **Single global `initCarousels()` script:** The carousel `<script>` in `KittenCard.astro` is Astro-deduplicated. One script initializes all `[data-carousel]` elements on the page via `querySelectorAll`. No per-card scripts.
+- **`data-lightbox-index` attribute for lightbox sync:** The carousel container holds `data-lightbox-index="0"` at render time. Each `goTo()` call updates it to the current slide index. The lightbox click/keydown handlers in `kittens.astro` read this attribute to open the lightbox at the visible slide.
+- **Swipe-vs-tap discrimination:** A `touchmove` listener tracks horizontal delta. If movement > 10px, `data-swiped-last` is set to `'1'` on `touchend`. The lightbox click handler in `kittens.astro` checks this flag and suppresses lightbox open on swipes. Flag is reset to `'0'` on the next `touchstart` (not in the click handler, to avoid race conditions).
+- **Timer cleanup for Astro View Transitions:** An `astro:before-swap` listener (once) clears the interval on each card when the page navigates. Not needed today (no View Transitions), but added preemptively to avoid stacking intervals if View Transitions is enabled later.
+- **"View N photos" button removed:** The carousel makes it redundant. Clicking the card image opens the lightbox at the current slide.
+- **Touch pause duration:** `touchend` schedules a 1-second delay before `paused = false`. Prevents the carousel from advancing immediately after a tap/swipe.
+
+### Conventions
+- **Carousel HTML pattern:** `data-carousel` (holds JSON image array), `data-carousel-name`, `data-lightbox-trigger`, `data-lightbox-images`, `data-lightbox-index` all on the same container div.
+- **Slide elements:** `[data-carousel-slide="N"]` on each `<img>`. Dot elements: `[data-carousel-dot="N"]`.
+- **Pause flag:** `paused` boolean checked inside `setInterval`. Timer always runs; pause skips `goTo()`. Calling `startTimer()` always clears the existing interval first to prevent stacking.
+
+### Deferred
+- **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root to expose the gallery field in Studio UI (carry-forward from PR #11 session).
+- **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` to populate gallery arrays in Sanity (carry-forward from PR #11 session).
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carousel and lightbox should be tested on an actual phone.
+
+### Files Changed This Session (PR #13 — merged)
+```
+src/components/KittenCard.astro  (carousel replaces static image; "View N photos" button removed; carousel <script> added)
+src/pages/kittens.astro          (lightbox handlers read data-lightbox-index; swipe guard added)
+CLAUDE.md                        (session log appended)
+```
