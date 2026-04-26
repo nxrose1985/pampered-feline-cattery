@@ -857,3 +857,23 @@ src/components/KittenCard.astro  (carousel replaces static image; "View N photos
 src/pages/kittens.astro          (lightbox handlers read data-lightbox-index; swipe guard added)
 CLAUDE.md                        (session log appended)
 ```
+
+---
+
+## Session: 2026-04-26 (PR #15 — all kittens on homepage, smoother carousel)
+
+### Decisions
+- **CurrentLitter shows all available kittens:** Removed `.slice(0, 3)` cap. Homepage now shows all available kittens (7 with current litter: Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren). Elain is Reserved and correctly excluded by the `status === "Available"` filter.
+- **Fallback expanded to full 8-kitten slate:** CurrentLitter fallback previously only had 3 kittens (Helion, Tarquin, Kallias). Expanded to all 8 with correct names, colors, sexes, prices, `isPolydactyl`, and `availableDate` values matching the kittens.astro fallback.
+- **CTA text updated:** "VIEW FULL DETAILS" changed to "MEET THE FULL LITTER". Link to `/kittens` unchanged.
+- **Carousel crossfade smoother:** `transition-opacity duration-700` changed to `duration-[1200ms] ease-in-out` on KittenCard carousel images. Both outgoing and incoming images animate simultaneously (true crossfade — this was already the architecture; only duration and timing function changed). Auto-advance interval remains 4 seconds.
+
+### Deferred
+- Same as previous session: Sanity Studio deploy for gallery field, gallery upload script run, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session (PR #15 — merged)
+```
+src/components/CurrentLitter.astro  (removed slice(0,3); expanded fallback to 8 kittens; CTA text updated)
+src/components/KittenCard.astro     (carousel transition: duration-700 → duration-[1200ms] ease-in-out)
+CLAUDE.md                           (session log appended)
+```
