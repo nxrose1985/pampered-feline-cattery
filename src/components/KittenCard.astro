@@ -99,6 +99,9 @@ const dateLabel = formatDate(availableDate);
       "data-lightbox-trigger": "",
       "data-lightbox-images": JSON.stringify(allImages),
       "data-lightbox-name": name,
+      "role": "button",
+      "tabindex": "0",
+      "aria-label": `View photos of ${name}`,
     } : {}}
   >
     {image ? (

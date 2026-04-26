@@ -106,8 +106,8 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER]";
   <!-- Lightbox -->
   <div id="kitten-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90" aria-modal="true" role="dialog">
     <button id="lightbox-close" class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl leading-none" aria-label="Close">&times;</button>
-    <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-5xl leading-none px-2" aria-label="Previous">&#8249;</button>
-    <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-5xl leading-none px-2" aria-label="Next">&#8250;</button>
+    <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Previous">&#8249;</button>
+    <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Next">&#8250;</button>
     <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[85vw] object-contain" />
     <div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-sm tracking-widest"></div>
   </div>
@@ -118,15 +118,18 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER]";
     const lightboxCounter = document.getElementById('lightbox-counter') as HTMLElement;
     let images: string[] = [];
     let currentIndex = 0;
+    let lastFocusedElement: HTMLElement | null = null;
 
     function openLightbox(imgs: string[], idx: number, name: string) {
       images = imgs;
       currentIndex = idx;
+      lastFocusedElement = document.activeElement as HTMLElement;
       showImage();
       lightbox.classList.remove('hidden');
       lightbox.classList.add('flex');
       document.body.style.overflow = 'hidden';
       lightboxImg.alt = name + ' Maine Coon kitten';
+      document.getElementById('lightbox-close')!.focus();
     }
 
     function showImage() {
@@ -149,6 +152,7 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER]";
       lightbox.classList.remove('flex');
       document.body.style.overflow = '';
       images = [];
+      lastFocusedElement?.focus();
     }
 
     document.getElementById('lightbox-close')!.addEventListener('click', closeLightbox);
@@ -172,7 +176,7 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER]";
     lightbox.addEventListener('touchstart', (e) => { touchStartX = (e as TouchEvent).touches[0].clientX; }, { passive: true });
     lightbox.addEventListener('touchend', (e) => {
       const dx = (e as TouchEvent).changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 50) {
+      if (Math.abs(dx) > 50 && images.length > 1) {
         if (dx < 0) { currentIndex = (currentIndex + 1) % images.length; }
         else { currentIndex = (currentIndex - 1 + images.length) % images.length; }
         showImage();
@@ -184,6 +188,14 @@ const paymentMethods = settings.paymentMethods ?? "[PLACEHOLDER]";
         const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
         const name = (el as HTMLElement).dataset.lightboxName || '';
         if (imgs.length > 0) openLightbox(imgs, 0, name);
+      });
+      el.addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+          e.preventDefault();
+          const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
+          const name = (el as HTMLElement).dataset.lightboxName || '';
+          if (imgs.length > 0) openLightbox(imgs, 0, name);
+        }
       });
     });
   </script>
