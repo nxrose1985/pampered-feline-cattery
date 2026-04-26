@@ -56,6 +56,12 @@ export const kitten = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: "gallery",
+      title: "Photo Gallery",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+    }),
+    defineField({
       name: "order",
       title: "Display Order",
       type: "number",
