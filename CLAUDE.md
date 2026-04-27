@@ -940,3 +940,62 @@ src/pages/kittens.astro             (DELETED)
 public/_redirects                   (NEW — /kittens and /kittens/ → /#kittens 301)
 CLAUDE.md                           (session log appended)
 ```
+
+---
+
+## Session: 2026-04-27 (PR #19 — dark theme unification, European bloodlines, mobile optimization)
+
+### Decisions
+- **Full dark theme applied to all sections:** Every homepage section now uses bg-obsidian (#0A0A0A) or bg-[#0f0e0d] (alternating) instead of bg-ivory / bg-ivory-warm. The site is now a single cohesive dark design end-to-end.
+- **Text color convention unified:** text-charcoal → text-bone (#E8E4DC), text-charcoal-light → text-bone/70, text-gold-dark labels → text-gold/70 throughout index.astro.
+- **Gradient bridge removed:** The `h-16 md:h-20 bg-gradient-to-b from-obsidian to-ivory-warm` div between the kittens section and Meet the Parents was removed. No longer needed since all sections are dark.
+- **CatCard dark variant added:** `variant="light"|"dark"` prop added. Dark: bone text, gold/70 accents, bg-bone/[0.04] card background, bone/10 border. Light: original ivory-warm styling preserved.
+- **ContactForm dark variant added:** `variant="light"|"dark"` prop added. Dark: obsidian inputs with bone/15 borders, bone text, bone button. `text-base` added to all inputs to prevent iOS auto-zoom (prevents browser zoom on input focus on iPhone).
+- **Hero subtitle updated:** "Thoughtfully raised to be your best friend for life." → "European-line Maine Coons, raised in our home."
+- **European bloodlines messaging added in three locations:**
+  1. CurrentLitter: "European Championship Bloodlines · HCM Echo-Negative Parents" below "Born March 12, 2026" line
+  2. Meet the Parents h2: "European Championship Bloodlines · CFA Registered" subtitle line
+  3. Hero subtitle already includes "European-line"
+- **Accordion touch targets:** `min-h-[44px]` added to all `<summary>` elements in FAQ and Contract accordions.
+- **Nav mobile menu auto-close:** Added event listener on each mobile nav link to close the menu and reset aria-expanded on click.
+- **KittenCard lazy loading:** Non-first carousel images now use `loading="lazy"`. First image uses `loading="eager"` for performance.
+- **Footer background:** bg-charcoal → bg-obsidian for dark theme consistency.
+- **Contact email made tappable:** Email in the "Other Ways to Connect" section is now an `<a href="mailto:...">` link, not plain text.
+- **FAQ content verified:** All 10 FAQ answers confirmed accurate against current pricing and policies:
+  - Standard pets $3,600, rare color $4,000, polydactyl $4,200, rare color polydactyl $4,500 ✓
+  - Deposit $400 non-refundable ✓
+  - Payment: Zelle and bank wire only ✓
+  - Balance one week before pickup ✓
+  - Kittens go home at 12 weeks ✓
+  - Spay/neuter by 10 months ✓
+  - CFA papers withheld until proof of alteration ✓
+  - No air cargo, flight nanny in-cabin only ✓
+  - HCM echocardiogram by board-certified cardiologist + Wisdom Panel ✓
+
+### Conventions
+- **Dark alternating pattern:** Primary sections use `bg-obsidian`, alternating sections use `bg-[#0f0e0d]`. Applies to all sections below the hero.
+- **`text-gold/70` for labels:** All small-caps section labels use `text-gold/70` in dark mode (replaces `text-gold-dark`).
+- **`text-bone/[0.08]` divider pattern:** `divide-bone/[0.08]` for accordion dividers in dark context.
+- **`min-h-[44px]` on summary:** All accordion `<summary>` elements carry this class for mobile tap target compliance.
+- **`text-base` on inputs:** ContactForm always uses `text-base` to prevent iOS auto-zoom, regardless of variant.
+
+### Deferred
+- **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root (carry-forward). Sara cannot see gallery upload field until deployed.
+- **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` (carry-forward).
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** All new dark theme and touch target changes should be verified on an actual phone.
+
+### Files Changed This Session (PR #19 — merged)
+```
+src/components/Footer.astro       (bg-charcoal → bg-obsidian)
+src/components/Hero.astro         (subtitle: European-line Maine Coons, raised in our home)
+src/components/CurrentLitter.astro (European Championship Bloodlines tagline added)
+src/components/CatCard.astro      (variant="dark" prop added with full dark styling)
+src/components/ContactForm.astro  (variant="dark" prop added; text-base on all inputs)
+src/components/Nav.astro          (mobile menu auto-closes on link tap)
+src/components/KittenCard.astro   (loading="lazy" on non-first carousel images)
+src/pages/index.astro             (full dark theme; European bloodlines in Meet the Parents; gradient bridge removed; variant="dark" passed to CatCard and ContactForm; email mailto link; accordion min-h-[44px])
+CLAUDE.md                         (session log appended)
+```
+```
