@@ -117,6 +117,7 @@ const dateLabel = formatDate(availableDate);
           alt={`${name}, ${color} Maine Coon kitten`}
           class={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ease-linear ${i === 0 ? "opacity-100" : "opacity-0"}`}
           data-carousel-slide={i}
+          loading={i === 0 ? "eager" : "lazy"}
         />
       ))}
 

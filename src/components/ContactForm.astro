@@ -1,5 +1,12 @@
 ---
+interface Props {
+  variant?: "light" | "dark";
+}
+const { variant = "light" } = Astro.props;
+const isDark = variant === "dark";
 
+const labelClass = `block text-sm font-medium tracking-widest uppercase mb-2 ${isDark ? "text-bone/60" : "text-charcoal-light"}`;
+const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:outline-none ${isDark ? "bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold" : "bg-ivory-warm border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:border-gold-dark"}`;
 ---
 
 <form
@@ -17,63 +24,55 @@
   </p>
 
   <div>
-    <label for="name" class="block text-sm font-medium tracking-widest uppercase text-charcoal-light mb-2">
-      Name
-    </label>
+    <label for="name" class={labelClass}>Name</label>
     <input
       type="text"
       id="name"
       name="name"
       required
-      class="w-full px-4 py-3 bg-ivory-warm border border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:outline-none focus:border-gold-dark transition-colors"
+      class={inputClass}
       placeholder="Your full name"
     />
   </div>
 
   <div>
-    <label for="email" class="block text-sm font-medium tracking-widest uppercase text-charcoal-light mb-2">
-      Email
-    </label>
+    <label for="email" class={labelClass}>Email</label>
     <input
       type="email"
       id="email"
       name="email"
       required
-      class="w-full px-4 py-3 bg-ivory-warm border border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:outline-none focus:border-gold-dark transition-colors"
+      class={inputClass}
       placeholder="your@email.com"
     />
   </div>
 
   <div>
-    <label for="location" class="block text-sm font-medium tracking-widest uppercase text-charcoal-light mb-2">
-      City / State
-    </label>
+    <label for="location" class={labelClass}>City / State</label>
     <input
       type="text"
       id="location"
       name="location"
-      class="w-full px-4 py-3 bg-ivory-warm border border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:outline-none focus:border-gold-dark transition-colors"
+      class={inputClass}
       placeholder="Where are you located?"
     />
   </div>
 
   <div>
-    <label for="message" class="block text-sm font-medium tracking-widest uppercase text-charcoal-light mb-2">
-      Message
-    </label>
+    <label for="message" class={labelClass}>Message</label>
     <textarea
       id="message"
       name="message"
       rows="5"
       required
-      class="w-full px-4 py-3 bg-ivory-warm border border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:outline-none focus:border-gold-dark transition-colors resize-vertical"
+      class={`${inputClass} resize-vertical`}
       placeholder="Tell us about yourself and what you're looking for."
     ></textarea>
   </div>
 
   <button
     type="submit"
-    class="w-full sm:w-auto px-8 py-3 bg-charcoal text-ivory text-sm font-medium tracking-widest uppercase hover:bg-charcoal-light transition-colors cursor-pointer"
+    class={`w-full sm:w-auto px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors cursor-pointer ${isDark ? "bg-bone text-obsidian hover:bg-bone/85" : "bg-charcoal text-ivory hover:bg-charcoal-light"}`}
   >
     Send Message
   </button>

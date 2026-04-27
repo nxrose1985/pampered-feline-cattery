@@ -69,4 +69,11 @@ const navLinks = [
     toggle.setAttribute("aria-expanded", String(!expanded));
     menu?.classList.toggle("hidden");
   });
+
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu.classList.add("hidden");
+      toggle?.setAttribute("aria-expanded", "false");
+    });
+  });
 </script>
