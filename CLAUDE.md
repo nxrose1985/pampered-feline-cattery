@@ -999,3 +999,32 @@ src/pages/index.astro             (full dark theme; European bloodlines in Meet 
 CLAUDE.md                         (session log appended)
 ```
 ```
+
+---
+
+## Session: 2026-04-27 (PR #22 — contact form feedback + favicon)
+
+### Decisions
+- **Contact form feedback added:** Form submit is intercepted with `fetch` (AJAX). On success (HTTP 2xx from Netlify), all input fields and the submit button are hidden and a green success message is shown ("Message sent. We'll be in touch within 24 hours."). On error (network failure or non-2xx), the button is re-enabled and a red error message with a `mailto:` fallback link is shown. The user can retry without losing their input.
+- **Success/error colors use inline style rather than Tailwind utilities:** `#86efac` (light green) and `#fca5a5` (light salmon-red) are used with `style="color: ..."` because these exact values are not in the Tailwind token set. Both read legibly on the dark obsidian background.
+- **Form fields grouped in `#contact-fields` div:** Allows hiding all fields with a single `style.display = "none"` on success, rather than hiding each field individually.
+- **Favicon link tags completed:** `BaseLayout.astro` previously only had the SVG favicon link. Added `favicon.ico` (32×32 fallback for legacy browsers) and `apple-touch-icon.png` (iOS Safari home screen icon) link tags alongside the SVG reference.
+- **`apple-touch-icon.png` generated with sharp:** 180×180 PNG created from the existing PF monogram SVG (dark `#1C1917` background, gold `#C9A96E` text, 16px corner radius). Sharp renders the SVG to PNG at build time; the output was committed as a static asset.
+- **`favicon.ico` retained as-is:** The existing 655-byte file is actually a PNG with a `.ico` extension (PNG magic bytes confirmed). Most browsers accept this. Regenerating a proper ICO is deferred — the SVG link tag covers all modern browsers.
+
+### Conventions
+- **Netlify Forms AJAX pattern:** POST to `"/"` with `Content-Type: application/x-www-form-urlencoded` and `form-name` field included. `URLSearchParams` built by iterating `FormData` entries (avoids TypeScript overload ambiguity).
+- **Favicon link order:** ICO first (sizes="32x32"), SVG second (type override for modern browsers), apple-touch-icon third. This matches the 2024 favicon best-practice recommended by Andrey Sitnik.
+
+### Deferred
+- **`favicon.ico` replacement:** Current ICO is a PNG with wrong extension. Should be regenerated as a proper multi-size ICO (16×16, 32×32) using a tool like `png-to-ico` or `sharp`+custom ICO encoder. Low priority — SVG covers Chrome, Firefox, Edge; Safari uses apple-touch-icon.
+- **Contact form success/error states tested live:** Netlify Forms processing must be verified on the deployed site. The fetch target is `"/"` which is the standard Netlify Forms endpoint.
+- **All prior deferred items carry forward:** Sanity Studio deploy, gallery upload, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile device testing.
+
+### Files Changed This Session (PR #22 — merged)
+```
+src/components/ContactForm.astro   (fetch-based submit; #contact-fields wrapper; success/error message divs; inline JS)
+src/layouts/BaseLayout.astro       (favicon link tags: added ICO fallback + apple-touch-icon; SVG tag retained)
+public/apple-touch-icon.png        (NEW — 180×180 PF monogram PNG for iOS Safari)
+CLAUDE.md                          (session log appended)
+```
