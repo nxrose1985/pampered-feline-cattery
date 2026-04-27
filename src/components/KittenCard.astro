@@ -47,6 +47,12 @@ const {
 const galleryUrls = (gallery ?? []).map((g) => g.asset.url).filter(Boolean);
 const allImages = image ? [image, ...galleryUrls] : galleryUrls;
 
+function sanityCardUrl(url: string): string {
+  if (!url || !url.includes('cdn.sanity.io')) return url;
+  return `${url}?w=800&q=80&auto=format`;
+}
+const displayImages = allImages.map(sanityCardUrl);
+
 const pa = personalityAssessment;
 const hasAssessment = pa && (pa.personalitySummary || pa.confidenceLevel || pa.energyLevel);
 
@@ -101,7 +107,7 @@ const dateLabel = formatDate(availableDate);
   {allImages.length > 1 ? (
     <div
       class={`relative aspect-[4/5] overflow-hidden ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"} cursor-pointer`}
-      data-carousel={JSON.stringify(allImages)}
+      data-carousel={JSON.stringify(displayImages)}
       data-carousel-name={name}
       data-lightbox-images={JSON.stringify(allImages)}
       data-lightbox-name={name}
@@ -111,7 +117,7 @@ const dateLabel = formatDate(availableDate);
       tabindex="0"
       aria-label={`View photos of ${name}`}
     >
-      {allImages.map((src, i) => (
+      {displayImages.map((src, i) => (
         <img
           src={src}
           alt={`${name}, ${color} Maine Coon kitten`}
@@ -273,7 +279,7 @@ const dateLabel = formatDate(availableDate);
 
     {status === "Available" && !linkTo && (
       <a
-        href="/contact"
+        href="/#contact"
         class={`inline-block px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
           isDark
             ? "border-bone text-bone hover:bg-bone hover:text-obsidian"

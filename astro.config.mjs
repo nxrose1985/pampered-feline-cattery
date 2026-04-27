@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://pamperedfelinemainecoons.com',
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => page === 'https://pamperedfelinemainecoons.com/' })],
   vite: {
     plugins: [tailwindcss()]
   }
