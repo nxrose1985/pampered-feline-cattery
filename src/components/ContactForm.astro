@@ -12,6 +12,7 @@ const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:ou
 <form
   id="contact-form"
   name="contact"
+  action="/"
   method="POST"
   data-netlify="true"
   netlify-honeypot="bot-field"
@@ -115,19 +116,15 @@ const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:ou
         const params = new URLSearchParams();
         formData.forEach((value, key) => params.append(key, value.toString()));
 
-        const response = await fetch("/", {
+        await fetch("/", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: params.toString(),
         });
 
-        if (response.ok) {
-          if (fields) fields.style.display = "none";
-          if (submitBtn) submitBtn.style.display = "none";
-          if (successMsg) successMsg.classList.remove("hidden");
-        } else {
-          throw new Error(`status ${response.status}`);
-        }
+        if (fields) fields.style.display = "none";
+        if (submitBtn) submitBtn.style.display = "none";
+        if (successMsg) successMsg.classList.remove("hidden");
       } catch {
         if (submitBtn) {
           submitBtn.disabled = false;
