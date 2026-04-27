@@ -1028,3 +1028,28 @@ src/layouts/BaseLayout.astro       (favicon link tags: added ICO fallback + appl
 public/apple-touch-icon.png        (NEW — 180×180 PF monogram PNG for iOS Safari)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-27 (PR #23 — fix contact form always showing error state)
+
+### Root Cause
+The contact form submit handler checked `response.ok` after the `fetch` call and threw `new Error()` when the check failed, which was caught by the outer `catch {}` block and displayed the error state. Netlify Forms returns a 302 redirect on successful submission; `fetch` follows the redirect but the resulting response can have a non-2xx status in CDN edge cases, causing `response.ok` to be `false` on every valid submission.
+
+### Fix
+- **Removed `response.ok` check:** Any resolved `fetch` promise is now treated as success, matching Netlify's official AJAX form pattern. Only network-level exceptions (thrown errors) trigger the error state.
+- **Added `action="/"` to the `<form>` tag:** Explicit submit URL for clarity and parity with the `fetch` target.
+
+### Conventions
+- **Netlify Forms AJAX success criterion:** A resolved `fetch` = success. Do not inspect `response.ok` or `response.status` for Netlify Forms submissions. The documented pattern is `.then(() => /* success */).catch((error) => /* error */)`.
+
+### Deferred
+- **Contact form verified live on deployed site:** Submission flow (fields hide, success message appears, notification email arrives at pamperedfelinemainecoons@gmail.com) should be confirmed in the Netlify production environment.
+- **Netlify Forms dashboard:** After deploy, verify the "contact" form appears registered under the Netlify site's Forms tab.
+- **All prior deferred items carry forward:** Sanity Studio deploy, gallery upload, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile device testing.
+
+### Files Changed This Session (PR #23 — merged)
+```
+src/components/ContactForm.astro   (removed response.ok check; added action="/" to form tag)
+CLAUDE.md                          (session log appended)
+```
