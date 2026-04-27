@@ -10,6 +10,7 @@ const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:ou
 ---
 
 <form
+  id="contact-form"
   name="contact"
   method="POST"
   data-netlify="true"
@@ -21,57 +22,119 @@ const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:ou
     <label><input name="bot-field" /></label>
   </div>
 
-  <div>
-    <label for="name" class={labelClass}>Name</label>
-    <input
-      type="text"
-      id="name"
-      name="name"
-      required
-      class={inputClass}
-      placeholder="Your full name"
-    />
+  <div id="contact-fields" class="space-y-6">
+    <div>
+      <label for="name" class={labelClass}>Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        required
+        class={inputClass}
+        placeholder="Your full name"
+      />
+    </div>
+
+    <div>
+      <label for="email" class={labelClass}>Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        class={inputClass}
+        placeholder="your@email.com"
+      />
+    </div>
+
+    <div>
+      <label for="location" class={labelClass}>City / State</label>
+      <input
+        type="text"
+        id="location"
+        name="location"
+        class={inputClass}
+        placeholder="Where are you located?"
+      />
+    </div>
+
+    <div>
+      <label for="message" class={labelClass}>Message</label>
+      <textarea
+        id="message"
+        name="message"
+        rows="5"
+        required
+        class={`${inputClass} resize-vertical`}
+        placeholder="Tell us about yourself and what you're looking for."
+      ></textarea>
+    </div>
   </div>
 
-  <div>
-    <label for="email" class={labelClass}>Email</label>
-    <input
-      type="email"
-      id="email"
-      name="email"
-      required
-      class={inputClass}
-      placeholder="your@email.com"
-    />
-  </div>
+  <div class="space-y-4">
+    <button
+      type="submit"
+      id="contact-submit"
+      class={`w-full sm:w-auto px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isDark ? "bg-bone text-obsidian hover:bg-bone/85" : "bg-charcoal text-ivory hover:bg-charcoal-light"}`}
+    >
+      Send Message
+    </button>
 
-  <div>
-    <label for="location" class={labelClass}>City / State</label>
-    <input
-      type="text"
-      id="location"
-      name="location"
-      class={inputClass}
-      placeholder="Where are you located?"
-    />
-  </div>
+    <p id="contact-success" class="hidden text-sm leading-relaxed" style="color: #86efac;">
+      Message sent. We'll be in touch within 24 hours.
+    </p>
 
-  <div>
-    <label for="message" class={labelClass}>Message</label>
-    <textarea
-      id="message"
-      name="message"
-      rows="5"
-      required
-      class={`${inputClass} resize-vertical`}
-      placeholder="Tell us about yourself and what you're looking for."
-    ></textarea>
+    <p id="contact-error" class="hidden text-sm leading-relaxed" style="color: #fca5a5;">
+      Something went wrong. Please email us directly at
+      <a href="mailto:pamperedfelinemainecoons@gmail.com" class="underline underline-offset-2">
+        pamperedfelinemainecoons@gmail.com
+      </a>.
+    </p>
   </div>
-
-  <button
-    type="submit"
-    class={`w-full sm:w-auto px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors cursor-pointer ${isDark ? "bg-bone text-obsidian hover:bg-bone/85" : "bg-charcoal text-ivory hover:bg-charcoal-light"}`}
-  >
-    Send Message
-  </button>
 </form>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const fields = document.getElementById("contact-fields");
+  const submitBtn = document.getElementById("contact-submit") as HTMLButtonElement | null;
+  const successMsg = document.getElementById("contact-success");
+  const errorMsg = document.getElementById("contact-error");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+      if (errorMsg) errorMsg.classList.add("hidden");
+
+      try {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => params.append(key, value.toString()));
+
+        const response = await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+        });
+
+        if (response.ok) {
+          if (fields) fields.style.display = "none";
+          if (submitBtn) submitBtn.style.display = "none";
+          if (successMsg) successMsg.classList.remove("hidden");
+        } else {
+          throw new Error(`status ${response.status}`);
+        }
+      } catch {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send Message";
+        }
+        if (errorMsg) errorMsg.classList.remove("hidden");
+      }
+    });
+  }
+</script>
