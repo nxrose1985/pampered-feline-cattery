@@ -1053,3 +1053,56 @@ The contact form submit handler checked `response.ok` after the `fetch` call and
 src/components/ContactForm.astro   (removed response.ok check; added action="/" to form tag)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-28 (PR #24 — breeding cats migrated to Sanity with gallery, PDF reports, and parents banner)
+
+### Decisions
+- **Cat Sanity schema extended:** `gallery` (array of hotspot images) and `wisdomPanelPdf` (file asset) fields added to the `cat` document type. `parentsBannerImage` (hotspot image) added to the `siteSettings` document type.
+- **GROQ projections updated:** `catQuery` now projects `gallery[] { asset-> { url } }` and `wisdomPanelPdf { asset-> { url } }`. `siteSettingsQuery` projects `parentsBannerImage { asset-> { url } }`.
+- **TypeScript types updated:** `Cat` interface gains `gallery?` and `wisdomPanelPdf?`. `SiteSettings` gains `parentsBannerImage?`.
+- **CatCard rewritten with gallery carousel:** Multi-image crossfade carousel (1.2s, `ease-in-out`, 4s advance) matching KittenCard pattern. Pause on mouseenter/touchstart, resume on mouseleave (1s touch delay). Dot indicators. Lightbox trigger attributes (`data-lightbox-trigger`, `data-lightbox-images`, `data-lightbox-index`) match the kitten lightbox contract. Single-image case uses `loading="eager"`. Placeholder preserved for no-image state. Aspect ratio: `aspect-square`.
+- **"View Genetic Report" PDF link:** Renders below health text in CatCard when `wisdomPanelPdf` URL is present. Opens in new tab with `rel="noopener noreferrer"`. Dark/light variant styling.
+- **Cat lightbox added to index.astro:** `<div id="cat-lightbox">` with full keyboard/swipe/click-outside handling. Scoped to `#our-cats` section via `el.closest('#our-cats')` guard to avoid conflicting with kitten lightbox.
+- **Kitten lightbox scoped to `#kittens`:** `CurrentLitter.astro` lightbox registration now has `if (!el.closest('#kittens')) return;` guard. Without this, cat card clicks would open the kitten lightbox with cat photos (bug).
+- **Parents banner added:** Optional full-width banner above cat cards, conditionally rendered when `settings.parentsBannerImage?.asset?.url` is set. Caption: "Aedion × Feyra — Spring 2026". Uses `?w=1200&q=85&auto=format` CDN params.
+- **upload-cats.mjs created and run:** Uploads hero photo, gallery array, and Wisdom Panel PDF for each cat. Three documents created/replaced in Sanity: `cat-aedion`, `cat-rowan`, `cat-feyra`. Script searches `public/images/cats/{CatName}/` in both worktree and main project root. Hero = first non-`_parents` image (alphabetical). Gallery = remaining images. PDF match is case-insensitive.
+- **All three cat documents live in Sanity:** Aedion (1 hero + 9 gallery + PDF), Rowan (1 hero, no gallery, no PDF), Feyra (1 hero + 3 gallery + PDF).
+- **No `_parents` banner image found:** None of the cat image files have `_parents` in the filename. The banner section will not render until a `parentsBannerImage` is uploaded via Sanity Studio or the script.
+- **`@astrojs/check` and `typescript` added as devDependencies:** Installed by subagents running `npx astro check` for TypeScript validation during development.
+
+### Conventions
+- **Cat document IDs:** `cat-{name.toLowerCase()}` — e.g. `cat-aedion`, `cat-rowan`, `cat-feyra`.
+- **Cat lightbox vs kitten lightbox:** Cat triggers are scoped via `el.closest('#our-cats')`; kitten triggers scoped via `el.closest('#kittens')`. Both use the same `data-lightbox-trigger` attribute — the scope guard in each script prevents interference.
+- **Gallery `_key` pattern:** `{basename_without_ext}_{index}` — index suffix guarantees uniqueness even if two filenames normalize to the same string after sanitization.
+- **parentsBannerImage upload path:** Upload via Sanity Studio (`siteSettings` document → Parents Together Banner Image field) or by adding a `_parents`-named file to a cat folder and re-running `node scripts/upload-cats.mjs`.
+
+### Deferred
+- **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated cat schema (gallery + wisdomPanelPdf fields) and siteSettings schema (parentsBannerImage) to Studio UI. Sara cannot see the new fields until this is done.
+- **Parents banner image:** No `_parents` photo exists yet. Upload one via Sanity Studio → Site Settings → Parents Together Banner Image. Once published, the banner renders above the cat cards.
+- **Sara's cat entries in Studio:** Cat documents are live with the uploaded photos. Sara may want to review and add/replace photos via the Studio UI once `npx sanity deploy` is run.
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
+- **Mobile testing on real device:** Carousel, lightbox, and cat gallery should be tested on an actual phone.
+- **Contact form verified live:** Carry forward from PR #23.
+
+### Files Changed This Session (PR #24 — merged)
+```
+sanity/schemas/cat.ts              (gallery + wisdomPanelPdf fields added)
+sanity/schemas/siteSettings.ts     (parentsBannerImage field added)
+src/lib/sanity.ts                  (Cat type + catQuery + SiteSettings type + siteSettingsQuery updated)
+src/components/CatCard.astro       (rewritten: gallery carousel, lightbox trigger, wisdomPanelPdf link)
+src/components/CurrentLitter.astro (kitten lightbox scoped to #kittens)
+src/pages/index.astro              (gallery/wisdomPanelPdf props wired; parents banner; cat lightbox HTML+JS)
+scripts/upload-cats.mjs            (NEW — uploads hero/gallery/PDF for Aedion, Rowan, Feyra)
+package.json                       (@astrojs/check + typescript added as devDependencies)
+package-lock.json                  (updated)
+CLAUDE.md                          (session log appended)
+```
+
+### Sanity Documents Created This Session
+```
+cat-aedion   hero: IMG_6495.jpeg, gallery: 9 photos, wisdomPanelPdf: Aedion_WisdomPanelProfile_FormerName-Eyktan Navarro.pdf
+cat-rowan    hero: PIX_0946-Enhanced-NR.png, gallery: none, wisdomPanelPdf: none
+cat-feyra    hero: IMG_6482.jpeg, gallery: 3 photos, wisdomPanelPdf: Feyra_WisdomPanelProfile_FormerName-Ulya.pdf
+```
