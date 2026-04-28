@@ -14,6 +14,7 @@ interface PersonalityAssessment {
 
 interface Props {
   name: string;
+  slug?: string;
   sex: string;
   color: string;
   personality?: string;
@@ -30,6 +31,7 @@ interface Props {
 
 const {
   name,
+  slug,
   sex,
   color,
   personality,
@@ -43,6 +45,8 @@ const {
   personalityAssessment,
   linkTo,
 } = Astro.props;
+
+const meetHref = slug ? `/kittens/${slug}` : null;
 
 const galleryUrls = (gallery ?? []).map((g) => g.asset.url).filter(Boolean);
 const allImages = image ? [image, ...galleryUrls] : galleryUrls;
@@ -256,17 +260,31 @@ const dateLabel = formatDate(availableDate);
       </div>
     )}
 
-    {status === "Available" && !linkTo && (
-      <a
-        href="/#contact"
-        class={`inline-block px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
-          isDark
-            ? "border-bone text-bone hover:bg-bone hover:text-obsidian"
-            : "border-charcoal text-charcoal hover:bg-charcoal hover:text-ivory"
-        }`}
-      >
-        Inquire
-      </a>
-    )}
+    <div class={`flex flex-col gap-2 ${meetHref || (status === "Available" && !linkTo) ? "" : "hidden"}`}>
+      {status === "Available" && !linkTo && (
+        <a
+          href="/#contact"
+          class={`inline-block w-full text-center px-6 py-2 text-xs font-medium tracking-widest uppercase transition-colors ${
+            isDark
+              ? "bg-bone text-obsidian hover:bg-bone/90"
+              : "bg-charcoal text-ivory hover:bg-charcoal/90"
+          }`}
+        >
+          Inquire
+        </a>
+      )}
+      {meetHref && (
+        <a
+          href={meetHref}
+          class={`inline-block w-full text-center px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
+            isDark
+              ? "border-bone/30 text-bone/60 hover:border-bone/60 hover:text-bone"
+              : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"
+          }`}
+        >
+          Meet {name}
+        </a>
+      )}
+    </div>
   </div>
 </div>

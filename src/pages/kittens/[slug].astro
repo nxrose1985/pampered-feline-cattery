@@ -1,0 +1,497 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getKittens, getKittenBySlug } from "../../lib/sanity";
+import type { Kitten } from "../../lib/sanity";
+
+export async function getStaticPaths() {
+  const fallbackSlugs = [
+    "helion", "tarquin", "kallias", "azriel", "lucien", "morrigan", "amren", "elain",
+  ];
+
+  const sanityKittens = await getKittens();
+
+  if (sanityKittens.length > 0) {
+    return sanityKittens
+      .filter((k) => k.slug)
+      .map((k) => ({ params: { slug: k.slug! } }));
+  }
+
+  return fallbackSlugs.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+
+const fallbackKittens: Kitten[] = [
+  { name: "Helion",  slug: "helion",  sex: "Male",   color: "Cream Shaded Silver",               status: "Available", isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1, personality: "", about: "Helion carries himself like he knows exactly how good-looking he is. His cream shaded silver coat shifts from pale champagne at the tips to a bright silver undercoat — in the right light he almost glows. He is steady and confident without being pushy, the kind of cat who settles into a new home on his own terms and then decides he owns it. He will do well in an active household and is likely to become his person's shadow. Named for the High Lord of the Day Court — radiant, unhurried, and completely sure of himself." },
+  { name: "Tarquin", slug: "tarquin", sex: "Male",   color: "Cream Shaded Silver",               status: "Available", isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2, personality: "", about: "Tarquin is the easygoing one. Where his cream shaded silver littermates are bold, Tarquin is warm — quick to purr, slow to startle, and genuinely happy in anyone's lap. His coat has the same luminous silver-cream shimmer as Helion's but his personality is softer, more collaborative. He would thrive as a companion for another cat or as the gentle anchor of a busy family home. Named for the High Lord of the Summer Court — generous, open, and deeply kind." },
+  { name: "Kallias", slug: "kallias", sex: "Male",   color: "Poly Cream Shaded Silver (6/6/6/6)", status: "Available", isPolydactyl: true,  litter: "march-2026", price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3, personality: "", about: "Kallias is the one who stops people mid-scroll. The cream shaded silver coat is already striking, but add six toes on each front paw and he becomes something genuinely rare. He is curious and physical — the kitten who investigates everything, climbs everything, and figures things out faster than you expect. His extra toes give him remarkable dexterity; don't be surprised if he learns to open things. He needs a home that will keep up with him. Named for the High Lord of the Winter Court — precise, capable, and quietly extraordinary." },
+  { name: "Azriel",  slug: "azriel",  sex: "Male",   color: "Poly Blue Silver Tabby (6/6/6/6)",  status: "Available", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 4, personality: "", about: "Azriel is cool-toned and watchful, with a blue silver tabby coat that photographs like smoke and steel. His tabby stripes are crisp, his silver undercoat deep, and his six-toed front paws give him a presence that is hard to ignore. He takes his time warming up to new people but once he decides you're his, he is loyal and close. He will likely bond deeply with one or two people in the household. Named for the shadowsinger — quiet, observant, and fiercely devoted to those he loves." },
+  { name: "Lucien",  slug: "lucien",  sex: "Male",   color: "Poly Red Tabby (7/7/6/6)",          status: "Available", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 400, availableDate: "2026-07-08", order: 5, personality: "", about: "Lucien is the warm one. His red tabby coat is rich and saturated — copper and amber in sunlight, deep auburn in shadow — and his seven-toed front paws make him look like he was built for adventure. He is outgoing and social, the first to greet a stranger and the last to stop playing. Red tabbies have a reputation for personality and Lucien earns it. He would do well in a home with kids, dogs, or other cats. Named for Elain's mate — resilient, vivid, and impossible not to love." },
+  { name: "Morrigan", slug: "morrigan", sex: "Female", color: "Blue Tortie",                      status: "Available", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 6, personality: "", about: "Morrigan's coat is a study in contrasts — soft blue-grey patches against warm cream, scattered in the random, unrepeatable pattern that makes every tortie one of a kind. She is sharp and spirited, with the classic tortitude that tortie owners know well: she has opinions, she will share them, and she will make you laugh doing it. She is also deeply affectionate with the people she chooses. Named for the most powerful High Fae in the Night Court — fierce, funny, and completely herself." },
+  { name: "Amren",   slug: "amren",   sex: "Female", color: "Blue Tortie",                       status: "Available", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7, personality: "", about: "Amren is compact, watchful, and quietly intense. Her blue tortie coat is softer in tone than Morrigan's — more muted blue, less contrast — which gives her a silvery, ethereal quality that suits her personality. She observes before she engages, sizes up a room before she enters it, and reserves her affection for people who have earned it. When she decides you're worth her time, you'll know. Named for the ancient, unknowable second-in-command of the Night Court — small, still, and not to be underestimated." },
+  { name: "Elain",   slug: "elain",   sex: "Female", color: "Poly Blue Shaded Silver (6/6/6/6)", status: "Reserved",  isPolydactyl: true,  litter: "march-2026", price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8, personality: "", about: "Elain is reserved — both in temperament and status. Her blue shaded silver polydactyl coat is soft and cool-toned, and her six-toed paws give her a quiet elegance that matches her personality. She warms slowly, prefers gentle handling, and rewards patience with deep loyalty. She is the kind of cat who will choose you, not the other way around." },
+];
+
+let kitten: Kitten | null = await getKittenBySlug(slug);
+
+if (!kitten) {
+  kitten = fallbackKittens.find((k) => k.slug === slug) ?? null;
+}
+
+if (!kitten) {
+  return Astro.redirect("/");
+}
+
+const heroUrl = kitten.image?.asset?.url;
+const galleryUrls = (kitten.gallery ?? []).map((g) => g.asset.url).filter(Boolean);
+const allImageUrls = heroUrl ? [heroUrl, ...galleryUrls] : galleryUrls;
+
+function sanityUrl(url: string, w = 1200): string {
+  if (!url || !url.includes("cdn.sanity.io")) return url;
+  return `${url}?w=${w}&q=85&auto=format`;
+}
+
+function formatPrice(p?: number): string | null {
+  if (p === undefined || p === null) return null;
+  return `$${p.toLocaleString("en-US")}`;
+}
+
+function formatDate(d?: string): string | null {
+  if (!d) return null;
+  const match = /^\d{4}-\d{2}-\d{2}$/.test(d);
+  if (!match) return d;
+  const [y, m, day] = d.split("-").map(Number);
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[m - 1]} ${day}, ${y}`;
+}
+
+const priceLabel = formatPrice(kitten.price);
+const dateLabel = formatDate(kitten.availableDate);
+const pa = kitten.personalityAssessment;
+const hasAssessment = pa && (pa.personalitySummary || pa.confidenceLevel || pa.energyLevel);
+
+const statusColors: Record<string, string> = {
+  "Available": "bg-green-light/25 text-bone",
+  "Reserved": "bg-gold/20 text-gold",
+  "Under Evaluation": "bg-bone/10 text-bone/70",
+};
+const statusClass = statusColors[kitten.status] ?? statusColors["Available"];
+
+const aboutFirstSentence = kitten.about?.split(". ")[0] ?? "";
+const metaDescription = aboutFirstSentence
+  ? `${aboutFirstSentence}. ${kitten.color} Maine Coon kitten available from Pampered Feline Maine Coons in Northern Virginia.`
+  : `${kitten.name} is a ${kitten.color} Maine Coon kitten available from Pampered Feline Maine Coons in Northern Virginia.`;
+
+function formatAssessmentDate(d?: string) {
+  if (!d) return null;
+  const match = /^\d{4}-\d{2}-\d{2}$/.test(d);
+  if (!match) return d;
+  const [, m, day] = d.split("-").map(Number);
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[m - 1]} ${day}`;
+}
+---
+
+<BaseLayout
+  title={`${kitten.name} — Pampered Feline Maine Coons`}
+  description={metaDescription}
+  ogImage={heroUrl ? sanityUrl(heroUrl, 1200) : undefined}
+>
+
+  <!-- Back nav -->
+  <div class="bg-obsidian border-b border-bone/10">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <a
+        href="/#kittens"
+        class="inline-flex items-center gap-2 text-bone/50 hover:text-bone text-sm tracking-widest uppercase transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to the Litter
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-obsidian pt-10 pb-16 md:pt-14 md:pb-24">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+
+        <!-- Image / gallery -->
+        <div class="w-full">
+          {heroUrl ? (
+            <div class="relative aspect-square overflow-hidden rounded-sm bg-bone/[0.03]">
+              <img
+                id="hero-img"
+                src={sanityUrl(heroUrl, 900)}
+                alt={`${kitten.name}, ${kitten.color} Maine Coon kitten`}
+                class="w-full h-full object-cover"
+                loading="eager"
+              />
+              {kitten.isPolydactyl && (
+                <span class="absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm bg-gold/20 text-gold z-10">
+                  Polydactyl
+                </span>
+              )}
+              <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-10 ${statusClass}`}>
+                {kitten.status}
+              </span>
+            </div>
+          ) : (
+            <div class="relative aspect-square flex items-center justify-center rounded-sm bg-bone/[0.03]">
+              <svg class="w-16 h-16 text-bone/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          )}
+
+          {galleryUrls.length > 0 && (
+            <div class="mt-3 grid grid-cols-4 gap-2">
+              {allImageUrls.slice(0, 8).map((url, i) => (
+                <button
+                  class={`aspect-square overflow-hidden rounded-sm border-2 transition-colors ${i === 0 ? "border-gold/60" : "border-transparent hover:border-bone/30"}`}
+                  data-thumb-src={sanityUrl(url, 900)}
+                  data-thumb-index={i}
+                  aria-label={`View photo ${i + 1} of ${kitten.name}`}
+                  onclick="selectThumb(this)"
+                >
+                  <img
+                    src={sanityUrl(url, 200)}
+                    alt=""
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {allImageUrls.length > 0 && (
+            <button
+              id="open-lightbox"
+              class="mt-4 w-full py-2 border border-bone/15 text-bone/40 text-xs uppercase tracking-widest hover:border-bone/40 hover:text-bone/70 transition-colors rounded-sm"
+              data-all-images={JSON.stringify(allImageUrls)}
+              data-kitten-name={kitten.name}
+            >
+              View all {allImageUrls.length} photo{allImageUrls.length !== 1 ? "s" : ""}
+            </button>
+          )}
+        </div>
+
+        <!-- Details -->
+        <div>
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-3">
+            Spring 2026 · Born March 12
+          </p>
+          <h1 class="font-heading text-5xl md:text-6xl font-semibold text-bone mb-2">
+            {kitten.name}
+          </h1>
+          <p class="text-gold text-sm uppercase tracking-widest mb-1">{kitten.color}</p>
+          <p class="text-bone/50 text-sm mb-8">{kitten.sex} · Maine Coon{kitten.breed && kitten.breed !== "Maine Coon" ? ` · ${kitten.breed}` : ""}</p>
+
+          <!-- Price / Date -->
+          {(priceLabel || dateLabel || kitten.status === "Reserved") && (
+            <dl class="text-xs uppercase tracking-widest space-y-2 mb-8 border-t border-b border-bone/10 py-5">
+              {kitten.status === "Reserved" && !priceLabel && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Status</dt>
+                  <dd class="font-medium text-gold">Reserved</dd>
+                </div>
+              )}
+              {priceLabel && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Price</dt>
+                  <dd class="font-medium text-bone">{priceLabel}</dd>
+                </div>
+              )}
+              {kitten.reservationFee && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Deposit</dt>
+                  <dd class="font-medium text-bone">${kitten.reservationFee.toLocaleString("en-US")} non-refundable</dd>
+                </div>
+              )}
+              {dateLabel && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Ready</dt>
+                  <dd class="font-medium text-bone">{dateLabel}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+
+          <!-- About -->
+          {kitten.about && (
+            <div class="mb-8">
+              <p class="text-bone/80 leading-relaxed text-base">{kitten.about}</p>
+            </div>
+          )}
+
+          <!-- CTA -->
+          {kitten.status === "Available" && (
+            <a
+              href="/#contact"
+              class="inline-block w-full text-center px-8 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors mb-3"
+            >
+              Inquire About {kitten.name}
+            </a>
+          )}
+          <a
+            href="/#kittens"
+            class="inline-block w-full text-center px-8 py-4 border border-bone/20 text-bone/60 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone/90 transition-colors"
+          >
+            Back to the Litter
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Personality Assessment -->
+  {hasAssessment && (
+    <section class="bg-[#0f0e0d] py-16 md:py-20">
+      <div class="max-w-3xl mx-auto px-4">
+        <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Temperament</p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+          Personality Assessment
+        </h2>
+
+        {pa?.personalitySummary && (
+          <p class="text-bone/80 leading-relaxed text-base mb-10">{pa.personalitySummary}</p>
+        )}
+
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {pa?.confidenceLevel && (
+            <div class="col-span-1 sm:col-span-2">
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-2">Confidence Level</dt>
+              <dd class="flex items-center gap-1">
+                {Array.from({ length: 10 }, (_, i) => (
+                  <span class={`w-3 h-3 rounded-full ${i < (pa?.confidenceLevel ?? 0) ? "bg-gold" : "bg-bone/15"}`} />
+                ))}
+                <span class="ml-3 text-sm text-bone/50">{pa.confidenceLevel}/10</span>
+              </dd>
+            </div>
+          )}
+          {pa?.energyLevel && (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">Energy</dt>
+              <dd class="text-bone font-medium">{pa.energyLevel}</dd>
+            </div>
+          )}
+          {pa?.approachesHumans && (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">With New People</dt>
+              <dd class="text-bone font-medium">{pa.approachesHumans}</dd>
+            </div>
+          )}
+          {pa?.lapCat && (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">Lap Cat</dt>
+              <dd class="text-bone font-medium">{pa.lapCat}</dd>
+            </div>
+          )}
+          {pa?.hotDogTest && (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">Food Motivated</dt>
+              <dd class="text-bone font-medium">{pa.hotDogTest}</dd>
+            </div>
+          )}
+          {pa?.goodWithKids && (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">Good With Kids</dt>
+              <dd class="text-bone font-medium">{pa.goodWithKids}</dd>
+            </div>
+          )}
+          {pa?.goodWithDogs && (
+            <div>
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">Good With Dogs</dt>
+              <dd class="text-bone font-medium">{pa.goodWithDogs}</dd>
+            </div>
+          )}
+          {pa?.toyDrive && (
+            <div class="col-span-1 sm:col-span-2">
+              <dt class="text-xs uppercase tracking-widest text-bone/40 mb-1">Play</dt>
+              <dd class="text-bone font-medium">{pa.toyDrive}</dd>
+            </div>
+          )}
+        </dl>
+
+        {pa?.assessmentDate && (
+          <p class="mt-8 text-xs text-bone/30 tracking-widest">
+            Assessed {formatAssessmentDate(pa.assessmentDate)}
+          </p>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- Full Gallery -->
+  {galleryUrls.length > 0 && (
+    <section class="bg-obsidian py-16 md:py-20">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Gallery</p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+          More Photos
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {allImageUrls.map((url, i) => (
+            <button
+              class="aspect-square overflow-hidden rounded-sm hover:opacity-90 transition-opacity"
+              data-lightbox-trigger=""
+              data-lightbox-images={JSON.stringify(allImageUrls)}
+              data-lightbox-name={kitten.name}
+              data-lightbox-index={i}
+              aria-label={`View photo ${i + 1} of ${kitten.name}`}
+            >
+              <img
+                src={sanityUrl(url, 400)}
+                alt=""
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Bottom CTA -->
+  <section class="bg-[#0f0e0d] py-16 md:py-20 text-center">
+    <div class="max-w-xl mx-auto px-4">
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+        Interested in {kitten.name}?
+      </h2>
+      <p class="text-bone/60 mb-8 leading-relaxed">
+        {kitten.status === "Available"
+          ? "Fill out a short form and we'll follow up within 24 hours to answer your questions and confirm the fit."
+          : `${kitten.name} is currently reserved. Fill out a form to be added to our waitlist for future litters.`}
+      </p>
+      <a
+        href="/#contact"
+        class="inline-block px-10 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors"
+      >
+        {kitten.status === "Available" ? `Inquire About ${kitten.name}` : "Join the Waitlist"}
+      </a>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div id="kitten-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90" aria-modal="true" role="dialog">
+    <button id="lightbox-close" class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl leading-none" aria-label="Close">&times;</button>
+    <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Previous">&#8249;</button>
+    <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Next">&#8250;</button>
+    <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[85vw] object-contain" />
+    <div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-sm tracking-widest"></div>
+  </div>
+
+</BaseLayout>
+
+<script>
+  // Thumbnail switcher
+  let currentThumbIndex = 0;
+
+  function selectThumb(btn: HTMLElement) {
+    const heroImg = document.getElementById('hero-img') as HTMLImageElement;
+    if (!heroImg) return;
+    const src = btn.dataset.thumbSrc;
+    const idx = parseInt(btn.dataset.thumbIndex || '0', 10);
+    if (src) heroImg.src = src;
+    currentThumbIndex = idx;
+
+    document.querySelectorAll('[data-thumb-index]').forEach((el) => {
+      (el as HTMLElement).classList.remove('border-gold/60');
+      (el as HTMLElement).classList.add('border-transparent');
+    });
+    btn.classList.remove('border-transparent');
+    btn.classList.add('border-gold/60');
+  }
+
+  // Make selectThumb global for onclick attribute
+  (window as any).selectThumb = selectThumb;
+
+  // Lightbox
+  const lightbox = document.getElementById('kitten-lightbox') as HTMLElement;
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxCounter = document.getElementById('lightbox-counter') as HTMLElement;
+  let images: string[] = [];
+  let currentIndex = 0;
+  let lastFocused: HTMLElement | null = null;
+
+  function openLightbox(imgs: string[], idx: number, name: string) {
+    images = imgs;
+    currentIndex = idx;
+    lastFocused = document.activeElement as HTMLElement;
+    showImage();
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    lightboxImg.alt = name + ' Maine Coon kitten';
+    document.getElementById('lightbox-close')!.focus();
+  }
+
+  function showImage() {
+    lightboxImg.src = images[currentIndex];
+    const prev = document.getElementById('lightbox-prev') as HTMLElement;
+    const next = document.getElementById('lightbox-next') as HTMLElement;
+    if (images.length > 1) {
+      lightboxCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+      prev.style.display = '';
+      next.style.display = '';
+    } else {
+      lightboxCounter.textContent = '';
+      prev.style.display = 'none';
+      next.style.display = 'none';
+    }
+  }
+
+  function closeLightbox() {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+    document.body.style.overflow = '';
+    images = [];
+    lastFocused?.focus();
+  }
+
+  document.getElementById('lightbox-close')!.addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-prev')!.addEventListener('click', () => { currentIndex = (currentIndex - 1 + images.length) % images.length; showImage(); });
+  document.getElementById('lightbox-next')!.addEventListener('click', () => { currentIndex = (currentIndex + 1) % images.length; showImage(); });
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') { currentIndex = (currentIndex - 1 + images.length) % images.length; showImage(); }
+    if (e.key === 'ArrowRight') { currentIndex = (currentIndex + 1) % images.length; showImage(); }
+  });
+
+  let touchStartX = 0;
+  lightbox.addEventListener('touchstart', (e) => { touchStartX = (e as TouchEvent).touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', (e) => {
+    const dx = (e as TouchEvent).changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50 && images.length > 1) {
+      if (dx < 0) currentIndex = (currentIndex + 1) % images.length;
+      else currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage();
+    }
+  });
+
+  // Open lightbox button
+  const openBtn = document.getElementById('open-lightbox');
+  if (openBtn) {
+    openBtn.addEventListener('click', () => {
+      const imgs: string[] = JSON.parse(openBtn.dataset.allImages || '[]');
+      const name = openBtn.dataset.kittenName || '';
+      if (imgs.length > 0) openLightbox(imgs, currentThumbIndex, name);
+    });
+  }
+
+  // Gallery grid triggers
+  document.querySelectorAll('[data-lightbox-trigger]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
+      const name = (el as HTMLElement).dataset.lightboxName || '';
+      const idx = parseInt((el as HTMLElement).dataset.lightboxIndex || '0', 10);
+      if (imgs.length > 0) openLightbox(imgs, idx, name);
+    });
+  });
+</script>
