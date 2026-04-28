@@ -1153,3 +1153,59 @@ CLAUDE.md                          (session log appended)
 src/styles/global.css              (html + body background-color set to var(--color-obsidian))
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-28 (PR #26 — individual kitten detail pages)
+
+### Decisions
+- **Individual kitten pages added:** Dynamic route `src/pages/kittens/[slug].astro` generates one SEO page per kitten. All 8 kittens (Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren, Elain) have pages at `/kittens/{slug}`.
+- **`slug` field added to Sanity kitten schema:** Type `slug`, source `name`, auto-generated. All 8 kitten documents patched with `slug.current` values (lowercase first names).
+- **`about` field added to Sanity kitten schema:** Type `text`, 6 rows, with description. All 8 kitten documents patched with the approved about copy provided in the session prompt.
+- **`getKittenBySlug()` added to sanity.ts:** Fetches a single kitten by `slug.current`. Returns `null` if not found (triggers redirect to homepage). Falls back to hardcoded fallback array when Sanity is unreachable.
+- **GROQ projection updated:** `kittenProjection` now includes `"slug": slug.current` and `about` fields. All existing queries automatically pick these up.
+- **Kitten detail page design:** Dark obsidian theme. Two-column layout on desktop (image left, details right). Hero image with thumbnail strip below (first 8 gallery images). "Back to the Litter" nav at top. Price/deposit/ready date in a bordered dl. About copy. Full gallery grid. Personality assessment section (if data present). Bottom CTA section. Lightbox for all images.
+- **"Meet [Name]" button added to KittenCard:** Secondary button below the primary Inquire button. Rendered when `slug` prop is set. Inquire remains primary (solid fill); Meet is secondary (outlined). Both visible simultaneously for Available kittens. Reserved kittens show only the Meet button (no Inquire).
+- **CurrentLitter fallback updated with slugs:** All 8 entries in the fallback array now include a `slug` field. `slug` passed as prop to `KittenCard` from the map.
+- **Sitemap filter fixed:** Was `filter: (page) => page === homepage` (homepage only). Changed to `filter: (page) => !page.includes('/404')` — all pages included except the 404. Sitemap now includes homepage + 8 kitten detail pages.
+- **`_redirects` unchanged:** `/kittens` and `/kittens/` still 301 to `/#kittens`. These exact-path redirects do not intercept `/kittens/{slug}/` subpaths. Verified Netlify does not wildcard-match these.
+- **Build passes cleanly:** 10 pages generated (1 homepage, 8 kitten pages, 1 404). Sitemap confirmed correct.
+- **Patch script committed:** `scripts/patch-kitten-about.mjs` handles the Sanity document patching. Can be re-run safely (idempotent patch). Reads write token from `.env` or `../../../.env` (main project root from worktree).
+
+### Conventions
+- **Kitten slug pattern:** Lowercase first name, no hyphens (e.g. `helion`, `morrigan`). Matches Sanity document ID suffix (`kitten-helion`).
+- **Kitten page URL pattern:** `/kittens/{slug}` (e.g. `/kittens/helion`).
+- **Kitten detail page fallback:** `fallbackKittens` array in `[slug].astro` mirrors the one in `CurrentLitter.astro` but includes `about` copy. If Sanity is unreachable, detail pages still render with correct copy.
+- **Thumbnail strip behavior:** First 8 images shown. Clicking a thumbnail updates the hero image via `selectThumb()` exposed on `window`. Active thumb has `border-gold/60`. Lightbox opens at the currently selected thumbnail index.
+- **Meet button visibility:** Rendered whenever `slug` prop is present (both Available and Reserved kittens). Inquire button rendered only for Available kittens without `linkTo`.
+
+### Deferred
+- **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated schema (slug + about fields) to Sanity Studio UI. Sara cannot see or edit these fields in Studio until deployed.
+- **Parents banner image:** Still no `_parents` photo. Upload via Sanity Studio → Site Settings → Parents Together Banner Image.
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos entered in Studio.
+- **Mobile testing on real device:** Kitten detail page layout (two-column, thumbnail strip, gallery grid) should be verified on an actual phone.
+
+### Files Changed This Session (PR #26 — merged)
+```
+sanity/schemas/kitten.ts           (slug field added before personality; about field added after personality)
+src/lib/sanity.ts                  (Kitten type: slug? + about? added; kittenProjection: slug.current + about; kittenBySlugQuery added; getKittenBySlug() added)
+src/components/KittenCard.astro    (slug prop added; meetHref computed; Inquire changed to primary solid; Meet [Name] secondary button added)
+src/components/CurrentLitter.astro (fallback array: slug field added to all 8 entries; slug prop passed to KittenCard)
+src/pages/kittens/[slug].astro     (NEW — dynamic route for individual kitten pages)
+scripts/patch-kitten-about.mjs     (NEW — patches all 8 kitten documents with about copy and slug.current)
+astro.config.mjs                   (sitemap filter: homepage-only → all pages except /404)
+CLAUDE.md                          (session log appended)
+```
+
+### Sanity Documents Patched This Session
+```
+kitten-helion    slug: helion,   about: "Helion carries himself like he knows exactly..."
+kitten-tarquin   slug: tarquin,  about: "Tarquin is the easygoing one..."
+kitten-kallias   slug: kallias,  about: "Kallias is the one who stops people mid-scroll..."
+kitten-azriel    slug: azriel,   about: "Azriel is cool-toned and watchful..."
+kitten-lucien    slug: lucien,   about: "Lucien is the warm one..."
+kitten-morrigan  slug: morrigan, about: "Morrigan's coat is a study in contrasts..."
+kitten-amren     slug: amren,    about: "Amren is compact, watchful, and quietly intense..."
+kitten-elain     slug: elain,    about: "Elain is reserved — both in temperament and status..."
+```
