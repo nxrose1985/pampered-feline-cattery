@@ -242,9 +242,9 @@ async function run() {
     // Upload gallery
     if (galleryFiles.length > 0) {
       const gallery = [];
-      for (const { filename, fullPath } of galleryFiles) {
+      for (const [i, { filename, fullPath }] of galleryFiles.entries()) {
         const assetId = await uploadImage(fullPath);
-        const key = basename(filename, extname(filename)).replace(/[^a-zA-Z0-9_-]/g, "_");
+        const key = basename(filename, extname(filename)).replace(/[^a-zA-Z0-9_-]/g, "_") + `_${i}`;
         gallery.push({
           _type: "image",
           _key: key,
@@ -258,7 +258,7 @@ async function run() {
 
     // Upload PDF
     if (cat.pdfName) {
-      const pdfFile = pdfs.find((p) => p.filename === cat.pdfName);
+      const pdfFile = pdfs.find((p) => p.filename.toLowerCase() === cat.pdfName.toLowerCase());
       if (pdfFile) {
         const assetId = await uploadPdf(pdfFile.fullPath);
         doc.wisdomPanelPdf = {
