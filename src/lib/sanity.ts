@@ -30,6 +30,8 @@ export interface Cat {
       url: string;
     };
   };
+  gallery?: Array<{ asset: { url: string } }>;
+  wisdomPanelPdf?: { asset: { url: string } };
   order: number;
 }
 
@@ -76,6 +78,7 @@ export interface SiteSettings {
   contactEmail?: string;
   instagramHandle?: string;
   availabilityStatus?: "Kittens Available" | "Waitlist Open" | "No Kittens Available";
+  parentsBannerImage?: { asset: { url: string } };
 }
 
 export interface Faq {
@@ -93,6 +96,8 @@ const catQuery = `*[_type == "cat"] | order(order asc) {
   traits,
   health,
   "image": image { asset-> { url } },
+  "gallery": gallery[] { asset-> { url } },
+  "wisdomPanelPdf": wisdomPanelPdf { asset-> { url } },
   order
 }`;
 
@@ -125,7 +130,8 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   paymentMethods,
   contactEmail,
   instagramHandle,
-  availabilityStatus
+  availabilityStatus,
+  "parentsBannerImage": parentsBannerImage { asset-> { url } }
 }`;
 
 const faqQuery = `*[_type == "faq"] | order(order asc) {
@@ -180,6 +186,7 @@ const fallbackSettings: SiteSettings = {
   contactEmail: "pamperedfelinemainecoons@gmail.com",
   instagramHandle: "[PLACEHOLDER — instagram]",
   availabilityStatus: "Kittens Available",
+  parentsBannerImage: undefined,
 };
 
 export async function getSettings(): Promise<SiteSettings> {
