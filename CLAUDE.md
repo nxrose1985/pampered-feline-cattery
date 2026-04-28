@@ -1209,3 +1209,27 @@ kitten-morrigan  slug: morrigan, about: "Morrigan's coat is a study in contrasts
 kitten-amren     slug: amren,    about: "Amren is compact, watchful, and quietly intense..."
 kitten-elain     slug: elain,    about: "Elain is reserved — both in temperament and status..."
 ```
+
+---
+
+## Session: 2026-04-28 (PR #28 — contract PDF download button)
+
+### Decisions
+- **"Download Contract (PDF)" button added** to the contract accordion section on the homepage, below the last accordion item ("What Comes With Your Kitten").
+- **PDF path:** `/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` — the file was already present in `public/contracts/` from PR #26 (kitten purchase agreement PDF commit).
+- **Opens in new tab** with `target="_blank" rel="noopener noreferrer"`.
+- **Styled as secondary outlined button:** `border-bone/20 text-bone/60` base, `hover:border-bone/50 hover:text-bone/90` hover — matches the dark obsidian theme convention for secondary CTAs used throughout the site (e.g., "Back to the Litter" on kitten detail pages).
+- **Download icon included:** SVG document-download icon inline with the label text, `flex-shrink-0` to prevent collapse on small viewports.
+- **Placement:** Centered (`text-center`), `mt-10` below the last `</ScrollReveal>`, inside the existing accordion container div.
+- **No new files created.** Single edit to `src/pages/index.astro`.
+
+### Deferred
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics, mobile testing:** Carry forward from previous sessions.
+- **`npx sanity deploy`:** Still needed from project root to push kitten slug + about schema fields to Studio UI (carry-forward from PR #26).
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+
+### Files Changed This Session (PR #28 — merged)
+```
+src/pages/index.astro              (Download Contract (PDF) button added below last contract accordion item)
+CLAUDE.md                          (session log appended)
+```
