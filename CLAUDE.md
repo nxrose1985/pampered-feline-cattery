@@ -1129,3 +1129,27 @@ cat-feyra    hero: IMG_6482.jpeg, gallery: 3 photos, wisdomPanelPdf: Feyra_Wisdo
 sanity/schemas/siteSettings.ts     (removed "discardChanges" from __experimental_actions)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-28 (PR #25 — fix white background flash on scroll)
+
+### Root Cause
+`body` in `src/styles/global.css` had `background-color: var(--color-ivory)` and `html` had no background set. All page sections use `bg-obsidian` or `bg-[#0f0e0d]` Tailwind classes, but the underlying document background was ivory. During scroll, the gaps between painted sections showed through as a white/ivory flash.
+
+### Fix
+- Added `background-color: var(--color-obsidian)` to `html` in `global.css`.
+- Changed `background-color` on `body` from `var(--color-ivory)` to `var(--color-obsidian)`.
+- Verified computed `background-color` is `rgb(10, 10, 10)` in dev preview before committing.
+
+### Conventions
+- **Page background rule:** Both `html` and `body` must match the site's primary background color. For dark-theme sites, this prevents flash-of-white during scroll, overscroll bounce on iOS, and any gaps between sections.
+
+### Deferred
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics, mobile testing:** Carry forward.
+
+### Files Changed This Session (PR #25 — merged)
+```
+src/styles/global.css              (html + body background-color set to var(--color-obsidian))
+CLAUDE.md                          (session log appended)
+```
