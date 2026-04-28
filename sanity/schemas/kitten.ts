@@ -30,10 +30,25 @@ export const kitten = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      description: "URL-safe identifier. Auto-generate from name.",
+      options: { source: "name", maxLength: 96 },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "personality",
       title: "Personality Note",
       type: "text",
       rows: 3,
+    }),
+    defineField({
+      name: "about",
+      title: "About This Kitten",
+      type: "text",
+      rows: 6,
+      description: "A paragraph or two about this kitten's personality and appearance. Displays on the individual kitten page.",
     }),
     defineField({
       name: "status",

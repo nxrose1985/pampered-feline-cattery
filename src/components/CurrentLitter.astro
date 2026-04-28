@@ -13,14 +13,14 @@ const { litterId = "march-2026" } = Astro.props;
 const sanityKittens = await getKittensByLitter(litterId);
 
 const fallbackKittens = [
-  { name: "Elain",   color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8 },
-  { name: "Helion",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1 },
-  { name: "Tarquin", color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2 },
-  { name: "Kallias", color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3 },
-  { name: "Azriel",  color: "Poly Blue Silver Tabby (6/6/6/6)",  sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 4 },
-  { name: "Lucien",  color: "Poly Red Tabby (7/7/6/6)",          sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-07-08", order: 5 },
-  { name: "Morrigan", color: "Blue Tortie",                      sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 6 },
-  { name: "Amren",   color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7 },
+  { name: "Elain",    slug: "elain",    color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8 },
+  { name: "Helion",   slug: "helion",   color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1 },
+  { name: "Tarquin",  slug: "tarquin",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2 },
+  { name: "Kallias",  slug: "kallias",  color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3 },
+  { name: "Azriel",   slug: "azriel",   color: "Poly Blue Silver Tabby (6/6/6/6)",  sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 4 },
+  { name: "Lucien",   slug: "lucien",   color: "Poly Red Tabby (7/7/6/6)",          sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-07-08", order: 5 },
+  { name: "Morrigan", slug: "morrigan", color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 6 },
+  { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7 },
 ];
 
 // Sort: Reserved first (credibility/demand signal), then Available by display order
@@ -59,6 +59,7 @@ const kittens = sortKittens(sanityKittens.length > 0 ? sanityKittens : fallbackK
         <ScrollReveal animation="fadeUp" delay={i * 0.08}>
           <KittenCard
             name={kitten.name}
+            slug={kitten.slug}
             sex={kitten.sex}
             color={kitten.color ?? ""}
             personality={kitten.personality}

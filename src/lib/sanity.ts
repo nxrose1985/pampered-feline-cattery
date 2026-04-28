@@ -50,9 +50,11 @@ export interface PersonalityAssessment {
 
 export interface Kitten {
   name: string;
+  slug?: string;
   sex: string;
   color: string;
   personality: string;
+  about?: string;
   status: "Available" | "Reserved" | "Under Evaluation";
   image?: {
     asset: {
@@ -103,9 +105,11 @@ const catQuery = `*[_type == "cat"] | order(order asc) {
 
 const kittenProjection = `{
   name,
+  "slug": slug.current,
   sex,
   color,
   personality,
+  about,
   status,
   "image": image { asset-> { url } },
   order,
@@ -122,6 +126,8 @@ const kittenProjection = `{
 const kittenQuery = `*[_type == "kitten"] | order(order asc) ${kittenProjection}`;
 
 const kittensByLitterQuery = `*[_type == "kitten" && litter == $litter] | order(order asc) ${kittenProjection}`;
+
+const kittenBySlugQuery = `*[_type == "kitten" && slug.current == $slug][0] ${kittenProjection}`;
 
 const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   petKittenPriceMin,
@@ -175,6 +181,18 @@ export async function getKittensByLitter(litterId: string): Promise<Kitten[]> {
   } catch (error) {
     console.error("Failed to fetch kittens by litter from Sanity:", error);
     return [];
+  }
+}
+
+export async function getKittenBySlug(slug: string): Promise<Kitten | null> {
+  const client = getClient();
+  if (!client) return null;
+
+  try {
+    return await client.fetch<Kitten | null>(kittenBySlugQuery, { slug });
+  } catch (error) {
+    console.error("Failed to fetch kitten by slug from Sanity:", error);
+    return null;
   }
 }
 
