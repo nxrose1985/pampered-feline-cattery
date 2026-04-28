@@ -52,6 +52,13 @@ export const siteSettings = defineType({
       },
       initialValue: "Waitlist Open",
     }),
+    defineField({
+      name: "parentsBannerImage",
+      title: "Parents Together Banner Image",
+      type: "image",
+      options: { hotspot: true },
+      description: "Full-width banner image showing the sire and dam together (used above Meet the Parents section).",
+    }),
   ],
   preview: {
     prepare() {

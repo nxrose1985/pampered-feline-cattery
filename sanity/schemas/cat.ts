@@ -48,6 +48,19 @@ export const cat = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: "gallery",
+      title: "Photo Gallery",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      description: "Additional photos shown in the gallery carousel.",
+    }),
+    defineField({
+      name: "wisdomPanelPdf",
+      title: "Wisdom Panel PDF Report",
+      type: "file",
+      description: "Upload the Wisdom Panel genetic health report PDF.",
+    }),
+    defineField({
       name: "order",
       title: "Display Order",
       type: "number",
