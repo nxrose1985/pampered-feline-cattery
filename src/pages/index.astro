@@ -106,6 +106,22 @@ const faqSchemaJson = JSON.stringify({
       </div>
     </ScrollReveal>
 
+    {settings.parentsBannerImage?.asset?.url && (
+      <div class="bg-obsidian">
+        <div class="relative w-full max-w-5xl mx-auto px-4 pb-12">
+          <img
+            src={`${settings.parentsBannerImage.asset.url}?w=1200&q=85&auto=format`}
+            alt="Aedion and Feyra — Pampered Feline Maine Coons"
+            class="w-full object-cover rounded-sm"
+            loading="lazy"
+          />
+          <p class="text-center text-bone/40 text-xs tracking-[0.25em] uppercase mt-4">
+            Aedion × Feyra — Spring 2026
+          </p>
+        </div>
+      </div>
+    )}
+
     <!-- Kings -->
     <div class="pb-16 md:pb-24 bg-obsidian">
       <div class="max-w-6xl mx-auto px-4">
@@ -124,6 +140,8 @@ const faqSchemaJson = JSON.stringify({
                 traits={cat.traits}
                 health={cat.health}
                 image={cat.image?.asset?.url}
+                gallery={cat.gallery}
+                wisdomPanelPdf={cat.wisdomPanelPdf?.asset?.url}
                 variant="dark"
               />
             </ScrollReveal>
@@ -150,6 +168,8 @@ const faqSchemaJson = JSON.stringify({
                 traits={cat.traits}
                 health={cat.health}
                 image={cat.image?.asset?.url}
+                gallery={cat.gallery}
+                wisdomPanelPdf={cat.wisdomPanelPdf?.asset?.url}
                 variant="dark"
               />
             </ScrollReveal>
@@ -157,6 +177,107 @@ const faqSchemaJson = JSON.stringify({
         </div>
       </div>
     </div>
+
+    <!-- Cat Lightbox -->
+    <div id="cat-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90" aria-modal="true" role="dialog">
+      <button id="cat-lightbox-close" class="absolute top-6 right-6 text-white/70 hover:text-white text-3xl leading-none" aria-label="Close">&times;</button>
+      <button id="cat-lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Previous">&#8249;</button>
+      <button id="cat-lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Next">&#8250;</button>
+      <img id="cat-lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[85vw] object-contain" />
+      <div id="cat-lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-sm tracking-widest"></div>
+    </div>
+
+    <script>
+      const catLightbox = document.getElementById('cat-lightbox') as HTMLElement;
+      const catLightboxImg = document.getElementById('cat-lightbox-img') as HTMLImageElement;
+      const catLightboxCounter = document.getElementById('cat-lightbox-counter') as HTMLElement;
+      let catImages: string[] = [];
+      let catCurrentIndex = 0;
+      let catLastFocused: HTMLElement | null = null;
+
+      function openCatLightbox(imgs: string[], idx: number, name: string) {
+        catImages = imgs;
+        catCurrentIndex = idx;
+        catLastFocused = document.activeElement as HTMLElement;
+        showCatImage();
+        catLightbox.classList.remove('hidden');
+        catLightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        catLightboxImg.alt = name + ' Maine Coon';
+        document.getElementById('cat-lightbox-close')!.focus();
+      }
+
+      function showCatImage() {
+        catLightboxImg.src = catImages[catCurrentIndex];
+        const prev = document.getElementById('cat-lightbox-prev') as HTMLElement;
+        const next = document.getElementById('cat-lightbox-next') as HTMLElement;
+        if (catImages.length > 1) {
+          catLightboxCounter.textContent = `${catCurrentIndex + 1} / ${catImages.length}`;
+          prev.style.display = '';
+          next.style.display = '';
+        } else {
+          catLightboxCounter.textContent = '';
+          prev.style.display = 'none';
+          next.style.display = 'none';
+        }
+      }
+
+      function closeCatLightbox() {
+        catLightbox.classList.add('hidden');
+        catLightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+        catImages = [];
+        catLastFocused?.focus();
+      }
+
+      document.getElementById('cat-lightbox-close')!.addEventListener('click', closeCatLightbox);
+      document.getElementById('cat-lightbox-prev')!.addEventListener('click', () => {
+        catCurrentIndex = (catCurrentIndex - 1 + catImages.length) % catImages.length;
+        showCatImage();
+      });
+      document.getElementById('cat-lightbox-next')!.addEventListener('click', () => {
+        catCurrentIndex = (catCurrentIndex + 1) % catImages.length;
+        showCatImage();
+      });
+      catLightbox.addEventListener('click', (e) => { if (e.target === catLightbox) closeCatLightbox(); });
+      document.addEventListener('keydown', (e) => {
+        if (catLightbox.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeCatLightbox();
+        if (e.key === 'ArrowLeft') { catCurrentIndex = (catCurrentIndex - 1 + catImages.length) % catImages.length; showCatImage(); }
+        if (e.key === 'ArrowRight') { catCurrentIndex = (catCurrentIndex + 1) % catImages.length; showCatImage(); }
+      });
+
+      let catTouchStartX = 0;
+      catLightbox.addEventListener('touchstart', (e) => { catTouchStartX = (e as TouchEvent).touches[0].clientX; }, { passive: true });
+      catLightbox.addEventListener('touchend', (e) => {
+        const dx = (e as TouchEvent).changedTouches[0].clientX - catTouchStartX;
+        if (Math.abs(dx) > 50 && catImages.length > 1) {
+          if (dx < 0) { catCurrentIndex = (catCurrentIndex + 1) % catImages.length; }
+          else { catCurrentIndex = (catCurrentIndex - 1 + catImages.length) % catImages.length; }
+          showCatImage();
+        }
+      });
+
+      document.querySelectorAll('[data-lightbox-trigger]').forEach(el => {
+        // Only wire triggers inside #our-cats (CatCard triggers), not kitten triggers
+        if (!el.closest('#our-cats')) return;
+        el.addEventListener('click', () => {
+          const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
+          const name = (el as HTMLElement).dataset.lightboxName || '';
+          const startIdx = parseInt((el as HTMLElement).dataset.lightboxIndex || '0', 10);
+          if (imgs.length > 0) openCatLightbox(imgs, startIdx, name);
+        });
+        el.addEventListener('keydown', (e) => {
+          if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+            e.preventDefault();
+            const imgs: string[] = JSON.parse((el as HTMLElement).dataset.lightboxImages || '[]');
+            const name = (el as HTMLElement).dataset.lightboxName || '';
+            const startIdx = parseInt((el as HTMLElement).dataset.lightboxIndex || '0', 10);
+            if (imgs.length > 0) openCatLightbox(imgs, startIdx, name);
+          }
+        });
+      });
+    </script>
 
   </section>
 
