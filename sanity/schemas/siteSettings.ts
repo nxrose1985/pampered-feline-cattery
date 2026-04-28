@@ -4,7 +4,7 @@ export const siteSettings = defineType({
   name: "siteSettings",
   title: "Site Settings",
   type: "document",
-  __experimental_actions: ["update", "publish", "discardChanges"],
+  __experimental_actions: ["update", "publish"],
   fields: [
     defineField({
       name: "petKittenPriceMin",
