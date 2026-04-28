@@ -19,12 +19,13 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  background-color: var(--color-obsidian);
 }
 
 body {
   font-family: var(--font-body);
   color: var(--color-charcoal);
-  background-color: var(--color-ivory);
+  background-color: var(--color-obsidian);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
