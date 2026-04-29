@@ -5,13 +5,14 @@ import CurrentLitter from "../components/CurrentLitter.astro";
 import CatCard from "../components/CatCard.astro";
 import ContactForm from "../components/ContactForm.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
-import { getCats, getFaqs, getSettings } from "../lib/sanity";
+import { getCats, getFaqs, getSettings, getHealthEthics } from "../lib/sanity";
 import type { Cat } from "../lib/sanity";
 
-const [sanityCats, faqs, settings] = await Promise.all([
+const [sanityCats, faqs, settings, healthEthics] = await Promise.all([
   getCats(),
   getFaqs(),
   getSettings(),
+  getHealthEthics(),
 ]);
 
 const fallbackKings = [
@@ -296,7 +297,7 @@ const faqSchemaJson = JSON.stringify({
             Health, Ethics, and Care
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.
+            {healthEthics.introduction ?? "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats."}
           </p>
         </div>
       </div>
@@ -333,6 +334,48 @@ const faqSchemaJson = JSON.stringify({
               </ul>
               <p class="text-bone/70 leading-relaxed mt-4">
                 Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions. Every kitten leaves with documentation of both parents' test results.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Retirement Policy -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-obsidian">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Our Cats Stay With Us for Life</h3>
+              <p class="text-bone/70 leading-relaxed">
+                {healthEthics.retirementPolicy ?? "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family."}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Breeding Frequency -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Queen Rest Between Litters</h3>
+              <p class="text-bone/70 leading-relaxed">
+                {healthEthics.breedingFrequency ?? "Each queen is limited to two litters per year maximum, with appropriate rest between litters."}
               </p>
             </div>
           </div>

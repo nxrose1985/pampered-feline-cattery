@@ -233,6 +233,47 @@ const fallbackFaqs: Faq[] = [
   { question: "Do you have a contract? What does it cover?", answer: "Yes. Every kitten is sold with a written purchase agreement that protects the kitten first. The contract covers spay/neuter requirements (by 10 months for both sexes), indoor-only housing, no declawing, first right of refusal if you can ever no longer keep your cat, a 72-hour veterinary exam requirement, a one-year genetic health guarantee, and vaccination guidance. CFA registration papers are withheld until we receive proof of alteration from your veterinarian. A summary of our contract terms is available on our contract page. The full contract is signed at the time of deposit.", order: 10 },
 ];
 
+export interface HealthEthics {
+  title?: string;
+  introduction?: string;
+  echocardiogramSection?: { title?: string; content?: string };
+  geneticTestingSection?: { title?: string; content?: string };
+  retirementPolicy?: string;
+  breedingFrequency?: string;
+  additionalPractices?: Array<{ title: string; content: string }>;
+}
+
+const healthEthicsQuery = `*[_type == "healthEthics"][0] {
+  title,
+  introduction,
+  echocardiogramSection,
+  geneticTestingSection,
+  retirementPolicy,
+  breedingFrequency,
+  additionalPractices[] { title, content }
+}`;
+
+const fallbackHealthEthics: HealthEthics = {
+  title: "Health, Ethics, and Care",
+  introduction: "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.",
+  retirementPolicy: "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family.",
+  breedingFrequency: "Each queen is limited to two litters per year maximum, with appropriate rest between litters.",
+  additionalPractices: [],
+};
+
+export async function getHealthEthics(): Promise<HealthEthics> {
+  const client = getClient();
+  if (!client) return fallbackHealthEthics;
+
+  try {
+    const result = await client.fetch<HealthEthics | null>(healthEthicsQuery);
+    return result ?? fallbackHealthEthics;
+  } catch (error) {
+    console.error("Failed to fetch health ethics from Sanity:", error);
+    return fallbackHealthEthics;
+  }
+}
+
 export async function getFaqs(): Promise<Faq[]> {
   const client = getClient();
   if (!client) return fallbackFaqs;
