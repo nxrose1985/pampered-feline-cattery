@@ -1233,3 +1233,41 @@ kitten-elain     slug: elain,    about: "Elain is reserved — both in temperame
 src/pages/index.astro              (Download Contract (PDF) button added below last contract accordion item)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-29 (PR #29 — healthEthics Sanity schema and Health & Ethics section wiring)
+
+### Decisions
+- **Two new content statements added to Health & Ethics section:**
+  1. "Our Cats Stay With Us for Life" — uses `healthEthics.retirementPolicy` from Sanity: "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family."
+  2. "Queen Rest Between Litters" — uses `healthEthics.breedingFrequency` from Sanity: "Each queen is limited to two litters per year maximum, with appropriate rest between litters."
+- **Placement:** Both new sections inserted between the "Genetic Testing" block and the "Heart & Joint Health" block, maintaining the alternating `bg-obsidian` / `bg-[#0f0e0d]` dark background pattern.
+- **`healthEthics` Sanity singleton schema created:** Fields: `title`, `introduction`, `echocardiogramSection` (object: title+content), `geneticTestingSection` (object: title+content), `retirementPolicy` (text), `breedingFrequency` (text), `additionalPractices` (array of objects with title+content). Uses `__experimental_actions: ["update", "publish"]` — same singleton pattern as `siteSettings`.
+- **Intro paragraph wired to Sanity:** The Health & Ethics section opening paragraph ("We hold ourselves to a transparent standard...") now pulls from `healthEthics.introduction` with hardcoded fallback.
+- **`getHealthEthics()` fetcher added to `sanity.ts`:** Follows the same fallback-constant pattern as `getSettings()` and `getFaqs()`. Returns `fallbackHealthEthics` when Sanity is unreachable.
+- **Sanity document seeded:** `scripts/create-health-ethics.mjs` created and run. Default `healthEthics` document is live in Sanity (project `k6e71wky`, dataset `production`).
+- **`echocardiogramSection` and `geneticTestingSection` schema fields exist but are not wired to the page HTML** — those sections remain hardcoded for now. Sara can populate them in Studio; the content won't render on the page until explicitly wired in a future session.
+
+### Conventions
+- **`additionalPractices` array object type** has `title: "Practice"` so Sanity Studio labels each item correctly in the list UI.
+- **Singleton healthEthics document ID:** `healthEthics` (no prefix). Matches the siteSettings pattern.
+- **Seed script is idempotent:** `createOrReplace` — safe to re-run if content needs resetting.
+
+### Deferred
+- **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the `healthEthics` schema to Sanity Studio UI. Sara cannot see or edit the Health & Ethics fields in Studio until this is deployed.
+- **`echocardiogramSection` and `geneticTestingSection` wiring:** Fields exist in schema and TypeScript type but are not yet rendered on the page. Future session can wire these if Sara wants to manage that content from Studio.
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+- **Kitten slug + about schema fields in Studio:** `npx sanity deploy` also needed to expose those fields (carry-forward from PR #26).
+
+### Files Changed This Session (PR #29 — merged)
+```
+sanity/schemas/healthEthics.ts     (NEW — singleton document type with 7 fields)
+sanity/schemas/index.ts            (healthEthics imported and added to schemaTypes)
+src/lib/sanity.ts                  (HealthEthics interface, healthEthicsQuery, fallbackHealthEthics, getHealthEthics() fetcher)
+src/pages/index.astro              (getHealthEthics imported; added to Promise.all; intro wired; two new ScrollReveal sections added)
+scripts/create-health-ethics.mjs   (NEW — seeds default healthEthics document in Sanity)
+CLAUDE.md                          (session log appended)
+```
