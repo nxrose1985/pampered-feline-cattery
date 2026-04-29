@@ -57,7 +57,7 @@ const doc = {
   },
   geneticTestingSection: {
     title: "Genetic Testing",
-    content: "Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions. Every kitten leaves with documentation of both parents' test results.",
+    content: "Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions.",
   },
   retirementPolicy: "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family.",
   breedingFrequency: "Each queen is limited to two litters per year maximum, with appropriate rest between litters.",
