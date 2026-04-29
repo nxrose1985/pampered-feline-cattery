@@ -77,6 +77,7 @@ export const healthEthics = defineType({
       of: [
         {
           name: "practice",
+          title: "Practice",
           type: "object",
           fields: [
             defineField({
