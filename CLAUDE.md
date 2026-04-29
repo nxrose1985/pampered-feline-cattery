@@ -1271,3 +1271,36 @@ src/pages/index.astro              (getHealthEthics imported; added to Promise.a
 scripts/create-health-ethics.mjs   (NEW — seeds default healthEthics document in Sanity)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-29 (PR #31 — Health & Ethics content edits and contract accordion fixes)
+
+### Context
+PR #29 (previous session) already created the `healthEthics` Sanity schema, wired the Health & Ethics section to Sanity, and added the two new statements (retirement policy + breeding frequency). This session applies the remaining content corrections and contract accordion fixes that were specified in the session brief.
+
+### Decisions
+- **Genetic Testing paragraph — sentence removed:** "Every kitten leaves with documentation of both parents' test results." removed from the end of the long echocardiography/genetic testing paragraph. This information is already covered under "What Comes With Your Kitten" in the contract accordion; duplicating it in the Health & Ethics section was redundant.
+- **Contract — Deposit & Payment — payment methods updated:** "We accept Zelle and bank wire transfer only." changed to "We accept Zelle, bank transfers, and cash."
+- **Contract — No Declawing — sentence removed:** "Any buyer who declaw their kitten is required to return the cat to us immediately." removed. The paragraph now ends at "...long-term physical and behavioral consequences." before moving to the scratching post alternative.
+- **Contract — Breeding Restriction — legal consequence added:** "Unauthorized breeding is a breach of contract" now ends with "and will be prosecuted to the fullest extent of the law."
+- **Contract — Rehoming — already correct:** Current code already reads "Transfers to another household require our written approval." No change needed.
+- **Sanity seed script updated:** `scripts/create-health-ethics.mjs` updated to remove the documentation sentence from `geneticTestingSection.content`. Script re-run — Sanity document updated.
+- **Two new Health & Ethics statements confirmed present:** "Our Cats Stay With Us for Life" (retirement policy) and "Queen Rest Between Litters" (breeding frequency) were added in PR #29 and remain unchanged.
+
+### Conventions
+- **Sanity seed script is idempotent:** `createOrReplace` — safe to re-run whenever content needs resetting.
+
+### Deferred
+- **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` to push the `healthEthics` schema to Sanity Studio UI (carry-forward from PR #29). Also pushes kitten slug + about fields (carry-forward from PR #26).
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+- **`echocardiogramSection` and `geneticTestingSection` wiring:** These Sanity fields exist but the page HTML still uses hardcoded text for those sections. Future session can wire if Sara wants Studio control over them.
+
+### Files Changed This Session (PR #31 — merged)
+```
+src/pages/index.astro              (4 targeted edits: genetic testing sentence removed; payment methods updated; declawing sentence removed; breeding restriction legal language added)
+scripts/create-health-ethics.mjs   (geneticTestingSection.content updated to match page — documentation sentence removed)
+CLAUDE.md                          (session log appended)
+```
