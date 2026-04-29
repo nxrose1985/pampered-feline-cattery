@@ -8,7 +8,7 @@ import ScrollReveal from "../components/ScrollReveal.astro";
 import { getCats, getFaqs, getSettings, getHealthEthics } from "../lib/sanity";
 import type { Cat } from "../lib/sanity";
 
-const [sanityCats, faqs, settings, healthEthics] = await Promise.all([
+const [sanityCats, faqs, settings, healthEthicsData] = await Promise.all([
   getCats(),
   getFaqs(),
   getSettings(),
@@ -297,7 +297,7 @@ const faqSchemaJson = JSON.stringify({
             Health, Ethics, and Care
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            {healthEthics.introduction ?? "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats."}
+            {healthEthicsData.introduction ?? "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats."}
           </p>
         </div>
       </div>
@@ -333,49 +333,7 @@ const faqSchemaJson = JSON.stringify({
                 </li>
               </ul>
               <p class="text-bone/70 leading-relaxed mt-4">
-                Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ScrollReveal>
-
-    <!-- Retirement Policy -->
-    <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-obsidian">
-        <div class="max-w-3xl mx-auto px-4">
-          <div class="flex items-start gap-4 mb-8">
-            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-              <svg class="w-5 h-5 text-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Our Cats Stay With Us for Life</h3>
-              <p class="text-bone/70 leading-relaxed">
-                {healthEthics.retirementPolicy ?? "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family."}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ScrollReveal>
-
-    <!-- Breeding Frequency -->
-    <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
-        <div class="max-w-3xl mx-auto px-4">
-          <div class="flex items-start gap-4 mb-8">
-            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
-              <svg class="w-5 h-5 text-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Queen Rest Between Litters</h3>
-              <p class="text-bone/70 leading-relaxed">
-                {healthEthics.breedingFrequency ?? "Each queen is limited to two litters per year maximum, with appropriate rest between litters."}
+                {healthEthicsData.geneticTestingSection?.content ?? "Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions."}
               </p>
             </div>
           </div>
@@ -394,15 +352,35 @@ const faqSchemaJson = JSON.stringify({
               </svg>
             </div>
             <div>
-              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Heart and Joint Health</h3>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">
+                {healthEthicsData.echocardiogramSection?.title ?? "Heart and Joint Health"}
+              </h3>
+              {(healthEthicsData.echocardiogramSection?.content ?? "DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.\n\nHearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.\n\nHip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.").split("\n\n").map((para: string) => (
+                <p class="text-bone/70 leading-relaxed mb-4">{para}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Lifetime Care & Breeding Frequency -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Our Commitment to Our Cats</h3>
               <p class="text-bone/70 leading-relaxed mb-4">
-                DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.
-              </p>
-              <p class="text-bone/70 leading-relaxed mb-4">
-                Hearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.
+                {healthEthicsData.retirementPolicy ?? "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family."}
               </p>
               <p class="text-bone/70 leading-relaxed">
-                Hip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.
+                {healthEthicsData.breedingFrequency ?? "Each queen is limited to 2 litters per year maximum, with appropriate rest between litters."}
               </p>
             </div>
           </div>
@@ -412,7 +390,7 @@ const faqSchemaJson = JSON.stringify({
 
     <!-- Daily Care -->
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -422,11 +400,8 @@ const faqSchemaJson = JSON.stringify({
             </div>
             <div>
               <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Daily Care</h3>
-              <p class="text-bone/70 leading-relaxed mb-4">
-                Our cats live indoors in a clean, enriched environment. They receive a balanced diet formulated for the nutritional needs of Maine Coons.
-              </p>
               <p class="text-bone/70 leading-relaxed">
-                We limit litters per queen to protect their health and ensure each kitten gets the attention it deserves. Rest periods between litters are non-negotiable.
+                Our cats live indoors in a clean, enriched environment. They receive a balanced diet formulated for the nutritional needs of Maine Coons.
               </p>
             </div>
           </div>
@@ -436,7 +411,7 @@ const faqSchemaJson = JSON.stringify({
 
     <!-- Ethical Practices -->
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-obsidian">
+      <div class="py-16 md:py-24 bg-[#0f0e0d]">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -448,9 +423,11 @@ const faqSchemaJson = JSON.stringify({
               <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Ethical Practices</h3>
               <ul class="space-y-3">
                 <li class="text-bone/70 leading-relaxed">We do not declaw and require adopters to agree to the same.</li>
-                <li class="text-bone/70 leading-relaxed">Retired breeding cats are placed in carefully selected pet homes where they can live out their years in comfort.</li>
                 <li class="text-bone/70 leading-relaxed">We work with a feline-friendly veterinarian who understands breed-specific needs.</li>
                 <li class="text-bone/70 leading-relaxed">Every kitten is sold with a written contract that protects the cat first.</li>
+                {healthEthicsData.additionalPractices?.map((practice) => (
+                  <li class="text-bone/70 leading-relaxed">{practice.content}</li>
+                ))}
               </ul>
             </div>
           </div>
