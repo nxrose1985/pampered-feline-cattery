@@ -1304,3 +1304,41 @@ src/pages/index.astro              (4 targeted edits: genetic testing sentence r
 scripts/create-health-ethics.mjs   (geneticTestingSection.content updated to match page — documentation sentence removed)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-28 (PR #30 — Health & Ethics Sanity integration)
+
+### Decisions
+- **`healthEthics` Sanity singleton created:** New `healthEthics` document type added as a singleton (`__experimental_actions: ["update", "publish"]`). Sara can edit all Health & Ethics content in Studio once `npx sanity deploy` is run.
+- **Sentence removed:** "Both parents' health test documentation (echocardiogram results and genetic panel reports) is provided at pickup." was removed from the Genetic Testing paragraph. The equivalent sentence "Every kitten leaves with documentation of both parents' test results." was the live form in the codebase; removed from the fallback content and from the Sanity seed data.
+- **Two new statements added as a combined section:** A new ScrollReveal section "Our Commitment to Our Cats" was inserted after the Heart and Joint Health section with two `<p>` tags:
+  1. "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family."
+  2. "Each queen is limited to 2 litters per year maximum, with appropriate rest between litters."
+- **"Retired breeding cats rehomed" bullet removed:** The Ethical Practices section previously included "Retired breeding cats are placed in carefully selected pet homes where they can live out their years in comfort." Removed — superseded by the new lifetime care statement.
+- **Alternating backgrounds corrected:** Inserting a new section shifted the `bg-obsidian` / `bg-[#0f0e0d]` alternating pattern. Ethical Practices background changed from `bg-obsidian` to `bg-[#0f0e0d]` to maintain alternation.
+- **Health section fully wired to Sanity:** `introduction`, `geneticTestingSection.content`, `echocardiogramSection.title`, `echocardiogramSection.content`, `retirementPolicy`, `breedingFrequency`, and `additionalPractices` all use `healthEthicsData.field ?? fallbackString` pattern. Fallback content mirrors the approved copy.
+- **`additionalPractices` wired to Ethical Practices list:** Any additional practices Sara adds in Studio will render as `<li>` items in the Ethical Practices section.
+- **Duplicate code conflict resolved:** When rebasing, the previous session's partial healthEthics integration (separate "Retirement Policy" and "Breeding Frequency" sections using an undefined `healthEthics` variable) was removed in favor of the new combined section using `healthEthicsData`.
+
+### Conventions
+- **`healthEthicsData` variable name:** The fetched HealthEthics document is destructured as `healthEthicsData` to avoid naming collision with the `HealthEthics` TypeScript interface.
+- **Sanity document `_id: "healthEthics"`:** Fixed `_id` used by `create-health-ethics.mjs` so the script is safely re-runnable (idempotent via `createOrReplace`).
+- **`echocardiogramSection.content` split on `\n\n`:** The Astro template splits the content string on double newlines to render multiple `<p>` tags. This allows Sara to separate paragraphs in Studio using blank lines.
+
+### Deferred
+- **Run `node scripts/create-health-ethics.mjs`:** Must be run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (or worktree) to seed the Sanity `healthEthics` document with approved content. Requires `SANITY_WRITE_TOKEN` in `.env` or active Sanity CLI session.
+- **Run `npx sanity deploy`:** Must be run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the `healthEthics` schema to Studio. Sara cannot see or edit Health & Ethics content in Studio until this is deployed.
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session (PR #30 — merged)
+```
+sanity/schemas/healthEthics.ts     (NEW — healthEthics singleton schema with 7 fields)
+sanity/schemas/index.ts            (healthEthics added to schemaTypes array)
+src/lib/sanity.ts                  (HealthEthicsSection, HealthEthicsPractice, HealthEthics interfaces; healthEthicsQuery; fallbackHealthEthics; getHealthEthics() fetcher)
+src/pages/index.astro              (getHealthEthics() added to Promise.all; health section wired to healthEthicsData; new "Our Commitment to Our Cats" section; Ethical Practices background corrected; retirement bullet removed)
+scripts/create-health-ethics.mjs   (NEW — seeds healthEthics Sanity document with approved content)
+CLAUDE.md                          (session log appended)
+```
