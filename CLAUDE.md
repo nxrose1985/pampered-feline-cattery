@@ -1367,3 +1367,70 @@ CLAUDE.md                          (session log appended)
 src/pages/index.astro              (contract h2 and intro paragraph updated with Pampered Feline LLC)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-29 (watermarked photo replacement — all kittens and cats)
+
+### Decisions
+- **All 8 kitten photos replaced with watermarked versions:** Hero and gallery images for Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren, and Elain replaced in Sanity. Old (non-watermarked) assets deleted.
+- **All 3 cat photos replaced with watermarked versions:** Hero and gallery images for Aedion, Rowan, and Feyra replaced in Sanity. Old assets deleted where possible.
+- **`siteSettings.parentsBannerImage` updated:** Feyra's `_parents_result.jpg` (watermarked) uploaded and set on the `siteSettings` document. `createIfNotExists` used to handle the case where `siteSettings` had not yet been created as a Sanity document.
+- **`replace-with-watermarked.mjs` script created and committed:** Handles full replacement flow: reads watermarked files from `public/images/kittens/watermarked/` and `public/images/cats/{Name}/watermarked/`, uploads assets, patches Sanity documents, deletes old assets. Supports `--kittens Name,Name` and `--cats [Name,Name]` flags to target specific animals. Retry logic: 4 attempts with 3s/6s/9s backoff for transient network errors.
+
+### Issues Encountered
+- **Persistent network error on Morrigan during initial runs:** `"An invalid response was received from the upstream server"` at `Morrigan_1799_result.jpg` on both first and second attempts. Fixed by adding retry logic with exponential backoff. Third attempt (run with `--kittens Morrigan,Tarquin`) succeeded on the first try — the error was transient Sanity API instability, not a file-specific issue.
+- **Feyra old-asset deletion blocked by draft references:** Three Feyra assets could not be deleted because `drafts.cat-feyra` still references them. Logged as warnings. The published `cat-feyra` document is fully updated with watermarked photos. Draft references will resolve when Sara publishes or discards the draft in Studio.
+- **`siteSettings` document did not exist:** The `client.patch("siteSettings")` call failed with "document not found". Fixed by calling `createIfNotExists` before patching.
+- **Orphaned assets from failed retry runs:** The first two failed runs uploaded watermarked assets for Amren, Azriel, Elain, Helion, Kallias, Lucien before failing. The subsequent successful run uploaded a second set, making the first set orphaned. These can be cleaned up via Sanity Studio → Media Library → filter "Unused assets". The cat (Feyra) re-run similarly left orphaned watermarked assets. No functional impact — published documents point to the correct watermarked assets.
+
+### Kitten counts uploaded
+- Amren: 1 hero + 11 gallery = 12
+- Azriel: 1 hero + 9 gallery = 10
+- Elain: 1 hero + 11 gallery = 12
+- Helion: 1 hero + 5 gallery = 6
+- Kallias: 1 hero + 9 gallery = 10
+- Lucien: 1 hero + 14 gallery = 15
+- Morrigan: 1 hero + 13 gallery = 14
+- Tarquin: 1 hero + 9 gallery = 10
+
+### Cat counts uploaded (final successful run)
+- Aedion: 1 hero + 9 gallery = 10
+- Rowan: 1 hero = 1
+- Feyra: 1 hero + 2 gallery + 1 parents banner = 4
+
+### Conventions
+- **`--kittens` flag:** Comma-separated kitten names (case-insensitive prefix matching). Skips cats unless `--cats` also present.
+- **`--cats` flag:** Optionally filtered by comma-separated names. Skips kittens unless `--kittens` also present.
+- **No flags = full run:** Both kittens and cats processed.
+- **Retry behavior:** 4 attempts, delay = `attempt * 3000ms`. Failure on all 4 attempts is fatal.
+- **`createIfNotExists` for siteSettings:** Ensures the singleton document exists before patching. Safe to run repeatedly.
+
+### Deferred
+- **Orphaned asset cleanup:** Use Sanity Studio → Media Library → "Unused assets" filter to find and delete the duplicate watermarked uploads from failed retry runs. This is cosmetic only — no functional impact.
+- **Feyra draft cleanup:** Sara can discard or publish the `drafts.cat-feyra` draft in Studio to release the blocked old asset references, then the old assets can be deleted manually or via script.
+- **`npx sanity deploy` from project root:** Still needed to push healthEthics + kitten slug/about schema fields to Studio UI (carry-forward from PR #29 / PR #26).
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session
+```
+scripts/replace-with-watermarked.mjs   (NEW — committed to main; full replacement script with retry + filters)
+CLAUDE.md                              (session log appended)
+```
+
+### Sanity Documents Updated This Session
+```
+kitten-helion    image + gallery → watermarked versions; old assets deleted
+kitten-tarquin   image + gallery → watermarked versions; old assets deleted
+kitten-kallias   image + gallery → watermarked versions; old assets deleted
+kitten-azriel    image + gallery → watermarked versions; old assets deleted
+kitten-lucien    image + gallery → watermarked versions; old assets deleted
+kitten-morrigan  image + gallery → watermarked versions; old assets deleted
+kitten-amren     image + gallery → watermarked versions; old assets deleted
+kitten-elain     image + gallery → watermarked versions; old assets deleted
+cat-aedion       image + gallery → watermarked versions; old assets deleted
+cat-rowan        image → watermarked version; old asset deleted
+cat-feyra        image + gallery → watermarked versions; old assets blocked by draft
+siteSettings     parentsBannerImage → watermarked _parents_result.jpg (document created then patched)
+```
