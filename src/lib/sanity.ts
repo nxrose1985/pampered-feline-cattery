@@ -89,6 +89,26 @@ export interface Faq {
   order?: number;
 }
 
+export interface HealthEthicsSection {
+  title: string;
+  content: string;
+}
+
+export interface HealthEthicsPractice {
+  title: string;
+  content: string;
+}
+
+export interface HealthEthics {
+  title?: string;
+  introduction?: string;
+  geneticTestingSection?: HealthEthicsSection;
+  echocardiogramSection?: HealthEthicsSection;
+  retirementPolicy?: string;
+  breedingFrequency?: string;
+  additionalPractices?: HealthEthicsPractice[];
+}
+
 // ── Queries ────────────────────────────────────────────
 
 const catQuery = `*[_type == "cat"] | order(order asc) {
@@ -144,6 +164,16 @@ const faqQuery = `*[_type == "faq"] | order(order asc) {
   question,
   answer,
   order
+}`;
+
+const healthEthicsQuery = `*[_type == "healthEthics"][0] {
+  title,
+  introduction,
+  geneticTestingSection,
+  echocardiogramSection,
+  retirementPolicy,
+  breedingFrequency,
+  additionalPractices[] { title, content }
 }`;
 
 // ── Fetchers with Fallbacks ────────────────────────────
@@ -233,31 +263,37 @@ const fallbackFaqs: Faq[] = [
   { question: "Do you have a contract? What does it cover?", answer: "Yes. Every kitten is sold with a written purchase agreement that protects the kitten first. The contract covers spay/neuter requirements (by 10 months for both sexes), indoor-only housing, no declawing, first right of refusal if you can ever no longer keep your cat, a 72-hour veterinary exam requirement, a one-year genetic health guarantee, and vaccination guidance. CFA registration papers are withheld until we receive proof of alteration from your veterinarian. A summary of our contract terms is available on our contract page. The full contract is signed at the time of deposit.", order: 10 },
 ];
 
-export interface HealthEthics {
-  title?: string;
-  introduction?: string;
-  echocardiogramSection?: { title?: string; content?: string };
-  geneticTestingSection?: { title?: string; content?: string };
-  retirementPolicy?: string;
-  breedingFrequency?: string;
-  additionalPractices?: Array<{ title: string; content: string }>;
+export async function getFaqs(): Promise<Faq[]> {
+  const client = getClient();
+  if (!client) return fallbackFaqs;
+
+  try {
+    const result = await client.fetch<Faq[]>(faqQuery);
+    return result.length > 0 ? result : fallbackFaqs;
+  } catch (error) {
+    console.error("Failed to fetch FAQs from Sanity:", error);
+    return fallbackFaqs;
+  }
 }
 
-const healthEthicsQuery = `*[_type == "healthEthics"][0] {
-  title,
-  introduction,
-  echocardiogramSection,
-  geneticTestingSection,
-  retirementPolicy,
-  breedingFrequency,
-  additionalPractices[] { title, content }
-}`;
-
 const fallbackHealthEthics: HealthEthics = {
-  title: "Health, Ethics, and Care",
-  introduction: "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.",
-  retirementPolicy: "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family.",
-  breedingFrequency: "Each queen is limited to two litters per year maximum, with appropriate rest between litters.",
+  title: "Health & Ethical Practices",
+  introduction:
+    "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.",
+  geneticTestingSection: {
+    title: "Genetic Testing",
+    content:
+      "Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions.",
+  },
+  echocardiogramSection: {
+    title: "Heart and Joint Health",
+    content:
+      "DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.\n\nHearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.\n\nHip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.",
+  },
+  retirementPolicy:
+    "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family.",
+  breedingFrequency:
+    "Each queen is limited to 2 litters per year maximum, with appropriate rest between litters.",
   additionalPractices: [],
 };
 
@@ -269,20 +305,7 @@ export async function getHealthEthics(): Promise<HealthEthics> {
     const result = await client.fetch<HealthEthics | null>(healthEthicsQuery);
     return result ?? fallbackHealthEthics;
   } catch (error) {
-    console.error("Failed to fetch health ethics from Sanity:", error);
+    console.error("Failed to fetch healthEthics from Sanity:", error);
     return fallbackHealthEthics;
-  }
-}
-
-export async function getFaqs(): Promise<Faq[]> {
-  const client = getClient();
-  if (!client) return fallbackFaqs;
-
-  try {
-    const result = await client.fetch<Faq[]>(faqQuery);
-    return result.length > 0 ? result : fallbackFaqs;
-  } catch (error) {
-    console.error("Failed to fetch FAQs from Sanity:", error);
-    return fallbackFaqs;
   }
 }

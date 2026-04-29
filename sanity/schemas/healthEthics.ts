@@ -8,10 +8,9 @@ export const healthEthics = defineType({
   fields: [
     defineField({
       name: "title",
-      title: "Title",
+      title: "Section Title",
       type: "string",
       initialValue: "Health & Ethical Practices",
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "introduction",
@@ -21,84 +20,70 @@ export const healthEthics = defineType({
       description: "Opening paragraph for the Health & Ethics section.",
     }),
     defineField({
-      name: "echocardiogramSection",
-      title: "Echocardiogram Section",
+      name: "geneticTestingSection",
+      title: "Genetic Testing",
       type: "object",
       fields: [
-        defineField({
-          name: "title",
-          title: "Title",
-          type: "string",
-        }),
+        defineField({ name: "title", title: "Title", type: "string" }),
         defineField({
           name: "content",
           title: "Content",
           type: "text",
           rows: 5,
+          description:
+            "Main paragraph describing the health testing program. Do not include documentation-at-pickup language here.",
         }),
       ],
     }),
     defineField({
-      name: "geneticTestingSection",
-      title: "Genetic Testing Section",
+      name: "echocardiogramSection",
+      title: "Heart and Joint Health",
       type: "object",
       fields: [
-        defineField({
-          name: "title",
-          title: "Title",
-          type: "string",
-        }),
+        defineField({ name: "title", title: "Title", type: "string" }),
         defineField({
           name: "content",
           title: "Content",
           type: "text",
           rows: 5,
+          description: "Paragraphs describing cardiac and joint monitoring.",
         }),
       ],
     }),
     defineField({
       name: "retirementPolicy",
-      title: "Retirement Policy",
+      title: "Lifetime Care Statement",
       type: "text",
-      rows: 3,
-      description: "Lifetime care statement — breeding cats stay with us for life.",
+      rows: 2,
+      description: "Statement about breeding cats staying with the cattery for life.",
     }),
     defineField({
       name: "breedingFrequency",
-      title: "Breeding Frequency",
+      title: "Breeding Frequency Statement",
       type: "text",
-      rows: 3,
-      description: "Queen litter frequency limit statement.",
+      rows: 2,
+      description: "Statement about litter limits per queen.",
     }),
     defineField({
       name: "additionalPractices",
-      title: "Additional Practices",
+      title: "Additional Ethical Practices",
       type: "array",
       of: [
         {
-          name: "practice",
-          title: "Practice",
           type: "object",
           fields: [
-            defineField({
-              name: "title",
-              title: "Title",
-              type: "string",
-            }),
-            defineField({
-              name: "content",
-              title: "Content",
-              type: "text",
-              rows: 3,
-            }),
+            defineField({ name: "title", title: "Practice Title", type: "string" }),
+            defineField({ name: "content", title: "Description", type: "text", rows: 3 }),
           ],
+          preview: {
+            select: { title: "title" },
+          },
         },
       ],
+      description: "Optional additional ethical practices to display in the Ethical Practices section.",
     }),
   ],
   preview: {
-    prepare() {
-      return { title: "Health & Ethics" };
-    },
+    prepare: () => ({ title: "Health & Ethics" }),
   },
 });
