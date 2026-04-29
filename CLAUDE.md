@@ -1342,3 +1342,28 @@ src/pages/index.astro              (getHealthEthics() added to Promise.all; heal
 scripts/create-health-ethics.mjs   (NEW — seeds healthEthics Sanity document with approved content)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-04-29 (PR #33 — Add Pampered Feline LLC to contract section)
+
+### Decisions
+- **Contract heading updated:** "Our Purchase Agreement" changed to "Kitten Purchase Agreement - Pampered Feline LLC". Hyphen used per spec (not em dash, consistent with CLAUDE.md copy conventions: no em dashes).
+- **Contract intro paragraph updated:** "Every Pampered Feline kitten is sold with a written purchase agreement." replaced with "This agreement is between [Buyer Name] and Pampered Feline LLC, operating as The Pampered Feline Maine Coons." The rest of the paragraph ("The contract protects the kitten first. Here is a summary of our terms.") is retained.
+- **"[Buyer Name]" placeholder retained as-is:** This is a literal placeholder in the web summary — the actual buyer name is filled in on the signed PDF contract, not on the website.
+- **Signature block does not exist in the web code:** The contract accordion is a summary of terms, not a fillable contract form. The spec's third item (add "Pampered Feline LLC" above Sara's signature line) applies only to the PDF — no web code change was made for this.
+- **PDF path unchanged:** `/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` is the existing PDF. Web code does not need to change; the PDF itself requires a manual update by Nick.
+- **"The Pampered Feline Maine Coons" DBA name used as specified.** Differs from site-wide usage ("Pampered Feline Maine Coons" without "The") — may be the formal legal DBA form.
+
+### Deferred
+- **PDF contract manual update:** Nick needs to update the PDF to include "Pampered Feline LLC" in the title, party line, and above Sara's signature. Replace the file at `public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` and push.
+- **`npx sanity deploy` from project root:** Still needed to push healthEthics + kitten schema fields to Studio (carry-forward from PR #29 / PR #26).
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session (PR #33 — merged)
+```
+src/pages/index.astro              (contract h2 and intro paragraph updated with Pampered Feline LLC)
+CLAUDE.md                          (session log appended)
+```
