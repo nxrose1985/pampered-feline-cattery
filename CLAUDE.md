@@ -1434,3 +1434,31 @@ cat-rowan        image → watermarked version; old asset deleted
 cat-feyra        image + gallery → watermarked versions; old assets blocked by draft
 siteSettings     parentsBannerImage → watermarked _parents_result.jpg (document created then patched)
 ```
+
+---
+
+## Session: 2026-04-30 (PR #34 — CFA and TICA registry logos in footer)
+
+### Decisions
+- **CFA and TICA logos added to footer:** Two SVG badge logos created from scratch and placed above the copyright line in `Footer.astro`, centered horizontally with `gap-10` (~40px) between them.
+- **SVG logos created as registry badges:** Gold (`#C9A96E`) serif type on transparent background. Each badge shows the abbreviation (CFA / TICA) as a 32px serif heading, a thin gold rule, and the full organization name in small spaced caps beneath. No external logo assets downloaded — owned SVGs that match the site's color tokens exactly.
+- **Opacity treatment:** `opacity-70` default, `opacity-100` on hover, `transition-opacity duration-300`. Links open in new tab with `rel="noopener noreferrer"`.
+- **Destinations:** CFA → https://cfa.org, TICA → https://tica.org.
+- **Height set to 90px** via `h-[90px] w-auto` Tailwind classes (maintains aspect ratio).
+- **No Sanity changes.** Footer is static HTML; no new content fields required.
+
+### Conventions
+- **Registry logo path:** `public/images/logos/{registry}-logo.svg` — consistent with other static assets under `public/images/`.
+- **Footer logo pattern:** Centered flex row with `gap-10`, above the `border-t` divider. Add future trust badges here (TICA member seal, etc.) using the same pattern.
+
+### Deferred
+- **Real CFA/TICA official logos:** The SVGs are typographic stand-ins. If Sara obtains official logo files from CFA/TICA, replace `public/images/logos/cfa-logo.svg` and `tica-logo.svg` with the official assets. No code change needed — only file replacement.
+- All prior deferred items carry forward: `npx sanity deploy`, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session (PR #34 — merged)
+```
+public/images/logos/cfa-logo.svg   (NEW — gold CFA registry badge SVG)
+public/images/logos/tica-logo.svg  (NEW — gold TICA registry badge SVG)
+src/components/Footer.astro        (logo links added above copyright line)
+CLAUDE.md                          (session log appended)
+```
