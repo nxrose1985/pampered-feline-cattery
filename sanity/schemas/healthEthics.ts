@@ -65,6 +65,28 @@ export const healthEthics = defineType({
       description: "Statement about litter limits per queen.",
     }),
     defineField({
+      name: "socializationSection",
+      title: "Kitten Socialization & Preparation",
+      type: "object",
+      fields: [
+        defineField({ name: "title", title: "Title", type: "string" }),
+        defineField({
+          name: "intro",
+          title: "Introduction",
+          type: "text",
+          rows: 3,
+          description: "Opening paragraph before the bullet list.",
+        }),
+        defineField({
+          name: "items",
+          title: "Socialization Items",
+          type: "array",
+          of: [{ type: "string" }],
+          description: "Each item appears as a bullet point.",
+        }),
+      ],
+    }),
+    defineField({
       name: "additionalPractices",
       title: "Additional Ethical Practices",
       type: "array",

@@ -77,6 +77,20 @@ const doc = {
     "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family.",
   breedingFrequency:
     "Each queen is limited to 2 litters per year maximum, with appropriate rest between litters.",
+  socializationSection: {
+    title: "Kitten Socialization & Preparation",
+    intro:
+      "We spend significant time training and loving your future furry family member. Every kitten receives:",
+    items: [
+      "Daily nail trimming from birth",
+      "Extensive paw handling and toe bean play to ensure comfort with grooming",
+      "Cat carrier acclimation for stress-free vet visits",
+      "Bite inhibition training and litter box training",
+      "Socialization with children and exposure to household noises",
+      "Daily human interaction — our kittens thrive on affection and will not do well without it",
+      "Kitten face massage techniques to build trust and bonding",
+    ],
+  },
   additionalPractices: [],
 };
 
