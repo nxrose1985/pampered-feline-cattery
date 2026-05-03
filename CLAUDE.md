@@ -1434,3 +1434,43 @@ cat-rowan        image → watermarked version; old asset deleted
 cat-feyra        image + gallery → watermarked versions; old assets blocked by draft
 siteSettings     parentsBannerImage → watermarked _parents_result.jpg (document created then patched)
 ```
+
+---
+
+## Session: 2026-05-03 (PR #35 — kitten socialization section in Health & Ethics)
+
+### Decisions
+- **New "Kitten Socialization & Preparation" subsection added** to the Health & Ethics block on the homepage. Appears between "Our Commitment to Our Cats" (lifetime care + breeding frequency) and "Daily Care", maintaining the alternating `bg-obsidian` / `bg-[#0f0e0d]` background pattern.
+- **Sanity `healthEthics` schema extended:** New `socializationSection` object field added with three sub-fields: `title` (string), `intro` (text — opening paragraph), `items` (array of strings — rendered as bullet points). Pattern matches the project convention of storing structured content in named objects rather than free-form text blocks.
+- **Daily Care background corrected:** Changed from `bg-obsidian` to `bg-[#0f0e0d]` to maintain the alternating dark background pattern after inserting the new section.
+- **Ethical Practices background corrected:** Changed from `bg-[#0f0e0d]` to `bg-obsidian` for the same reason.
+- **TypeScript type updated:** `HealthEthicsSocialization` interface added to `src/lib/sanity.ts`. `HealthEthics` interface extended with `socializationSection?: HealthEthicsSocialization`.
+- **GROQ query updated:** `socializationSection { title, intro, items }` added to `healthEthicsQuery`.
+- **Fallback constant updated:** Full approved content added to `fallbackHealthEthics.socializationSection` in `sanity.ts`. Identical content seeded in `create-health-ethics.mjs`.
+- **Seed script re-run:** `node scripts/create-health-ethics.mjs` executed successfully — Sanity `healthEthics` document updated with `socializationSection` content.
+- **Build verified:** 10 pages generated cleanly, no TypeScript errors.
+
+### Socialization items (approved content)
+1. Daily nail trimming from birth
+2. Extensive paw handling and toe bean play to ensure comfort with grooming
+3. Cat carrier acclimation for stress-free vet visits
+4. Bite inhibition training and litter box training
+5. Socialization with children and exposure to household noises
+6. Daily human interaction — our kittens thrive on affection and will not do well without it
+7. Kitten face massage techniques to build trust and bonding
+
+### Deferred
+- **`npx sanity deploy` required after merge:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated `healthEthics` schema (new `socializationSection` field) to Sanity Studio UI. Sara cannot see or edit these fields in Studio until deployed.
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+- **Kitten slug + about schema fields in Studio:** `npx sanity deploy` also needed to expose those fields (carry-forward from PR #26).
+
+### Files Changed This Session (PR #35 — pending review)
+```
+sanity/schemas/healthEthics.ts     (socializationSection object field added)
+src/lib/sanity.ts                  (HealthEthicsSocialization interface; socializationSection in query + fallback)
+scripts/create-health-ethics.mjs   (socializationSection content added; re-run to update Sanity)
+src/pages/index.astro              (new Kitten Socialization section added; Daily Care + Ethical Practices backgrounds corrected)
+CLAUDE.md                          (session log appended)
+```
