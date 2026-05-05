@@ -388,9 +388,48 @@ const faqSchemaJson = JSON.stringify({
       </div>
     </ScrollReveal>
 
-    <!-- Daily Care -->
+    <!-- Kitten Socialization & Preparation -->
     <ScrollReveal animation="fadeUp">
       <div class="py-16 md:py-24 bg-obsidian">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="flex items-start gap-4 mb-8">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">
+                {healthEthicsData.socializationSection?.title ?? "Kitten Socialization & Preparation"}
+              </h3>
+              <p class="text-bone/70 leading-relaxed mb-4">
+                {healthEthicsData.socializationSection?.intro ?? "We spend significant time training and loving your future furry family member. Every kitten receives:"}
+              </p>
+              <ul class="space-y-2">
+                {(healthEthicsData.socializationSection?.items ?? [
+                  "Daily nail trimming from birth",
+                  "Extensive paw handling and toe bean play to ensure comfort with grooming",
+                  "Cat carrier acclimation for stress-free vet visits",
+                  "Bite inhibition training and litter box training",
+                  "Socialization with children and exposure to household noises",
+                  "Daily human interaction — our kittens thrive on affection and will not do well without it",
+                  "Kitten face massage techniques to build trust and bonding",
+                ]).map((item: string) => (
+                  <li class="flex items-start gap-2 text-bone/70 leading-relaxed">
+                    <span class="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-gold/50"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <!-- Daily Care -->
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-[#0f0e0d]">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -411,7 +450,7 @@ const faqSchemaJson = JSON.stringify({
 
     <!-- Ethical Practices -->
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -496,7 +535,7 @@ const faqSchemaJson = JSON.stringify({
             Kitten Purchase Agreement - Pampered Feline LLC
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            This agreement is between [Buyer Name] and Pampered Feline LLC, operating as The Pampered Feline Maine Coons. The contract protects the kitten first. Here is a summary of our terms.
+            Every Pampered Feline kitten is sold with a written purchase agreement. Below is a summary of the key terms, covering deposits, health guarantees, spay/neuter requirements, and our policies for breeding rights and rehoming.
           </p>
         </div>
       </div>
@@ -636,13 +675,9 @@ const faqSchemaJson = JSON.stringify({
                   {[
                     "Veterinary health certificate",
                     "Vaccination records",
-                    "Both parents' health testing documentation (HCM echocardiogram results and Wisdom Panel genetic reports)",
                     "Signed purchase agreement",
                     "Kitten care guide",
-                    "Food sample",
-                    "Transition litter",
                     "Familiar toy or blanket",
-                    "Personality assessment card describing your kitten's temperament",
                     "CFA pedigree papers after proof of spay/neuter",
                   ].map((item) => (
                     <li class="flex items-start gap-3">
