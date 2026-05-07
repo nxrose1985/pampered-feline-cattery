@@ -262,7 +262,7 @@ const fallbackSettings: SiteSettings = {
   reservationFee: 400,
   paymentMethods: "We accept Zelle and bank wire transfer. A $400 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.",
   contactEmail: "pamperedfelinemainecoons@gmail.com",
-  instagramHandle: "[PLACEHOLDER — instagram]",
+  instagramHandle: undefined,
   availabilityStatus: "Kittens Available",
   parentsBannerImage: undefined,
 };
