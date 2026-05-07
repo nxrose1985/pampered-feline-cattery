@@ -1611,3 +1611,33 @@ CLAUDE.md                                   (session log appended)
 src/pages/kitten-application.astro   (NEW — 22-field adoption application form)
 CLAUDE.md                            (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (nav Info dropdown — committed directly to main)
+
+### Decisions
+- **Contract nav link replaced with Info dropdown:** "Contract" removed from the flat nav. A new "Info" item replaces it with a dropdown containing three links.
+- **Desktop dropdown:** CSS `group` + `group-hover:block` on an `absolute` panel — no JS required. Chevron rotates 180° on hover via `group-hover:rotate-180`. Panel styled `bg-ivory border border-gold/15 shadow-lg` to match the nav header. Links use the same `text-charcoal-light hover:text-gold-dark` classes as all other nav links. `min-w-[240px]` fits the longest label.
+- **Mobile accordion:** JS toggle on `#info-accordion-toggle` button. Chevron rotates on expand. Sub-list indented with `pl-4 border-l border-gold/20`. Clicking any sub-link closes the entire mobile menu and resets accordion state.
+- **Three Info items:**
+  1. "Bringing Home Your Kitten" → `/bringing-home-your-kitten`
+  2. "Kitten Purchase Agreement" → `/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` with `download` attribute and `target="_blank"`
+  3. "FAQ" → `/#faq`
+- **`autoPort: true` added to `.claude/launch.json`** for the `astro-dev` server config to avoid port-conflict errors when port 4321 is already in use.
+- **Build verified:** 12 pages generated cleanly. Built HTML confirmed: `group-hover:block` present, `info-accordion-toggle` present, `download` attribute on PDF link, `/#contract` link absent, all 3 info hrefs present in both desktop and mobile markup.
+
+### Conventions
+- **Dropdown pattern (desktop):** `<li class="relative group">` wrapper, `group-hover:block` on the panel `<div>`. No JS needed for desktop reveal.
+- **Accordion pattern (mobile):** `aria-expanded` toggled by JS, `hidden`/`flex` class swap on the sub-list, chevron `rotate-180` class toggled. Reset to closed state whenever the main mobile menu closes.
+- **PDF download link:** `download` attribute + `target="_blank"` + `rel="noopener noreferrer"` on the PDF `<a>` tag.
+
+### Deferred
+- All prior deferred items carry forward: `npx sanity deploy` for show results schema, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session
+```
+src/components/Nav.astro     (Contract link removed; Info dropdown + mobile accordion added)
+.claude/launch.json          (autoPort: true added to astro-dev config)
+CLAUDE.md                    (session log appended)
+```
