@@ -1474,3 +1474,43 @@ scripts/create-health-ethics.mjs   (socializationSection content added; re-run t
 src/pages/index.astro              (new Kitten Socialization section added; Daily Care + Ethical Practices backgrounds corrected)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (PR #36 — Bringing Home Your Kitten page — pending merge)
+
+See the session log entry that will land with PR #36. That PR adds `src/pages/bringing-home-your-kitten.astro` and updates the FAQ order-9 fallback.
+
+---
+
+## Session: 2026-05-07 (bringing-home PDF generation)
+
+### Decisions
+- **`public/bringing-home-guide.pdf` created:** 19KB PDF generated with ReportLab using `scripts/generate-bringing-home-pdf.py`. Fulfills the download link on `/bringing-home-your-kitten`.
+- **Design:** Dark charcoal (`#1C1917`) cover block with gold accent bar at bottom, ivory (`#F5F1EB`) page background. Times Roman for body and headings (closest professional serif available in ReportLab's built-in fonts), Helvetica for labels and footer. Gold (`#C9A96E`) bullets and section label text.
+- **All 11 sections included:** Before Pickup Supplies, Food & Feeding, Litter Box, First Few Days, Introducing to Other Pets, Health & Vet Care, Important Care Requirements, Toys & Enrichment, Grooming, Lifetime Support, Resources.
+- **Page template:** Slim obsidian header banner on pages 2+ with cattery name in gold. Footer on every page: domain left, page number right, separated by a hairline rule.
+- **Callout style:** Italic text for key rules (quarantine room, litter rule of thumb, microchip note, companionship note) — visually distinct without a border box.
+- **Script is re-runnable:** `python scripts/generate-bringing-home-pdf.py` from project root regenerates the PDF. Run again if content is updated.
+- **No schema changes:** This PR contains no Sanity schema changes. `npx sanity deploy` is not required for this PR.
+- **Separate PR from page:** PDF is in `feat/bringing-home-pdf` (branches from staging). Page is in `claude/wonderful-blackburn-218713` (also targets staging). Both PRs can merge independently — the download link on the page works as soon as the PDF PR is deployed.
+
+### Conventions
+- **PDF generation script path:** `scripts/generate-bringing-home-pdf.py` — run from project root.
+- **PDF output path:** `public/bringing-home-guide.pdf` — must match the href in `bringing-home-your-kitten.astro`.
+- **ReportLab font strategy:** Use `Times-Roman` / `Times-Bold` / `Times-Italic` for body/headings (professional serif, built-in), `Helvetica` for labels and footer (clean sans). Avoids custom font embedding complexity.
+
+### Deferred
+- **Merge order:** Merge PR #36 (page) and this PR in either order — they are independent. Recommend merging page first so the download button is live before the PDF link resolves.
+- **Content updates to PDF:** If care guide content changes in the future, update `scripts/generate-bringing-home-pdf.py` and re-run to regenerate `public/bringing-home-guide.pdf`, then push.
+- **`npx sanity deploy` carry-forward:** Still needed from project root to push healthEthics + kitten slug/about schema fields (carry-forward from PR #35 / #26 / #29). Not required for this PR.
+- **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Carry forward.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session (feat/bringing-home-pdf)
+```
+public/bringing-home-guide.pdf              (NEW — 19KB PDF, all 11 sections)
+scripts/generate-bringing-home-pdf.py       (NEW — ReportLab generation script)
+CLAUDE.md                                   (session log appended)
+```
