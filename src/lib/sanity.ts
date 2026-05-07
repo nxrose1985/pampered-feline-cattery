@@ -32,7 +32,18 @@ export interface Cat {
   };
   gallery?: Array<{ asset: { url: string } }>;
   wisdomPanelPdf?: { asset: { url: string } };
+  championshipCertificate?: { asset: { url: string } };
   order: number;
+}
+
+export interface ShowResult {
+  catName: string;
+  organization: "CFA" | "TICA";
+  titleEarned: string;
+  showDate?: string;
+  location?: string;
+  certificatePDF?: { asset: { url: string } };
+  displayOrder?: number;
 }
 
 export interface PersonalityAssessment {
@@ -127,7 +138,18 @@ const catQuery = `*[_type == "cat"] | order(order asc) {
   "image": image { asset-> { url } },
   "gallery": gallery[] { asset-> { url } },
   "wisdomPanelPdf": wisdomPanelPdf { asset-> { url } },
+  "championshipCertificate": championshipCertificate { asset-> { url } },
   order
+}`;
+
+const showResultQuery = `*[_type == "showResult"] | order(displayOrder asc) {
+  catName,
+  organization,
+  titleEarned,
+  showDate,
+  location,
+  "certificatePDF": certificatePDF { asset-> { url } },
+  displayOrder
 }`;
 
 const kittenProjection = `{
@@ -329,5 +351,29 @@ export async function getHealthEthics(): Promise<HealthEthics> {
   } catch (error) {
     console.error("Failed to fetch healthEthics from Sanity:", error);
     return fallbackHealthEthics;
+  }
+}
+
+const fallbackShowResults: ShowResult[] = [
+  {
+    catName: "Aedion",
+    organization: "CFA",
+    titleEarned: "Champion",
+    showDate: "2025-12-06",
+    location: "Greater Baltimore Cat Club, Baltimore, MD",
+    displayOrder: 1,
+  },
+];
+
+export async function getShowResults(): Promise<ShowResult[]> {
+  const client = getClient();
+  if (!client) return fallbackShowResults;
+
+  try {
+    const result = await client.fetch<ShowResult[]>(showResultQuery);
+    return result.length > 0 ? result : fallbackShowResults;
+  } catch (error) {
+    console.error("Failed to fetch show results from Sanity:", error);
+    return fallbackShowResults;
   }
 }
