@@ -1672,3 +1672,19 @@ src/components/KittenCard.astro  (Inquire → Apply for This Kitten; href /#cont
 src/components/Nav.astro         (Apply for a Kitten added as first Info item; CSS group-hover replaced with JS hover delay)
 CLAUDE.md                        (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (remove honeypot from kitten application form)
+
+### Decisions
+- **Honeypot removed from kitten-application form:** `netlify-honeypot="bot-field"` attribute removed from the `<form>` tag. Hidden `<div aria-hidden="true">` containing `<input name="bot-field">` removed. Netlify's native spam filter remains active and is sufficient.
+
+### Root Cause
+The honeypot was causing false positives — legitimate submissions were being blocked because some browsers or password managers were auto-filling the hidden field.
+
+### Files Changed This Session
+```
+src/pages/kitten-application.astro   (netlify-honeypot attr + hidden bot-field input removed)
+CLAUDE.md                            (session log appended)
+```
