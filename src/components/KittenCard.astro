@@ -263,14 +263,14 @@ const dateLabel = formatDate(availableDate);
     <div class={`flex flex-col gap-2 ${meetHref || (status === "Available" && !linkTo) ? "" : "hidden"}`}>
       {status === "Available" && !linkTo && (
         <a
-          href="/#contact"
+          href="/kitten-application"
           class={`inline-block w-full text-center px-6 py-2 text-xs font-medium tracking-widest uppercase transition-colors ${
             isDark
               ? "bg-bone text-obsidian hover:bg-bone/90"
               : "bg-charcoal text-ivory hover:bg-charcoal/90"
           }`}
         >
-          Inquire
+          Apply for This Kitten
         </a>
       )}
       {meetHref && (
