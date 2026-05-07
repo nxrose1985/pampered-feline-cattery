@@ -329,7 +329,7 @@ const fallbackHealthEthics: HealthEthics = {
     intro:
       "We spend significant time training and loving your future furry family member. Every kitten receives:",
     items: [
-      "Daily nail trimming from birth",
+      "Bi-weekly nail trimming starting at 4 weeks of age",
       "Extensive paw handling and toe bean play to ensure comfort with grooming",
       "Cat carrier acclimation for stress-free vet visits",
       "Bite inhibition training and litter box training",
