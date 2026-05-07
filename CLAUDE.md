@@ -1705,3 +1705,23 @@ CLAUDE.md                            (session log appended)
 ```
 src/lib/sanity.ts   (instagramHandle fallback: "[PLACEHOLDER — instagram]" → undefined)
 CLAUDE.md           (session log appended)
+
+---
+
+## Session: 2026-05-07 (Health & Ethics copy edits)
+
+### Decisions
+- **Nail trimming item updated:** "Daily nail trimming from birth" changed to "Bi-weekly nail trimming starting at 4 weeks of age" in the Kitten Socialization & Preparation section.
+- **Ethical Practices item updated:** "Every kitten is sold with a written contract that protects the cat first." changed to "Every kitten is placed with a written contract outlining our commitment to their lifelong care."
+- **Three files updated:** Both changes applied consistently across `index.astro` (rendered page), `src/lib/sanity.ts` (fallback constant), and `scripts/create-health-ethics.mjs` (seed script) to keep all three in sync.
+
+### Deferred
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session
+```
+src/pages/index.astro              (both copy edits applied)
+src/lib/sanity.ts                  (nail trimming fallback updated)
+scripts/create-health-ethics.mjs   (nail trimming seed content updated)
+CLAUDE.md                          (session log appended)
+```
