@@ -1,0 +1,88 @@
+---
+import type { ShowResult } from "../lib/sanity";
+import ScrollReveal from "./ScrollReveal.astro";
+
+interface Props {
+  results: ShowResult[];
+}
+
+const { results } = Astro.props;
+
+function formatDate(dateStr?: string): string {
+  if (!dateStr) return "";
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+---
+
+<section id="show-results" class="bg-[#0f0e0d]">
+  <ScrollReveal animation="fadeUp">
+    <div class="py-16 md:py-24">
+      <div class="max-w-3xl mx-auto px-4 text-center mb-14">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+          In the Ring
+        </p>
+        <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-6 leading-tight">
+          Championship Results
+        </h2>
+        <p class="text-bone/70 text-lg leading-relaxed">
+          Our cats compete and earn titles because the standard matters. Championship recognition confirms that what we see in our home holds up under independent evaluation.
+        </p>
+      </div>
+
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="divide-y divide-bone/[0.08]">
+          {results.map((result) => (
+            <div class="py-8 flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-8">
+              <!-- Organization badge -->
+              <div class="flex-shrink-0">
+                <span class="inline-block px-3 py-1 text-xs font-medium tracking-[0.2em] uppercase border border-gold/30 text-gold/70">
+                  {result.organization}
+                </span>
+              </div>
+
+              <!-- Result details -->
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
+                  <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone">
+                    {result.catName}
+                  </h3>
+                  <span class="text-gold/70 font-medium text-sm tracking-wide">
+                    {result.titleEarned}
+                  </span>
+                </div>
+                {result.location && (
+                  <p class="text-bone/50 text-sm mb-1">{result.location}</p>
+                )}
+                {result.showDate && (
+                  <p class="text-bone/40 text-xs tracking-wide">{formatDate(result.showDate)}</p>
+                )}
+              </div>
+
+              <!-- Certificate link -->
+              {result.certificatePDF?.asset?.url && (
+                <div class="flex-shrink-0 self-start">
+                  <a
+                    href={result.certificatePDF.asset.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium tracking-[0.15em] uppercase border border-bone/20 text-bone/60 hover:border-bone/50 hover:text-bone/90 transition-colors"
+                  >
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Certificate
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </ScrollReveal>
+</section>

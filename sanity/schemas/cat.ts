@@ -61,6 +61,12 @@ export const cat = defineType({
       description: "Upload the Wisdom Panel genetic health report PDF.",
     }),
     defineField({
+      name: "championshipCertificate",
+      title: "Championship Certificate PDF",
+      type: "file",
+      description: "Upload the CFA/TICA championship certificate PDF.",
+    }),
+    defineField({
       name: "order",
       title: "Display Order",
       type: "number",

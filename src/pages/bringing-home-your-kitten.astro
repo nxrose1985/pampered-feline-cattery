@@ -1,0 +1,767 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Bringing Home Your Kitten | Pampered Feline Maine Coons"
+  description="Complete guide for new Maine Coon kitten owners. Food, litter, veterinary care, and everything you need to know before your kitten comes home."
+>
+
+  <!-- Back nav -->
+  <div class="bg-obsidian border-b border-bone/10">
+    <div class="max-w-4xl mx-auto px-4 py-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-bone/50 hover:text-bone text-sm tracking-widest uppercase transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Home
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-obsidian pt-16 pb-20 md:pt-24 md:pb-28">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">New Owner Guide</p>
+      <h1 class="font-heading text-4xl md:text-6xl font-semibold text-bone mb-6 leading-tight">
+        Bringing Home Your New Kitten
+      </h1>
+      <p class="text-bone/70 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+        Congratulations on your new family member! Here's everything you need to know to prepare for your kitten's arrival and help them settle into their new home.
+      </p>
+      <a
+        href="/bringing-home-guide.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-3 px-8 py-4 border border-bone/20 text-bone/70 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone transition-colors"
+      >
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Download Complete Guide (PDF)
+      </a>
+    </div>
+  </section>
+
+  <!-- Section 1: Before Pickup — Must-Have Supplies -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 1</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Before Pickup — Must-Have Supplies
+      </h2>
+      <p class="text-bone/70 leading-relaxed mb-10">
+        Get these items before your kitten arrives:
+      </p>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Food & Water</h3>
+          <ul class="space-y-2">
+            {["Royal Canin kitten dry food", "Royal Canin kitten wet food (pate or chunks in gravy)", "Food storage container (airtight, for dry food)", "Food dishes: 2 shallow dishes for wet food", "Water bowls: 2 bowls (stainless steel or ceramic)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Litter</h3>
+          <ul class="space-y-2">
+            {["Large litter box (remember, your kitten will grow fast)", "Litter scoop", "BoxiePro Deep Clean litter (what your kitten is used to)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Comfort & Safety</h3>
+          <ul class="space-y-2">
+            {["Cat carrier (hard-sided, airline-approved if you're flying)", "Soft blankets and bedding", "Cat tree or scratching post (sisal rope, cardboard, or carpet)", "Toys (feather wands, balls, interactive toys)", "Cat brush or metal comb"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Veterinary Care</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Research local veterinarians and schedule an appointment within 72 hours of pickup.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Kitten Room</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Prepare a quiet room where your kitten can decompress for the first few days. This room should have their carrier, food, water, litter box, and a few toys.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Food & Feeding Schedule -->
+  <section class="bg-obsidian py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 2</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Food & Feeding Schedule
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">What your kitten is eating</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            Your kitten has been raised on Royal Canin kitten formula, both dry and wet.
+          </p>
+          <ul class="space-y-2">
+            {["Dry food: Royal Canin kitten dry, free-fed (left out at all times)", "Wet food: Royal Canin kitten wet (pate or chunks in gravy), 2-3 times daily, as much as they want"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Why wet food matters</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Wet food is essential for your kitten's health. It prevents urinary blockages, keeps them hydrated, and provides balanced nutrition. Dry food alone is full of carbs and fillers. While it's fine to leave dry food out for grazing, wet food 2-3 times daily is non-negotiable.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Switching foods</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Do not switch your kitten's food abruptly. Sudden diet changes cause gastrointestinal upset (vomiting, diarrhea). If you plan to switch brands, do it gradually over 7-10 days by mixing increasing amounts of the new food with the old.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Feeding schedule</h3>
+          <ul class="space-y-2 mb-4">
+            {["Morning: Wet food", "Afternoon/evening: Wet food", "Before bed: Wet food (optional third meal)", "All day: Dry food available for grazing"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/70 leading-relaxed">
+            Kittens should stay on kitten-specific food until 18 months of age.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Litter Box Setup -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 3</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Litter Box Setup
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">What your kitten is used to</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Your kitten has been using BoxiePro Deep Clean litter in both hooded and non-hooded litter boxes.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Litter box tips</h3>
+          <ul class="space-y-2">
+            {["Use a large litter box. Your kitten will grow into a 15-20 pound adult cat. A small box won't cut it.", "Scoop daily, replace litter weekly.", "Place the litter box in a quiet, low-traffic area.", "If you switch litter brands, do it gradually by mixing the new litter with BoxiePro over a week."].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Litter box rule of thumb</h3>
+          <p class="text-bone/70 leading-relaxed">
+            One litter box per cat, plus one extra. If you have other cats, your kitten needs their own box during the transition period.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: The First Few Days -->
+  <section class="bg-obsidian py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 4</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        The First Few Days — What to Expect
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Transitioning stress is normal</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            Going home is the most stressful time in your kitten's life. They're leaving their mother, siblings, and everything they know. Expect:
+          </p>
+          <ul class="space-y-2 mb-4">
+            {["Sneezing or runny eyes/nose", "Soft stool or diarrhea", "Hiding or reluctance to eat", "Crying or calling for their mother"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/70 leading-relaxed">
+            This is normal and usually resolves within a few days to two weeks. If symptoms persist or worsen, contact your vet.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">The quarantine room</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            For the first 3-7 days, confine your kitten to a small, quiet room (a bedroom works well). This room should have:
+          </p>
+          <ul class="space-y-2">
+            {["Their carrier (left open as a safe hiding spot)", "Food and water bowls", "Litter box (placed away from food)", "A few toys", "Soft bedding"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Give them time</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Your kitten will not walk in and immediately act confident. That's okay. Sit quietly in the room with them. Let them approach you. Offer treats. Talk softly. Don't force interaction. Some kittens adjust in a day. Others take a week. Be patient.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Sleeping arrangements</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Your kitten has been sleeping in our bedroom since birth. We hope you'll continue this. Maine Coons bond closely with their people and thrive when they're included in family life. Once your kitten is comfortable, let them sleep with you.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Introducing to Other Pets -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 5</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Introducing Your Kitten to Other Pets
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Slow introductions prevent problems</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Do not throw your new kitten in with your existing cat or dog and expect them to get along. A rushed introduction can lead to fear, aggression, and long-term relationship problems.
+          </p>
+        </div>
+
+        <div>
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/60 mb-4">Timeline: 2-3 weeks minimum</p>
+          <div class="space-y-6">
+
+            <div>
+              <h3 class="font-heading text-xl font-semibold text-bone mb-3">Week 1: Scent swapping</h3>
+              <ul class="space-y-2">
+                {["Keep your kitten in their quarantine room.", "Swap bedding between your kitten and your other pets so they get used to each other's scent.", "Feed them on opposite sides of a closed door so they associate each other's presence with positive experiences (food)."].map((item) => (
+                  <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                    <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-heading text-xl font-semibold text-bone mb-3">Week 2: Visual contact</h3>
+              <ul class="space-y-2">
+                {["Crack the door open a few inches (use a door stop or baby gate).", "Let them see each other without physical contact.", "Reward calm behavior with treats.", "If either animal shows aggression, slow down."].map((item) => (
+                  <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                    <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-heading text-xl font-semibold text-bone mb-3">Week 3: Supervised interaction</h3>
+              <ul class="space-y-2">
+                {["Allow short, supervised visits in a neutral space.", "Keep initial interactions to 10-15 minutes.", "Always supervise until you're confident they're safe together."].map((item) => (
+                  <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                    <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Dogs and kittens</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Never leave a kitten alone with a dog until the kitten is fully grown and you're 100% confident the dog won't hurt them. Even gentle dogs can accidentally injure a small kitten during play.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Young children</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Even though your kitten has been socialized with children, young kids can be overwhelming during the transition. Teach children to approach the kitten calmly, speak quietly, and let the kitten come to them.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Health & Veterinary Care -->
+  <section class="bg-obsidian py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 6</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Health & Veterinary Care
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">72-hour vet exam (required)</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            Your contract requires a veterinary exam within 72 hours of pickup (excluding Sundays and holidays). This exam:
+          </p>
+          <ul class="space-y-2 mb-4">
+            {["Confirms your kitten is healthy", "Activates your health guarantee", "Establishes a relationship with your vet"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/70 leading-relaxed">
+            Bring your kitten's health records to this appointment.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Vaccine schedule</h3>
+          <p class="text-bone/70 leading-relaxed mb-3">Your kitten has received:</p>
+          <ul class="space-y-2 mb-4">
+            {["FVRCP at 8 weeks", "FVRCP at 11 weeks", "Rabies at 12 weeks (if age-appropriate)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/70 leading-relaxed mb-3">Next vaccines due:</p>
+          <ul class="space-y-2">
+            {["FVRCP booster at 15-16 weeks (one year after the last shot, your vet will advise)", "Rabies booster at 1 year"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Important vaccination rules</h3>
+          <ol class="space-y-4">
+            <li class="flex items-start gap-4 text-bone/70 leading-relaxed">
+              <span class="mt-0.5 text-gold font-medium font-heading text-lg flex-shrink-0 w-5">1.</span>
+              <span><strong class="text-bone font-medium">Core vaccines only:</strong> FVRCP and rabies. We do not recommend the FeLV (feline leukemia) vaccine due to adverse reaction risk. Our kittens are indoor-only and our breeding cats are FeLV negative.</span>
+            </li>
+            <li class="flex items-start gap-4 text-bone/70 leading-relaxed">
+              <span class="mt-0.5 text-gold font-medium font-heading text-lg flex-shrink-0 w-5">2.</span>
+              <span><strong class="text-bone font-medium">One vaccine per visit:</strong> Do not let your vet give multiple vaccines in one appointment. Space vaccines at least 3 weeks apart.</span>
+            </li>
+            <li class="flex items-start gap-4 text-bone/70 leading-relaxed">
+              <span class="mt-0.5 text-gold font-medium font-heading text-lg flex-shrink-0 w-5">3.</span>
+              <span><strong class="text-bone font-medium">Separate vaccines from surgery:</strong> Schedule spay/neuter at least one week after vaccines (four weeks is better). Don't stress the immune system with surgery and vaccines at the same time.</span>
+            </li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Spay/neuter timeline</h3>
+          <p class="text-bone/70 leading-relaxed mb-3">
+            Your contract requires spay or neuter by 10 months of age for both males and females.
+          </p>
+          <p class="text-bone/70 leading-relaxed mb-3">
+            Recommended schedule: 7-10 months. Do not spay or neuter before 7 months. Early alteration removes hormones during skeletal development. Maine Coons are a large breed and benefit from waiting until at least 7 months.
+          </p>
+          <p class="text-bone/50 text-sm leading-relaxed mb-3">
+            Important: Spaying or neutering before 7 months voids your health guarantee.
+          </p>
+          <p class="text-bone/70 leading-relaxed">
+            CFA registration papers will be provided after we receive proof of alteration from your vet.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Microchip</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Your kitten is microchipped and registered to Pampered Feline LLC as the primary contact, with you listed as secondary. This stays in place for the kitten's lifetime. If your kitten is ever lost or stolen, the microchip helps us recover them.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: Important Care Requirements -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 7</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Important Care Requirements
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Indoor only</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            Your kitten must be kept indoors. Supervised outdoor time in an enclosed space (catio) or on a harness is fine, but your kitten should never roam freely outdoors. Outdoor cats face:
+          </p>
+          <ul class="space-y-2">
+            {["Cars", "Predators (dogs, coyotes, hawks)", "Disease (FeLV, FIV, parasites)", "Theft", "Poisoning"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">No declawing</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            Declawing is never acceptable. It's amputation of the first knuckle of each toe and causes permanent pain and behavioral problems. Alternatives:
+          </p>
+          <ul class="space-y-2 mb-4">
+            {["Scratching posts (sisal rope, cardboard, carpet)", "Nail caps (Soft Claws)", "Regular nail trimming"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/50 text-sm leading-relaxed">
+            If you declaw your kitten, you must return them to us immediately with no refund. This is in your contract.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Quality care</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">Your kitten deserves:</p>
+          <ul class="space-y-2">
+            {["Clean water changed daily", "High-quality food (wet and dry)", "A clean litter box (scooped daily)", "Regular vet visits", "Enrichment (toys, scratching posts, playtime)", "Companionship (Maine Coons are social and shouldn't be left alone for long periods)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="border-l-2 border-gold/30 pl-6">
+          <h3 class="font-heading text-xl font-semibold text-bone mb-3">Companionship</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Maine Coons bond closely with their people. They don't do well when left alone for more than a full day. If you work long hours, consider having another pet (cat, kitten, or dog) so your kitten has company.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Toys & Enrichment -->
+  <section class="bg-obsidian py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 8</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Toys & Enrichment
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Safe toys</h3>
+          <ul class="space-y-2">
+            {["Feather wands (supervise play, put away after use — kittens can swallow feathers)", "Balls (ping pong balls, jingle balls, foam balls)", "Interactive toys (puzzle feeders, treat balls)", "Catnip toys (some cats love catnip, others don't react until 6+ months)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Unsafe toys</h3>
+          <ul class="space-y-2">
+            {["String, yarn, ribbon, or tinsel (causes intestinal blockages if swallowed)", "Small objects that can be swallowed (buttons, hair ties, rubber bands)", "Broken toys (discard immediately)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Scratching posts</h3>
+          <p class="text-bone/70 leading-relaxed mb-3">
+            Maine Coons need tall, sturdy scratching posts. Recommended materials:
+          </p>
+          <ul class="space-y-2">
+            {["Sisal rope", "Cardboard scratchers", "Carpet-lined posts"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Cat trees</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">
+            Invest in a quality cat tree. Maine Coons are large cats (15-25 pounds at maturity) and cheap cat trees will collapse. Look for:
+          </p>
+          <ul class="space-y-2 mb-4">
+            {["Sturdy construction", "Wide, reinforced platforms", "Weight capacity of 30+ pounds per platform"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/70 leading-relaxed">
+            Brands we recommend: Kitty Mansions, Catit Senses.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 9: Grooming & Maintenance -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 9</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Grooming & Maintenance
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Brushing</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Maine Coons have semi-long coats and benefit from weekly brushing. Use a soft brush or metal comb. Brush more frequently during shedding season (spring and fall).
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Nail trimming</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Trim your kitten's nails every 2-3 weeks. Your vet can show you how at your first appointment.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Bathing</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Maine Coons rarely need baths unless they get into something messy. Their coats are naturally water-resistant.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Ear cleaning</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Check ears weekly. If they look dirty or waxy, clean them with a vet-approved ear cleaner. If ears are red, inflamed, or smell bad, see your vet.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 10: Lifetime Support & Contact -->
+  <section class="bg-obsidian py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 10</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Lifetime Support & Contact
+      </h2>
+
+      <div class="space-y-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">We're here for you</h3>
+          <p class="text-bone/70 leading-relaxed">
+            You have lifetime support for your kitten. If you have questions or concerns about health, behavior, feeding, litter training, socialization, or anything else, contact us at <a href="mailto:pamperedfelinemainecoons@gmail.com" class="text-gold hover:text-gold/80 transition-colors">pamperedfelinemainecoons@gmail.com</a> or use our <a href="/#contact" class="text-gold hover:text-gold/80 transition-colors">contact form</a>.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Stay in touch</h3>
+          <p class="text-bone/70 leading-relaxed mb-4">We ask that you send us photo updates:</p>
+          <ul class="space-y-2">
+            {["Within 24 hours of arrival", "At 3 months after arrival", "At 6 months after arrival", "At least once per year after that"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="text-bone/60 text-sm leading-relaxed mt-4">
+            This helps us track the health of our lines and confirm our kittens are thriving.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Review your contract</h3>
+          <p class="text-bone/70 leading-relaxed">
+            For full terms and conditions, review your signed <a href="/contracts/PamperedFeline-KittenPurchaseAgreement.pdf" target="_blank" rel="noopener noreferrer" class="text-gold hover:text-gold/80 transition-colors">Kitten Purchase Agreement</a>.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Have more questions?</h3>
+          <p class="text-bone/70 leading-relaxed">
+            Check our <a href="/#faq" class="text-gold hover:text-gold/80 transition-colors">FAQ</a> for answers to common questions about health guarantees, spay/neuter requirements, and more.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 11: Resources & Recommendations -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Section 11</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
+        Resources & Recommendations
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Food & Litter</h3>
+          <ul class="space-y-2">
+            {["Royal Canin kitten dry and wet food", "BoxiePro Deep Clean litter"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Bowls</h3>
+          <ul class="space-y-2">
+            {["Stainless steel or ceramic (avoid plastic, which can cause chin acne)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">Toys & Enrichment</h3>
+          <ul class="space-y-2">
+            {["Kitty Mansions cat trees", "Catit Senses toys", "Feather wands (supervise use)"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-xl font-semibold text-bone mb-4">General Kitten Care</h3>
+          <ul class="space-y-2">
+            {["ASPCA New Kitten Guide", "Cornell Feline Health Center"].map((item) => (
+              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <section class="bg-obsidian py-16 md:py-20 text-center">
+    <div class="max-w-xl mx-auto px-4">
+      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+        Questions? We're here.
+      </h2>
+      <p class="text-bone/60 mb-8 leading-relaxed">
+        Lifetime support is part of every adoption. Reach out anytime — we want your kitten to thrive.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="/#contact"
+          class="inline-block px-10 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors"
+        >
+          Contact Us
+        </a>
+        <a
+          href="/"
+          class="inline-block px-10 py-4 border border-bone/20 text-bone/60 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone/90 transition-colors"
+        >
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
