@@ -1577,3 +1577,37 @@ public/bringing-home-guide.pdf              (NEW — 19KB PDF, all 11 sections)
 scripts/generate-bringing-home-pdf.py       (NEW — ReportLab generation script)
 CLAUDE.md                                   (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (kitten application form — committed directly to main)
+
+### Decisions
+- **`/kitten-application` page created:** 20-field adoption application form at `src/pages/kitten-application.astro`. Committed directly to `main` (staging was already merged to main).
+- **Netlify Forms integration:** `data-netlify="true"`, `name="kitten-application"`, `netlify-honeypot="bot-field"` honeypot, hidden `form-name` input. Netlify will auto-register the form on first deploy and route submissions to the dashboard.
+- **AJAX submission:** Same `fetch("/")`+`URLSearchParams` pattern as the contact form. On success: form fields hidden, success message shown (green). On error: submit re-enabled, error message with mailto fallback shown (red).
+- **Dark obsidian theme:** Matches site conventions — `bg-obsidian` hero, `bg-[#0f0e0d]` form section, `text-bone`, `text-gold/70` labels, `font-heading` section headings.
+- **5 sections, 22 fields:**
+  - Section 1 (About You): full name, email, phone, city/state, referral source
+  - Section 2 (Your Household): home type, own/rent, pet permission if renting, adults in household, children in household
+  - Section 3 (Experience): current pets, cat ownership experience, Maine Coon experience, hours home per day, why a Maine Coon
+  - Section 4 (Kitten Preferences): sex preference, color preference, polydactyl interest, preferred timing
+  - Section 5 (References): vet name and clinic, personal reference, additional notes
+- **No nav change:** The nav already has 7 items. The page is reachable at `/kitten-application` and can be linked from kitten CTAs or the footer in a future session if desired.
+- **Build verified:** 12 pages generated cleanly, `data-netlify` and all field `name` attributes confirmed present in the built HTML output.
+
+### Conventions
+- **Netlify Forms name:** `kitten-application` — distinct from the existing `contact` form. Both will appear separately in the Netlify Forms dashboard.
+- **Select dropdowns:** Custom chevron SVG positioned absolutely inside `relative` wrapper. `appearance-none` on the `<select>` to remove browser default arrow. Chevron offset calculated with `top-[calc(50%+10px)]` to account for the label height above.
+- **Required fields:** Full name, email, city/state, and "why a Maine Coon" are marked required. Most other fields are optional to reduce friction.
+
+### Deferred
+- **Nav or CTA link to /kitten-application:** Not added this session. Consider linking from the kittens section or adding an "Apply" nav item in a future session.
+- **Netlify Forms confirmation email:** Can configure in Netlify dashboard (Forms → kitten-application → notifications) to auto-reply to applicants and notify Sara.
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results schema, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session
+```
+src/pages/kitten-application.astro   (NEW — 22-field adoption application form)
+CLAUDE.md                            (session log appended)
+```
