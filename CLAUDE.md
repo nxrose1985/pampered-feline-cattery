@@ -1688,3 +1688,20 @@ The honeypot was causing false positives — legitimate submissions were being b
 src/pages/kitten-application.astro   (netlify-honeypot attr + hidden bot-field input removed)
 CLAUDE.md                            (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (clear Instagram placeholder from fallback settings)
+
+### Decisions
+- **`instagramHandle` fallback cleared:** `fallbackSettings.instagramHandle` changed from `"[PLACEHOLDER — instagram]"` to `undefined` in `src/lib/sanity.ts`. The `instagramHandle` field remains in the `SiteSettings` interface, the GROQ `siteSettingsQuery`, and the Sanity `siteSettings` schema — nothing is rendered on the frontend until Sara adds a real handle via Sanity Studio.
+- **No frontend changes needed:** Footer and contact page had Instagram rendering removed in PR #5 (April 2026 session). No `.astro` file references `instagramHandle` today.
+- **`kitten-application.astro` "Instagram" option untouched:** The dropdown option for "How did you find us? → Instagram" is a referral source field, not a placeholder link. Kept as-is.
+
+### Deferred
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results schema, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session
+```
+src/lib/sanity.ts   (instagramHandle fallback: "[PLACEHOLDER — instagram]" → undefined)
+CLAUDE.md           (session log appended)
