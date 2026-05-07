@@ -1641,3 +1641,34 @@ src/components/Nav.astro     (Contract link removed; Info dropdown + mobile acco
 .claude/launch.json          (autoPort: true added to astro-dev config)
 CLAUDE.md                    (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (Apply for a Kitten CTAs — committed directly to main)
+
+### Decisions
+- **Hero CTA buttons added:** Two CTA buttons added below the hero subtitle: gold primary "Apply for a Kitten" → `/kitten-application`; outlined secondary "View Available Kittens" → `/#kittens`. Uses `flex flex-col sm:flex-row items-center justify-center gap-4` layout — stacked on mobile, side-by-side on small+ screens.
+- **KittenCard "Inquire" button renamed:** "Inquire About This Kitten" changed to "Apply for This Kitten". `href` changed from `/#contact` to `/kitten-application`. All styling classes and conditional logic unchanged.
+- **Nav Info dropdown updated:** "Apply for a Kitten" → `/kitten-application` added as the first item in `infoLinks`. Dropdown now has 4 items: Apply for a Kitten, Bringing Home Your Kitten, Kitten Purchase Agreement (PDF download), FAQ.
+- **Nav dropdown hover gap bug fixed:** The previous CSS `group`/`group-hover:block` approach caused the dropdown to close when the cursor passed through the 8px `mt-2` gap between the trigger button and the panel. Fixed by replacing CSS hover with JS `mouseenter`/`mouseleave` on both `#info-li` (the `<li>` wrapper) and `#info-panel`. A 220ms `scheduleHideInfo` timeout is started on mouseleave; it is cancelled if mouseenter fires on either element before it fires. This gives the cursor enough time to bridge the gap without the panel closing.
+- **Chevron and aria-expanded toggled in JS:** `rotate-180` class and `aria-expanded` attribute managed by the same `showInfo()`/`scheduleHideInfo()` functions rather than by CSS alone.
+- **Escape key closes dropdown:** `keydown` listener on `document` closes the panel and returns focus to `#info-trigger` when Escape is pressed while the panel is open.
+- **Build verified:** 12 pages generated cleanly.
+
+### Conventions
+- **Dropdown pattern (desktop — updated):** JS mouseenter/mouseleave + 220ms timeout, not CSS `group-hover`. Both `#info-li` and `#info-panel` register listeners so the delay covers the gap between them.
+- **`hideTimer` pattern:** Single `ReturnType<typeof setTimeout> | null` variable; always cleared before setting a new one; always set to `null` after clearing.
+
+### Deferred
+- **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the showResult schema, cat `championshipCertificate` field, and kitten slug/about fields to Sanity Studio UI.
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session
+```
+src/components/Hero.astro        (CTA buttons added below subtitle)
+src/components/KittenCard.astro  (Inquire → Apply for This Kitten; href /#contact → /kitten-application)
+src/components/Nav.astro         (Apply for a Kitten added as first Info item; CSS group-hover replaced with JS hover delay)
+CLAUDE.md                        (session log appended)
+```
