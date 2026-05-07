@@ -5,14 +5,16 @@ import CurrentLitter from "../components/CurrentLitter.astro";
 import CatCard from "../components/CatCard.astro";
 import ContactForm from "../components/ContactForm.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
-import { getCats, getFaqs, getSettings, getHealthEthics } from "../lib/sanity";
+import ShowResults from "../components/ShowResults.astro";
+import { getCats, getFaqs, getSettings, getHealthEthics, getShowResults } from "../lib/sanity";
 import type { Cat } from "../lib/sanity";
 
-const [sanityCats, faqs, settings, healthEthicsData] = await Promise.all([
+const [sanityCats, faqs, settings, healthEthicsData, showResults] = await Promise.all([
   getCats(),
   getFaqs(),
   getSettings(),
   getHealthEthics(),
+  getShowResults(),
 ]);
 
 const fallbackKings = [
@@ -281,6 +283,11 @@ const faqSchemaJson = JSON.stringify({
     </script>
 
   </section>
+
+  <!-- ═══════════════════════════════════════
+       SHOW RESULTS
+  ════════════════════════════════════════ -->
+  <ShowResults results={showResults} />
 
   <!-- ═══════════════════════════════════════
        HEALTH & ETHICS  id="health"
