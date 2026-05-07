@@ -1474,3 +1474,39 @@ scripts/create-health-ethics.mjs   (socializationSection content added; re-run t
 src/pages/index.astro              (new Kitten Socialization section added; Daily Care + Ethical Practices backgrounds corrected)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (bringing-home-your-kitten page)
+
+### Decisions
+- **New page created:** `src/pages/bringing-home-your-kitten.astro` at URL `/bringing-home-your-kitten`. Provides complete new owner care instructions in 11 sections.
+- **Dark obsidian theme matches site:** Hero, section backgrounds, and typography all follow existing site conventions (`bg-obsidian`, `bg-[#0f0e0d]` alternating, `text-bone`, `font-heading`, gold labels).
+- **SEO:** Title "Bringing Home Your Kitten | Pampered Feline Maine Coons", targeted meta description for new kitten owner queries.
+- **PDF download button in hero:** Links to `/bringing-home-guide.pdf`. File not yet created — placeholder link only.
+- **Section structure:** 11 content sections with `h2` section titles, `h3` subsections, gold bullet markers, and `border-l-2 border-gold/30` sidebar callouts for key rules (quarantine room, litter rule of thumb, companionship, etc.).
+- **Bottom CTA:** "Contact Us" primary button + "Back to Home" secondary button.
+- **No nav or footer changes:** Footer has no navigation section, so no link was added there. Nav already has 7 links; adding an 8th for a care guide would clutter it.
+- **FAQ order 9 fallback updated:** Appended "For detailed care instructions, see our Bringing Home Your Kitten guide at /bringing-home-your-kitten." to the "What is included with my kitten?" answer. FAQ answers render as plain text so no link markup is possible. Sara should also update the Sanity Studio entry directly.
+- **Build verified:** 11 pages generated cleanly. Route returns HTTP 200.
+
+### Conventions
+- **Bringing home guide PDF path:** `/bringing-home-guide.pdf` (file not yet created — add to `public/` when ready).
+- **Section number labels:** Each section has a `text-xs tracking-[0.3em] uppercase text-gold/70` label ("Section 1", "Section 2", etc.) above the `h2`.
+- **Bullet marker pattern:** `<span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0">` inside `<li class="flex items-start gap-3">` — gold dot bullets without `list-disc`.
+- **Numbered list pattern:** Flex layout with `text-gold font-heading` number span and `strong class="text-bone font-medium"` for ordered rules.
+
+### Deferred
+- **`/bringing-home-guide.pdf` file:** Must be created and placed in `public/` for the PDF download button to work.
+- **Sara to update Sanity FAQ entry (order 9):** "What is included with my kitten?" should include the bringing-home guide link in Studio.
+- **`npx sanity deploy` from project root:** Still needed (carry-forward from PR #35 / PR #26 / PR #29).
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session
+```
+src/pages/bringing-home-your-kitten.astro   (NEW — 11-section new owner care guide page)
+src/lib/sanity.ts                           (FAQ order 9 fallback: bringing-home guide reference appended)
+CLAUDE.md                                   (session log appended)
+```
