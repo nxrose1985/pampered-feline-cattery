@@ -47,6 +47,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://pampered
 
     <title>{title}</title>
 
+    <!-- Google Ads -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-326548451"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-326548451');
+    </script>
+
     <!-- Structured Data -->
     <script type="application/ld+json">
       {
