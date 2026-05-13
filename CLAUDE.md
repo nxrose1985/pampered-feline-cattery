@@ -1725,3 +1725,27 @@ src/lib/sanity.ts                  (nail trimming fallback updated)
 scripts/create-health-ethics.mjs   (nail trimming seed content updated)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-05-13 (PR #41 — Google Ads conversion tracking)
+
+### Decisions
+- **Google Ads global site tag added:** The `AW-326548451` tag pasted into `BaseLayout.astro` `<head>`, appearing on every page of the site.
+- **Conversion event fires on kitten application success:** In `kitten-application.astro`, the form submit success handler calls `gtag('event', 'conversion', { send_to: 'AW-326548451' })` after the success message is shown. Only fires on a resolved fetch — not on errors or incomplete submissions.
+- **Conversion label not yet configured:** The tag was provided with the account ID only. To attribute conversions to a specific Google Ads conversion action (required for reporting in the Google Ads dashboard), a conversion label must be added. Get it from Google Ads → Tools → Conversions → select action → Tag setup → copy the label. Update `send_to` in `kitten-application.astro` from `"AW-326548451"` to `"AW-326548451/YOUR_LABEL"`.
+- **Build verified:** Tag loaded (`gtag/js?id=AW-326548451` → 200), Google Ads pings confirmed in network tab, no console errors.
+
+### Conventions
+- **gtag guard pattern:** `if (typeof (window as any).gtag === "function")` — fires only when the tag has loaded. Prevents runtime errors if the tag is blocked by an ad blocker.
+
+### Deferred
+- **Add conversion label:** Nick to get the conversion label from Google Ads dashboard and update the `send_to` value in `src/pages/kitten-application.astro`.
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session (PR #41 — targeting staging)
+```
+src/layouts/BaseLayout.astro       (Google Ads global site tag added to <head>)
+src/pages/kitten-application.astro (gtag conversion event fired on successful form submission)
+CLAUDE.md                          (session log appended)
+```
