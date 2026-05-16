@@ -1749,3 +1749,26 @@ src/layouts/BaseLayout.astro       (Google Ads global site tag added to <head>)
 src/pages/kitten-application.astro (gtag conversion event fired on successful form submission)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-05-16 (PR #42 — Google-compliant favicon set for search results)
+
+### Decisions
+- **Full favicon set wired:** Replaced the two existing favicon `<link>` tags in `BaseLayout.astro` with the five-tag set recommended for Google Search favicon eligibility: ICO (legacy), SVG (modern browsers), 96×96 PNG (Google Search), apple-touch-icon (iOS), and `<link rel="manifest">` (PWA / Android).
+- **`site.webmanifest` corrected:** The file committed to staging had realfavicongenerator's default placeholder values (`"MyWebSite"`, `"MySite"`, `theme_color: "#ffffff"`). Updated to `"Pampered Feline Maine Coons"` / `"Pampered Feline"` / `theme_color: "#0A0A0A"` / `background_color: "#0A0A0A"` to match the site's dark theme.
+- **`robots.txt` confirmed clean:** `User-agent: * / Allow: /` — no rules that could block Googlebot or Googlebot-Image from fetching favicon files.
+- **No Sanity changes:** Frontend only.
+
+### Post-deploy steps (Nick)
+1. Verify `https://pamperedfelinemainecoons.com/favicon-96x96.png` loads after Netlify deploys.
+2. In Google Search Console, request indexing of the homepage.
+3. Allow several days to several weeks for Google to display the favicon in search results.
+
+### Files Changed This Session (PR #42 — targeting staging)
+```
+src/layouts/BaseLayout.astro   (favicon <link> tags replaced with 5-tag Google-compliant set; <link rel="manifest"> added)
+public/site.webmanifest        (name, short_name, theme_color, background_color corrected from placeholder defaults)
+CLAUDE.md                      (session log appended)
+```
+```
