@@ -1749,3 +1749,37 @@ src/layouts/BaseLayout.astro       (Google Ads global site tag added to <head>)
 src/pages/kitten-application.astro (gtag conversion event fired on successful form submission)
 CLAUDE.md                          (session log appended)
 ```
+
+---
+
+## Session: 2026-05-16 (PR #42 — fix favicon 404s by excluding static assets from SPA routing)
+
+### Root Cause
+All favicon files were deployed successfully to the `dist/` root, but visiting `/favicon-96x96.png` (and other static assets) returned 404. Netlify's `_redirects` file had no passthrough rules for static file extensions, so Astro's SPA fallback routing intercepted those requests and served the 404 page instead of the actual files.
+
+### Fix
+Added static asset passthrough rules at the top of `public/_redirects` — before any existing redirect rules. Netlify processes `_redirects` top-to-bottom and stops at the first match, so these rules must precede the anchor redirects.
+
+Rules added (200 status = serve the file, not a redirect):
+```
+/*.png   /:splat   200
+/*.jpg   /:splat   200
+/*.jpeg  /:splat   200
+/*.ico   /:splat   200
+/*.svg   /:splat   200
+/*.webmanifest  /:splat  200
+/*.pdf   /:splat   200
+```
+
+### Conventions
+- **`/:splat` + `200` pattern:** Tells Netlify to serve the file at the exact requested path without redirecting. The `200` rewrite rule is a passthrough, not a forward.
+- **Order in `_redirects` matters:** Static asset rules must always appear before any SPA fallback or anchor redirect rules. Netlify stops at first match.
+
+### Deferred
+- **All prior deferred items carry forward:** Add conversion label in Google Ads for `kitten-application.astro`, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session (PR #42 — targeting staging)
+```
+public/_redirects   (static asset passthrough rules added at top of file)
+CLAUDE.md           (session log appended)
+```

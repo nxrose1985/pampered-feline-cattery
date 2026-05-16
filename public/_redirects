@@ -1,3 +1,12 @@
+# Serve static assets directly, bypass SPA routing
+/*.png   /:splat   200
+/*.jpg   /:splat   200
+/*.jpeg  /:splat   200
+/*.ico   /:splat   200
+/*.svg   /:splat   200
+/*.webmanifest  /:splat  200
+/*.pdf   /:splat   200
+
 /kittens /#kittens 301!
 /kittens/ /#kittens 301!
 /our-cats /#our-cats 301!
