@@ -23,9 +23,23 @@ const { heroImage } = Astro.props;
     <h1 class="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold text-bone leading-[1.05] mb-8 tracking-tight">
       Ready to meet your<br class="hidden sm:block" /> soul kitten?
     </h1>
-    <p class="font-body text-base md:text-lg text-bone/55 max-w-sm mx-auto leading-relaxed tracking-wide">
+    <p class="font-body text-base md:text-lg text-bone/55 max-w-sm mx-auto leading-relaxed tracking-wide mb-10">
       European-line Maine Coons, raised in our home.
     </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a
+        href="/kitten-application"
+        class="px-8 py-3.5 bg-gold text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-gold/85 transition-colors"
+      >
+        Apply for a Kitten
+      </a>
+      <a
+        href="/#kittens"
+        class="px-8 py-3.5 border border-bone/25 text-bone/70 text-sm font-medium tracking-widest uppercase hover:border-bone/55 hover:text-bone transition-colors"
+      >
+        View Available Kittens
+      </a>
+    </div>
   </div>
 
   <div id="hero-scroll-indicator" class="absolute bottom-8 inset-x-0 flex flex-col items-center gap-2" aria-hidden="true">

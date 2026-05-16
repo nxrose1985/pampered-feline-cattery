@@ -1577,3 +1577,198 @@ public/bringing-home-guide.pdf              (NEW — 19KB PDF, all 11 sections)
 scripts/generate-bringing-home-pdf.py       (NEW — ReportLab generation script)
 CLAUDE.md                                   (session log appended)
 ```
+
+---
+
+## Session: 2026-05-07 (kitten application form — committed directly to main)
+
+### Decisions
+- **`/kitten-application` page created:** 20-field adoption application form at `src/pages/kitten-application.astro`. Committed directly to `main` (staging was already merged to main).
+- **Netlify Forms integration:** `data-netlify="true"`, `name="kitten-application"`, `netlify-honeypot="bot-field"` honeypot, hidden `form-name` input. Netlify will auto-register the form on first deploy and route submissions to the dashboard.
+- **AJAX submission:** Same `fetch("/")`+`URLSearchParams` pattern as the contact form. On success: form fields hidden, success message shown (green). On error: submit re-enabled, error message with mailto fallback shown (red).
+- **Dark obsidian theme:** Matches site conventions — `bg-obsidian` hero, `bg-[#0f0e0d]` form section, `text-bone`, `text-gold/70` labels, `font-heading` section headings.
+- **5 sections, 22 fields:**
+  - Section 1 (About You): full name, email, phone, city/state, referral source
+  - Section 2 (Your Household): home type, own/rent, pet permission if renting, adults in household, children in household
+  - Section 3 (Experience): current pets, cat ownership experience, Maine Coon experience, hours home per day, why a Maine Coon
+  - Section 4 (Kitten Preferences): sex preference, color preference, polydactyl interest, preferred timing
+  - Section 5 (References): vet name and clinic, personal reference, additional notes
+- **No nav change:** The nav already has 7 items. The page is reachable at `/kitten-application` and can be linked from kitten CTAs or the footer in a future session if desired.
+- **Build verified:** 12 pages generated cleanly, `data-netlify` and all field `name` attributes confirmed present in the built HTML output.
+
+### Conventions
+- **Netlify Forms name:** `kitten-application` — distinct from the existing `contact` form. Both will appear separately in the Netlify Forms dashboard.
+- **Select dropdowns:** Custom chevron SVG positioned absolutely inside `relative` wrapper. `appearance-none` on the `<select>` to remove browser default arrow. Chevron offset calculated with `top-[calc(50%+10px)]` to account for the label height above.
+- **Required fields:** Full name, email, city/state, and "why a Maine Coon" are marked required. Most other fields are optional to reduce friction.
+
+### Deferred
+- **Nav or CTA link to /kitten-application:** Not added this session. Consider linking from the kittens section or adding an "Apply" nav item in a future session.
+- **Netlify Forms confirmation email:** Can configure in Netlify dashboard (Forms → kitten-application → notifications) to auto-reply to applicants and notify Sara.
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results schema, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session
+```
+src/pages/kitten-application.astro   (NEW — 22-field adoption application form)
+CLAUDE.md                            (session log appended)
+```
+
+---
+
+## Session: 2026-05-07 (nav Info dropdown — committed directly to main)
+
+### Decisions
+- **Contract nav link replaced with Info dropdown:** "Contract" removed from the flat nav. A new "Info" item replaces it with a dropdown containing three links.
+- **Desktop dropdown:** CSS `group` + `group-hover:block` on an `absolute` panel — no JS required. Chevron rotates 180° on hover via `group-hover:rotate-180`. Panel styled `bg-ivory border border-gold/15 shadow-lg` to match the nav header. Links use the same `text-charcoal-light hover:text-gold-dark` classes as all other nav links. `min-w-[240px]` fits the longest label.
+- **Mobile accordion:** JS toggle on `#info-accordion-toggle` button. Chevron rotates on expand. Sub-list indented with `pl-4 border-l border-gold/20`. Clicking any sub-link closes the entire mobile menu and resets accordion state.
+- **Three Info items:**
+  1. "Bringing Home Your Kitten" → `/bringing-home-your-kitten`
+  2. "Kitten Purchase Agreement" → `/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` with `download` attribute and `target="_blank"`
+  3. "FAQ" → `/#faq`
+- **`autoPort: true` added to `.claude/launch.json`** for the `astro-dev` server config to avoid port-conflict errors when port 4321 is already in use.
+- **Build verified:** 12 pages generated cleanly. Built HTML confirmed: `group-hover:block` present, `info-accordion-toggle` present, `download` attribute on PDF link, `/#contract` link absent, all 3 info hrefs present in both desktop and mobile markup.
+
+### Conventions
+- **Dropdown pattern (desktop):** `<li class="relative group">` wrapper, `group-hover:block` on the panel `<div>`. No JS needed for desktop reveal.
+- **Accordion pattern (mobile):** `aria-expanded` toggled by JS, `hidden`/`flex` class swap on the sub-list, chevron `rotate-180` class toggled. Reset to closed state whenever the main mobile menu closes.
+- **PDF download link:** `download` attribute + `target="_blank"` + `rel="noopener noreferrer"` on the PDF `<a>` tag.
+
+### Deferred
+- All prior deferred items carry forward: `npx sanity deploy` for show results schema, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session
+```
+src/components/Nav.astro     (Contract link removed; Info dropdown + mobile accordion added)
+.claude/launch.json          (autoPort: true added to astro-dev config)
+CLAUDE.md                    (session log appended)
+```
+
+---
+
+## Session: 2026-05-07 (Apply for a Kitten CTAs — committed directly to main)
+
+### Decisions
+- **Hero CTA buttons added:** Two CTA buttons added below the hero subtitle: gold primary "Apply for a Kitten" → `/kitten-application`; outlined secondary "View Available Kittens" → `/#kittens`. Uses `flex flex-col sm:flex-row items-center justify-center gap-4` layout — stacked on mobile, side-by-side on small+ screens.
+- **KittenCard "Inquire" button renamed:** "Inquire About This Kitten" changed to "Apply for This Kitten". `href` changed from `/#contact` to `/kitten-application`. All styling classes and conditional logic unchanged.
+- **Nav Info dropdown updated:** "Apply for a Kitten" → `/kitten-application` added as the first item in `infoLinks`. Dropdown now has 4 items: Apply for a Kitten, Bringing Home Your Kitten, Kitten Purchase Agreement (PDF download), FAQ.
+- **Nav dropdown hover gap bug fixed:** The previous CSS `group`/`group-hover:block` approach caused the dropdown to close when the cursor passed through the 8px `mt-2` gap between the trigger button and the panel. Fixed by replacing CSS hover with JS `mouseenter`/`mouseleave` on both `#info-li` (the `<li>` wrapper) and `#info-panel`. A 220ms `scheduleHideInfo` timeout is started on mouseleave; it is cancelled if mouseenter fires on either element before it fires. This gives the cursor enough time to bridge the gap without the panel closing.
+- **Chevron and aria-expanded toggled in JS:** `rotate-180` class and `aria-expanded` attribute managed by the same `showInfo()`/`scheduleHideInfo()` functions rather than by CSS alone.
+- **Escape key closes dropdown:** `keydown` listener on `document` closes the panel and returns focus to `#info-trigger` when Escape is pressed while the panel is open.
+- **Build verified:** 12 pages generated cleanly.
+
+### Conventions
+- **Dropdown pattern (desktop — updated):** JS mouseenter/mouseleave + 220ms timeout, not CSS `group-hover`. Both `#info-li` and `#info-panel` register listeners so the delay covers the gap between them.
+- **`hideTimer` pattern:** Single `ReturnType<typeof setTimeout> | null` variable; always cleared before setting a new one; always set to `null` after clearing.
+
+### Deferred
+- **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the showResult schema, cat `championshipCertificate` field, and kitten slug/about fields to Sanity Studio UI.
+- **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session
+```
+src/components/Hero.astro        (CTA buttons added below subtitle)
+src/components/KittenCard.astro  (Inquire → Apply for This Kitten; href /#contact → /kitten-application)
+src/components/Nav.astro         (Apply for a Kitten added as first Info item; CSS group-hover replaced with JS hover delay)
+CLAUDE.md                        (session log appended)
+```
+
+---
+
+## Session: 2026-05-07 (remove honeypot from kitten application form)
+
+### Decisions
+- **Honeypot removed from kitten-application form:** `netlify-honeypot="bot-field"` attribute removed from the `<form>` tag. Hidden `<div aria-hidden="true">` containing `<input name="bot-field">` removed. Netlify's native spam filter remains active and is sufficient.
+
+### Root Cause
+The honeypot was causing false positives — legitimate submissions were being blocked because some browsers or password managers were auto-filling the hidden field.
+
+### Files Changed This Session
+```
+src/pages/kitten-application.astro   (netlify-honeypot attr + hidden bot-field input removed)
+CLAUDE.md                            (session log appended)
+```
+
+---
+
+## Session: 2026-05-07 (clear Instagram placeholder from fallback settings)
+
+### Decisions
+- **`instagramHandle` fallback cleared:** `fallbackSettings.instagramHandle` changed from `"[PLACEHOLDER — instagram]"` to `undefined` in `src/lib/sanity.ts`. The `instagramHandle` field remains in the `SiteSettings` interface, the GROQ `siteSettingsQuery`, and the Sanity `siteSettings` schema — nothing is rendered on the frontend until Sara adds a real handle via Sanity Studio.
+- **No frontend changes needed:** Footer and contact page had Instagram rendering removed in PR #5 (April 2026 session). No `.astro` file references `instagramHandle` today.
+- **`kitten-application.astro` "Instagram" option untouched:** The dropdown option for "How did you find us? → Instagram" is a referral source field, not a placeholder link. Kept as-is.
+
+### Deferred
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results schema, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries, mobile testing.
+
+### Files Changed This Session
+```
+src/lib/sanity.ts   (instagramHandle fallback: "[PLACEHOLDER — instagram]" → undefined)
+CLAUDE.md           (session log appended)
+
+---
+
+## Session: 2026-05-07 (Health & Ethics copy edits)
+
+### Decisions
+- **Nail trimming item updated:** "Daily nail trimming from birth" changed to "Bi-weekly nail trimming starting at 4 weeks of age" in the Kitten Socialization & Preparation section.
+- **Ethical Practices item updated:** "Every kitten is sold with a written contract that protects the cat first." changed to "Every kitten is placed with a written contract outlining our commitment to their lifelong care."
+- **Three files updated:** Both changes applied consistently across `index.astro` (rendered page), `src/lib/sanity.ts` (fallback constant), and `scripts/create-health-ethics.mjs` (seed script) to keep all three in sync.
+
+### Deferred
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session
+```
+src/pages/index.astro              (both copy edits applied)
+src/lib/sanity.ts                  (nail trimming fallback updated)
+scripts/create-health-ethics.mjs   (nail trimming seed content updated)
+CLAUDE.md                          (session log appended)
+```
+
+---
+
+## Session: 2026-05-13 (PR #41 — Google Ads conversion tracking)
+
+### Decisions
+- **Google Ads global site tag added:** The `AW-326548451` tag pasted into `BaseLayout.astro` `<head>`, appearing on every page of the site.
+- **Conversion event fires on kitten application success:** In `kitten-application.astro`, the form submit success handler calls `gtag('event', 'conversion', { send_to: 'AW-326548451' })` after the success message is shown. Only fires on a resolved fetch — not on errors or incomplete submissions.
+- **Conversion label not yet configured:** The tag was provided with the account ID only. To attribute conversions to a specific Google Ads conversion action (required for reporting in the Google Ads dashboard), a conversion label must be added. Get it from Google Ads → Tools → Conversions → select action → Tag setup → copy the label. Update `send_to` in `kitten-application.astro` from `"AW-326548451"` to `"AW-326548451/YOUR_LABEL"`.
+- **Build verified:** Tag loaded (`gtag/js?id=AW-326548451` → 200), Google Ads pings confirmed in network tab, no console errors.
+
+### Conventions
+- **gtag guard pattern:** `if (typeof (window as any).gtag === "function")` — fires only when the tag has loaded. Prevents runtime errors if the tag is blocked by an ad blocker.
+
+### Deferred
+- **Add conversion label:** Nick to get the conversion label from Google Ads dashboard and update the `send_to` value in `src/pages/kitten-application.astro`.
+- **All prior deferred items carry forward:** `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session (PR #41 — targeting staging)
+```
+src/layouts/BaseLayout.astro       (Google Ads global site tag added to <head>)
+src/pages/kitten-application.astro (gtag conversion event fired on successful form submission)
+CLAUDE.md                          (session log appended)
+```
+
+---
+
+## Session: 2026-05-16 (PR #42 — Google-compliant favicon set for search results)
+
+### Decisions
+- **Full favicon set wired:** Replaced the two existing favicon `<link>` tags in `BaseLayout.astro` with the five-tag set recommended for Google Search favicon eligibility: ICO (legacy), SVG (modern browsers), 96×96 PNG (Google Search), apple-touch-icon (iOS), and `<link rel="manifest">` (PWA / Android).
+- **`site.webmanifest` corrected:** The file committed to staging had realfavicongenerator's default placeholder values (`"MyWebSite"`, `"MySite"`, `theme_color: "#ffffff"`). Updated to `"Pampered Feline Maine Coons"` / `"Pampered Feline"` / `theme_color: "#0A0A0A"` / `background_color: "#0A0A0A"` to match the site's dark theme.
+- **`robots.txt` confirmed clean:** `User-agent: * / Allow: /` — no rules that could block Googlebot or Googlebot-Image from fetching favicon files.
+- **No Sanity changes:** Frontend only.
+
+### Post-deploy steps (Nick)
+1. Verify `https://pamperedfelinemainecoons.com/favicon-96x96.png` loads after Netlify deploys.
+2. In Google Search Console, request indexing of the homepage.
+3. Allow several days to several weeks for Google to display the favicon in search results.
+
+### Files Changed This Session (PR #42 — targeting staging)
+```
+src/layouts/BaseLayout.astro   (favicon <link> tags replaced with 5-tag Google-compliant set; <link rel="manifest"> added)
+public/site.webmanifest        (name, short_name, theme_color, background_color corrected from placeholder defaults)
+CLAUDE.md                      (session log appended)
+```
+```

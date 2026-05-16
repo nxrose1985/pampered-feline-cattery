@@ -1,0 +1,444 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const labelClass = "block text-sm font-medium tracking-widest uppercase mb-2 text-bone/60";
+const inputClass = "w-full px-4 py-3 text-base border bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold focus:outline-none transition-colors";
+const selectClass = "w-full px-4 py-3 text-base border bg-obsidian border-bone/15 text-bone focus:border-gold focus:outline-none transition-colors appearance-none cursor-pointer";
+---
+
+<BaseLayout
+  title="Kitten Application | Pampered Feline Maine Coons"
+  description="Apply to adopt a Pampered Feline Maine Coon kitten. Complete our adoption application to be considered for our current or upcoming litters."
+>
+
+  <!-- Back nav -->
+  <div class="bg-obsidian border-b border-bone/10">
+    <div class="max-w-4xl mx-auto px-4 py-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-bone/50 hover:text-bone text-sm tracking-widest uppercase transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Home
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-obsidian pt-16 pb-20 md:pt-24 md:pb-28">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">Adoption</p>
+      <h1 class="font-heading text-4xl md:text-6xl font-semibold text-bone mb-6 leading-tight">
+        Kitten Application
+      </h1>
+      <p class="text-bone/70 text-lg leading-relaxed max-w-2xl mx-auto">
+        We match kittens to families carefully. Tell us about your home and what you are looking for, and we will be in touch once we review your application.
+      </p>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section class="bg-[#0f0e0d] py-16 md:py-24">
+    <div class="max-w-2xl mx-auto px-4">
+
+      <form
+        id="application-form"
+        name="kitten-application"
+        action="/"
+        method="POST"
+        data-netlify="true"
+        class="space-y-16"
+      >
+        <input type="hidden" name="form-name" value="kitten-application" />
+
+        <div id="application-fields" class="space-y-16">
+
+          <!-- Section 1: About You -->
+          <fieldset class="space-y-6">
+            <legend class="w-full pb-4 border-b border-bone/[0.08] mb-2">
+              <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-1">Section 1</p>
+              <h2 class="font-heading text-2xl md:text-3xl font-semibold text-bone">About You</h2>
+            </legend>
+
+            <div>
+              <label for="full-name" class={labelClass}>Full Name <span class="text-gold/60">*</span></label>
+              <input
+                type="text"
+                id="full-name"
+                name="full-name"
+                required
+                class={inputClass}
+                placeholder="Your full name"
+              />
+            </div>
+
+            <div>
+              <label for="email" class={labelClass}>Email Address <span class="text-gold/60">*</span></label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class={inputClass}
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div>
+              <label for="phone" class={labelClass}>Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class={inputClass}
+                placeholder="(555) 000-0000"
+              />
+            </div>
+
+            <div>
+              <label for="location" class={labelClass}>City / State <span class="text-gold/60">*</span></label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                required
+                class={inputClass}
+                placeholder="e.g. Richmond, VA"
+              />
+            </div>
+
+            <div class="relative">
+              <label for="referral" class={labelClass}>How did you find us?</label>
+              <select id="referral" name="referral" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Google / website search">Google / website search</option>
+                <option value="Word of mouth">Word of mouth</option>
+                <option value="CFA or TICA listing">CFA or TICA listing</option>
+                <option value="Other">Other</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </fieldset>
+
+          <!-- Section 2: Your Household -->
+          <fieldset class="space-y-6">
+            <legend class="w-full pb-4 border-b border-bone/[0.08] mb-2">
+              <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-1">Section 2</p>
+              <h2 class="font-heading text-2xl md:text-3xl font-semibold text-bone">Your Household</h2>
+            </legend>
+
+            <div class="relative">
+              <label for="home-type" class={labelClass}>Type of home</label>
+              <select id="home-type" name="home-type" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Single-family house">Single-family house</option>
+                <option value="Apartment or condo">Apartment or condo</option>
+                <option value="Townhouse">Townhouse</option>
+                <option value="Other">Other</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div class="relative">
+              <label for="own-rent" class={labelClass}>Do you own or rent?</label>
+              <select id="own-rent" name="own-rent" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Own">Own</option>
+                <option value="Rent">Rent</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div class="relative">
+              <label for="pet-permission" class={labelClass}>If renting, do you have written pet permission?</label>
+              <select id="pet-permission" name="pet-permission" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Not applicable — I own my home">Not applicable — I own my home</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div>
+              <label for="adults" class={labelClass}>Adults in the household</label>
+              <input
+                type="number"
+                id="adults"
+                name="adults"
+                min="1"
+                class={inputClass}
+                placeholder="e.g. 2"
+              />
+            </div>
+
+            <div>
+              <label for="children" class={labelClass}>Children in the household</label>
+              <input
+                type="text"
+                id="children"
+                name="children"
+                class={inputClass}
+                placeholder="e.g. Two children, ages 5 and 9 — or None"
+              />
+            </div>
+          </fieldset>
+
+          <!-- Section 3: Experience -->
+          <fieldset class="space-y-6">
+            <legend class="w-full pb-4 border-b border-bone/[0.08] mb-2">
+              <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-1">Section 3</p>
+              <h2 class="font-heading text-2xl md:text-3xl font-semibold text-bone">Experience</h2>
+            </legend>
+
+            <div>
+              <label for="current-pets" class={labelClass}>Current pets</label>
+              <textarea
+                id="current-pets"
+                name="current-pets"
+                rows="3"
+                class={`${inputClass} resize-vertical`}
+                placeholder="List type, breed, and age of any pets currently in your home. Write None if no pets."
+              ></textarea>
+            </div>
+
+            <div class="relative">
+              <label for="cat-experience" class={labelClass}>Have you owned a cat before?</label>
+              <select id="cat-experience" name="cat-experience" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div class="relative">
+              <label for="mc-experience" class={labelClass}>Maine Coon experience</label>
+              <select id="mc-experience" name="mc-experience" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="I have owned a Maine Coon before">I have owned a Maine Coon before</option>
+                <option value="No, but I have researched the breed">No, but I have researched the breed</option>
+                <option value="No experience with the breed">No experience with the breed</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div class="relative">
+              <label for="hours-home" class={labelClass}>Hours someone is typically home per day</label>
+              <select id="hours-home" name="hours-home" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Work from home / always home">Work from home / always home</option>
+                <option value="12+ hours">12 or more hours</option>
+                <option value="8–12 hours">8 to 12 hours</option>
+                <option value="4–8 hours">4 to 8 hours</option>
+                <option value="Under 4 hours">Under 4 hours</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div>
+              <label for="why-mc" class={labelClass}>Why do you want a Maine Coon? <span class="text-gold/60">*</span></label>
+              <textarea
+                id="why-mc"
+                name="why-mc"
+                rows="4"
+                required
+                class={`${inputClass} resize-vertical`}
+                placeholder="Tell us what draws you to the breed and what you are hoping for in a companion."
+              ></textarea>
+            </div>
+          </fieldset>
+
+          <!-- Section 4: Kitten Preferences -->
+          <fieldset class="space-y-6">
+            <legend class="w-full pb-4 border-b border-bone/[0.08] mb-2">
+              <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-1">Section 4</p>
+              <h2 class="font-heading text-2xl md:text-3xl font-semibold text-bone">Kitten Preferences</h2>
+            </legend>
+
+            <div class="relative">
+              <label for="sex-preference" class={labelClass}>Sex preference</label>
+              <select id="sex-preference" name="sex-preference" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="No preference">No preference</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div>
+              <label for="color-preference" class={labelClass}>Color or pattern preference</label>
+              <input
+                type="text"
+                id="color-preference"
+                name="color-preference"
+                class={inputClass}
+                placeholder="e.g. Silver shaded, any color, or no preference"
+              />
+            </div>
+
+            <div class="relative">
+              <label for="poly-interest" class={labelClass}>Are you interested in a polydactyl kitten?</label>
+              <select id="poly-interest" name="poly-interest" class={selectClass}>
+                <option value="">Select one</option>
+                <option value="Yes, specifically interested">Yes, specifically interested</option>
+                <option value="No preference">No preference</option>
+                <option value="No, prefer standard paws">No, prefer standard paws</option>
+              </select>
+              <svg class="pointer-events-none absolute right-4 top-[calc(50%+10px)] -translate-y-1/2 w-4 h-4 text-bone/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            <div>
+              <label for="timing" class={labelClass}>Preferred timing</label>
+              <input
+                type="text"
+                id="timing"
+                name="timing"
+                class={inputClass}
+                placeholder="e.g. Summer 2026, as soon as possible, flexible"
+              />
+            </div>
+          </fieldset>
+
+          <!-- Section 5: References -->
+          <fieldset class="space-y-6">
+            <legend class="w-full pb-4 border-b border-bone/[0.08] mb-2">
+              <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-1">Section 5</p>
+              <h2 class="font-heading text-2xl md:text-3xl font-semibold text-bone">References</h2>
+            </legend>
+
+            <div>
+              <label for="vet-reference" class={labelClass}>Veterinarian name and clinic</label>
+              <input
+                type="text"
+                id="vet-reference"
+                name="vet-reference"
+                class={inputClass}
+                placeholder="Dr. Name, Clinic Name, phone number"
+              />
+            </div>
+
+            <div>
+              <label for="personal-reference" class={labelClass}>Personal reference</label>
+              <input
+                type="text"
+                id="personal-reference"
+                name="personal-reference"
+                class={inputClass}
+                placeholder="Name and relationship (not a family member)"
+              />
+            </div>
+
+            <div>
+              <label for="additional" class={labelClass}>Anything else you want us to know?</label>
+              <textarea
+                id="additional"
+                name="additional"
+                rows="4"
+                class={`${inputClass} resize-vertical`}
+                placeholder="Anything else about your home, lifestyle, or what you are hoping for."
+              ></textarea>
+            </div>
+          </fieldset>
+
+        </div>
+
+        <!-- Submit -->
+        <div class="pt-2 space-y-4">
+          <p class="text-bone/40 text-sm leading-relaxed">
+            Fields marked <span class="text-gold/60">*</span> are required. We typically respond within two business days.
+          </p>
+          <button
+            type="submit"
+            id="application-submit"
+            class="w-full sm:w-auto px-10 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/85 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Submit Application
+          </button>
+
+          <p id="application-success" class="hidden text-sm leading-relaxed" style="color: #86efac;">
+            Application received. We will review it and be in touch within two business days.
+          </p>
+
+          <p id="application-error" class="hidden text-sm leading-relaxed" style="color: #fca5a5;">
+            Something went wrong. Please email us directly at
+            <a href="mailto:pamperedfelinemainecoons@gmail.com" class="underline underline-offset-2">
+              pamperedfelinemainecoons@gmail.com
+            </a>.
+          </p>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const form = document.getElementById("application-form") as HTMLFormElement | null;
+  const fields = document.getElementById("application-fields");
+  const submitBtn = document.getElementById("application-submit") as HTMLButtonElement | null;
+  const successMsg = document.getElementById("application-success");
+  const errorMsg = document.getElementById("application-error");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting…";
+      }
+      if (errorMsg) errorMsg.classList.add("hidden");
+
+      try {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => params.append(key, value.toString()));
+
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+        });
+
+        if (fields) fields.style.display = "none";
+        if (submitBtn) submitBtn.style.display = "none";
+        if (successMsg) successMsg.classList.remove("hidden");
+
+        // Google Ads conversion
+        if (typeof (window as any).gtag === "function") {
+          (window as any).gtag("event", "conversion", { send_to: "AW-326548451/RYUJCNnSqawcEOP32psB" });
+        }
+      } catch {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Application";
+        }
+        if (errorMsg) errorMsg.classList.remove("hidden");
+      }
+    });
+  }
+</script>
