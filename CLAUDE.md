@@ -1771,4 +1771,28 @@ src/layouts/BaseLayout.astro   (favicon <link> tags replaced with 5-tag Google-c
 public/site.webmanifest        (name, short_name, theme_color, background_color corrected from placeholder defaults)
 CLAUDE.md                      (session log appended)
 ```
+
+---
+
+## Session: 2026-05-18 (PR #46 — complete .gitignore: exclude Claude Code and Sanity artifacts)
+
+### Decisions
+- **`.claude/worktrees/` and `.claude/settings.local.json` excluded:** Claude Code creates these as local artifacts — worktree checkouts and machine-specific settings. Neither belongs in version control.
+- **`.sanity/` excluded:** Sanity CLI creates this as a local cache directory. Not relevant to version control.
+- **`/contracts/` also added here:** PR #45 added this on `feat/add-photos-and-certificate`, but that branch hadn't merged to `main` at the time of this session. Added here so this branch also has it. If PRs merge in an order that causes a `.gitignore` conflict, resolve by keeping all entries from both PRs.
+- **`Thumbs.db` and `desktop.ini` added:** Common Windows OS artifacts. `.DS_Store` was already in the file.
+- **`git rm -r --cached` run defensively:** Neither `.claude/worktrees` nor `.sanity` were tracked, so nothing was removed from the index.
+- **No code changes.** `.gitignore` and `CLAUDE.md` only.
+
+### Conventions
+- **`.claude/settings.local.json`:** Machine-specific Claude Code settings. Always gitignore this file in any project.
+- **`.claude/worktrees/`:** Claude Code creates these during worktree-based sessions. Always gitignore — they are ephemeral clones.
+
+### Deferred
+- **All prior deferred items carry forward:** Add conversion label in Google Ads, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session (PR #46 — targeting staging)
+```
+.gitignore   (.claude/worktrees/, .claude/settings.local.json, .sanity/, /contracts/, Thumbs.db, desktop.ini added)
+CLAUDE.md    (session log appended)
 ```
