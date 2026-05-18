@@ -1771,4 +1771,36 @@ src/layouts/BaseLayout.astro   (favicon <link> tags replaced with 5-tag Google-c
 public/site.webmanifest        (name, short_name, theme_color, background_color corrected from placeholder defaults)
 CLAUDE.md                      (session log appended)
 ```
+
+---
+
+## Session: 2026-05-18 (PR #43 — add cat/kitten photos, logos, and Aedion certificate; exclude private buyer contracts)
+
+### Decisions
+- **`/contracts/` added to `.gitignore`:** Root-level `contracts/` folder contains private buyer documents (`PamperedFeline-KittenPurchaseAgreement-Mawyer_Lucien_5.7.2026-signed.pdf` and an unsigned copy with the buyer's name). These must never be committed. Distinct from `public/contracts/` which holds the public template PDF (already tracked and deployed).
+- **Aedion's CFA Championship Certificate moved:** `Aedion_CFA_Champion-Certificate.jpeg` was at the repo root (untracked). Moved to `public/images/certificates/` — a new folder created for this purpose.
+- **All cat photos committed:** `public/images/cats/Aedion/`, `public/images/cats/Feyra/`, `public/images/cats/Rowan/` including originals, watermarked versions, Wisdom Panel PDFs, and the Feyra parents photo.
+- **All kitten photos committed:** `public/images/kittens/2026 kitten photos/` (originals) and `public/images/kittens/watermarked/` (watermarked versions) for all 8 kittens. These are the source files used by `scripts/upload-kittens.mjs` and `scripts/replace-with-watermarked.mjs`.
+- **Logo files committed:** `public/images/logos/CFA-Stacked-Logo-Tag_White-1024x925.png` and `public/images/logos/White-Globe-Name-Cat-Website.png`.
+- **No code changes.** This PR is assets and `.gitignore` only.
+
+### Conventions
+- **`/contracts/` (root) vs `public/contracts/` (public template):** Root contracts are private buyer documents — gitignored. `public/contracts/` holds the generic purchase agreement PDF served on the site — tracked and deployed.
+- **`public/images/certificates/`:** New folder for championship certificates and similar award documents.
+
+### Deferred
+- **All prior deferred items carry forward:** Add conversion label in Google Ads for `kitten-application.astro`, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing.
+
+### Files Changed This Session (PR #43 — targeting staging)
+```
+.gitignore                                    (/contracts/ entry added)
+public/images/certificates/                   (NEW folder — Aedion_CFA_Champion-Certificate.jpeg)
+public/images/cats/Aedion/                    (11 originals + 10 watermarked + Wisdom Panel PDF)
+public/images/cats/Feyra/                     (4 originals + 4 watermarked + Wisdom Panel PDF)
+public/images/cats/Rowan/                     (1 original + 1 watermarked)
+public/images/kittens/2026 kitten photos/     (originals for all 8 kittens)
+public/images/kittens/watermarked/            (watermarked versions for all 8 kittens)
+public/images/logos/CFA-Stacked-Logo-Tag_White-1024x925.png
+public/images/logos/White-Globe-Name-Cat-Website.png
+CLAUDE.md                                     (session log appended)
 ```
