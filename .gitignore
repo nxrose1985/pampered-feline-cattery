@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # git worktrees
 .worktrees/
+
+# Private buyer contracts (names and signatures)
+/contracts/
