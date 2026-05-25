@@ -1804,3 +1804,23 @@ public/images/logos/CFA-Stacked-Logo-Tag_White-1024x925.png
 public/images/logos/White-Globe-Name-Cat-Website.png
 CLAUDE.md                                     (session log appended)
 ```
+
+---
+
+## Session: 2026-05-25 (bringing-home guide content updates — PDF and web page)
+
+### Decisions
+- **Food references updated:** All references to "Royal Canin" removed from the bringing-home guide. Replaced with "Purina ONE +Plus Healthy Kitten formula" (dry) and "High-quality wet kitten food" throughout.
+- **Litter Robot 4 added:** Litter section in supplies list now reads "Extra-large litter box or Litter Robot 4" — giving buyers two options.
+- **Feeding schedule simplified:** Removed the optional third wet meal. Schedule is now: Morning wet food, Evening wet food, Kibble or air-dried diet out 24/7. "2-3 times daily" language removed throughout.
+- **Vaccine schedule corrected:** Previous copy listed 3 doses given before pickup (FVRCP ×2 + Rabies). Updated to reflect actual protocol: one FVRCP dose and one Rabies dose given before going home. "Next vaccines due" now instructs buyer's vet to complete the FVRCP kitten series.
+- **Both PDF and web page updated:** Changes applied consistently to `scripts/generate-bringing-home-pdf.py` (PDF regenerated) and `src/pages/bringing-home-your-kitten.astro`.
+- **Committed directly to main:** No staging PR needed for content-only updates.
+
+### Files Changed This Session
+```
+scripts/generate-bringing-home-pdf.py          (food, litter, feeding schedule, vaccine section updated)
+public/bringing-home-guide.pdf                 (regenerated from updated script)
+src/pages/bringing-home-your-kitten.astro      (same content changes applied to web page)
+CLAUDE.md                                      (session log appended)
+```
