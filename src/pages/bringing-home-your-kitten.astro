@@ -62,7 +62,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Food & Water</h3>
           <ul class="space-y-2">
-            {["Royal Canin kitten dry food", "Royal Canin kitten wet food (pate or chunks in gravy)", "Food storage container (airtight, for dry food)", "Food dishes: 2 shallow dishes for wet food", "Water bowls: 2 bowls (stainless steel or ceramic)"].map((item) => (
+            {["Purina ONE +Plus Healthy Kitten formula (dry)", "High-quality wet kitten food (pate or chunks in gravy)", "Food storage container (airtight, for dry food)", "Food dishes: 2 shallow dishes for wet food", "Water bowls: 2 bowls (stainless steel or ceramic)"].map((item) => (
               <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
                 <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
                 {item}
@@ -74,7 +74,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Litter</h3>
           <ul class="space-y-2">
-            {["Large litter box (remember, your kitten will grow fast)", "Litter scoop", "BoxiePro Deep Clean litter (what your kitten is used to)"].map((item) => (
+            {["Extra-large litter box or Litter Robot 4 (your kitten will grow fast)", "Litter scoop", "BoxiePro Deep Clean litter (what your kitten is used to)"].map((item) => (
               <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
                 <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
                 {item}
@@ -125,37 +125,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">What your kitten is eating</h3>
-          <p class="text-bone/70 leading-relaxed mb-4">
-            Your kitten has been raised on Royal Canin kitten formula, both dry and wet.
+          <p class="text-bone/70 leading-relaxed">
+            Your kitten has been raised on Purina ONE +Plus Healthy Kitten formula and various wet kitten foods.
           </p>
-          <ul class="space-y-2">
-            {["Dry food: Royal Canin kitten dry, free-fed (left out at all times)", "Wet food: Royal Canin kitten wet (pate or chunks in gravy), 2-3 times daily, as much as they want"].map((item) => (
-              <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
-                <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
-                {item}
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Why wet food matters</h3>
           <p class="text-bone/70 leading-relaxed">
-            Wet food is essential for your kitten's health. It prevents urinary blockages, keeps them hydrated, and provides balanced nutrition. Dry food alone is full of carbs and fillers. While it's fine to leave dry food out for grazing, wet food 2-3 times daily is non-negotiable.
+            Wet food prevents urinary blockages, keeps your kitten hydrated, and provides balanced nutrition. Dry food alone is high in carbs. Leave dry food or an air-dried diet out at all times for grazing, but wet food twice daily is non-negotiable.
           </p>
         </div>
 
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Switching foods</h3>
           <p class="text-bone/70 leading-relaxed">
-            Do not switch your kitten's food abruptly. Sudden diet changes cause gastrointestinal upset (vomiting, diarrhea). If you plan to switch brands, do it gradually over 7-10 days by mixing increasing amounts of the new food with the old.
+            Do not switch food abruptly. Mix increasing amounts of the new food with the old over 7-10 days to avoid vomiting or diarrhea.
           </p>
         </div>
 
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Feeding schedule</h3>
           <ul class="space-y-2 mb-4">
-            {["Morning: Wet food", "Afternoon/evening: Wet food", "Before bed: Wet food (optional third meal)", "All day: Dry food available for grazing"].map((item) => (
+            {["Morning: Wet food", "Evening: Wet food", "All day: Kibble or air-dried diet available for grazing"].map((item) => (
               <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
                 <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
                 {item}
@@ -380,9 +372,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Vaccine schedule</h3>
-          <p class="text-bone/70 leading-relaxed mb-3">Your kitten has received:</p>
+          <p class="text-bone/70 leading-relaxed mb-3">Your kitten has received before going home:</p>
           <ul class="space-y-2 mb-4">
-            {["FVRCP at 8 weeks", "FVRCP at 11 weeks", "Rabies at 12 weeks (if age-appropriate)"].map((item) => (
+            {["FVRCP — one dose", "Rabies — one dose"].map((item) => (
               <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
                 <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
                 {item}
@@ -391,7 +383,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </ul>
           <p class="text-bone/70 leading-relaxed mb-3">Next vaccines due:</p>
           <ul class="space-y-2">
-            {["FVRCP booster at 15-16 weeks (one year after the last shot, your vet will advise)", "Rabies booster at 1 year"].map((item) => (
+            {["FVRCP: your vet will complete the kitten series (typically 2-3 doses total, 3-4 weeks apart)", "Rabies booster at 1 year"].map((item) => (
               <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
                 <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
                 {item}
@@ -689,7 +681,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div>
           <h3 class="font-heading text-xl font-semibold text-bone mb-4">Food & Litter</h3>
           <ul class="space-y-2">
-            {["Royal Canin kitten dry and wet food", "BoxiePro Deep Clean litter"].map((item) => (
+            {["Purina ONE +Plus Healthy Kitten formula (dry)", "High-quality wet kitten food (pate or chunks in gravy)", "BoxiePro Deep Clean litter"].map((item) => (
               <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
                 <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0"></span>
                 {item}
