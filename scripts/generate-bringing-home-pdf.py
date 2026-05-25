@@ -234,8 +234,8 @@ def section_1(s):
     ))
     items.append(Paragraph("Food & Water", s["h3"]))
     for txt in [
-        "Royal Canin kitten dry food",
-        "Royal Canin kitten wet food (pate or chunks in gravy)",
+        "Purina ONE +Plus Healthy Kitten formula (dry)",
+        "High-quality wet kitten food (pate or chunks in gravy)",
         "Food storage container (airtight, for dry food)",
         "Food dishes: 2 shallow dishes for wet food",
         "Water bowls: 2 bowls (stainless steel or ceramic)",
@@ -243,7 +243,7 @@ def section_1(s):
         items.append(bullet_item(txt, s))
     items.append(Paragraph("Litter", s["h3"]))
     for txt in [
-        "Large litter box (your kitten will grow fast)",
+        "Extra-large litter box or Litter Robot 4 (your kitten will grow fast)",
         "Litter scoop",
         "BoxiePro Deep Clean litter (what your kitten is used to)",
     ]:
@@ -279,35 +279,27 @@ def section_2(s):
     items += section_start("Section 2", "Food & Feeding Schedule", s)
     items.append(Paragraph("What your kitten is eating", s["h3"]))
     items.append(Paragraph(
-        "Your kitten has been raised on Royal Canin kitten formula, both dry and wet.",
+        "Your kitten has been raised on Purina ONE +Plus Healthy Kitten formula and various wet kitten foods.",
         s["body"]
     ))
-    for txt in [
-        "Dry food: Royal Canin kitten dry, free-fed (left out at all times)",
-        "Wet food: Royal Canin kitten wet (pate or chunks in gravy), 2-3 times daily, as much as they want",
-    ]:
-        items.append(bullet_item(txt, s))
     items.append(Paragraph("Why wet food matters", s["h3"]))
     items.append(Paragraph(
-        "Wet food is essential for your kitten's health. It prevents urinary blockages, "
-        "keeps them hydrated, and provides balanced nutrition. Dry food alone is full of carbs "
-        "and fillers. While it's fine to leave dry food out for grazing, wet food 2-3 times daily "
-        "is non-negotiable.",
+        "Wet food prevents urinary blockages, keeps your kitten hydrated, and provides balanced nutrition. "
+        "Dry food alone is high in carbs. Leave dry food or an air-dried diet out at all times for grazing, "
+        "but wet food twice daily is non-negotiable.",
         s["body"]
     ))
     items.append(Paragraph("Switching foods", s["h3"]))
     items.append(Paragraph(
-        "Do not switch your kitten's food abruptly. Sudden diet changes cause gastrointestinal "
-        "upset (vomiting, diarrhea). If you plan to switch brands, do it gradually over 7-10 days "
-        "by mixing increasing amounts of the new food with the old.",
+        "Do not switch food abruptly. Mix increasing amounts of the new food with the old over 7-10 days "
+        "to avoid vomiting or diarrhea.",
         s["body"]
     ))
     items.append(Paragraph("Feeding schedule", s["h3"]))
     for txt in [
         "Morning: Wet food",
-        "Afternoon/evening: Wet food",
-        "Before bed: Wet food (optional third meal)",
-        "All day: Dry food available for grazing",
+        "Evening: Wet food",
+        "All day: Kibble or air-dried diet available for grazing",
     ]:
         items.append(bullet_item(txt, s))
     items.append(Paragraph(
@@ -471,16 +463,15 @@ def section_6(s):
         "Bring your kitten's health records to this appointment.", s["body"]
     ))
     items.append(Paragraph("Vaccine schedule", s["h3"]))
-    items.append(Paragraph("Your kitten has received:", s["body"]))
+    items.append(Paragraph("Your kitten has received before going home:", s["body"]))
     for txt in [
-        "FVRCP at 8 weeks",
-        "FVRCP at 11 weeks",
-        "Rabies at 12 weeks (if age-appropriate)",
+        "FVRCP — one dose",
+        "Rabies — one dose",
     ]:
         items.append(bullet_item(txt, s))
     items.append(Paragraph("Next vaccines due:", s["body"]))
     for txt in [
-        "FVRCP booster at 15-16 weeks (one year after the last shot, your vet will advise)",
+        "FVRCP: your vet will complete the kitten series (typically 2-3 doses total, 3-4 weeks apart)",
         "Rabies booster at 1 year",
     ]:
         items.append(bullet_item(txt, s))
@@ -684,7 +675,8 @@ def section_11(s):
     items += section_start("Section 11", "Resources & Recommendations", s)
     categories = [
         ("Food & Litter", [
-            "Royal Canin kitten dry and wet food",
+            "Purina ONE +Plus Healthy Kitten formula (dry)",
+            "High-quality wet kitten food (pate or chunks in gravy)",
             "BoxiePro Deep Clean litter",
         ]),
         ("Bowls", [
