@@ -1804,3 +1804,43 @@ public/images/logos/CFA-Stacked-Logo-Tag_White-1024x925.png
 public/images/logos/White-Globe-Name-Cat-Website.png
 CLAUDE.md                                     (session log appended)
 ```
+
+---
+
+## Session: 2026-05-28 (PR #51 — fix kitten display order not updating after Sanity publish)
+
+### Root Cause
+`getClient()` in `src/lib/sanity.ts` was initialized with `useCdn: true`. Sanity's CDN caches GROQ query responses for up to 2 minutes. When Sara publishes a Display Order change in Sanity Studio, the Sanity → Netlify webhook triggers a rebuild immediately — but the rebuild's GROQ queries hit the CDN, which may still be serving the pre-publish cached response. The rebuild completes with stale `order` values baked into the static HTML.
+
+### Diagnosis Summary
+- **GROQ query** — `kittensByLitterQuery` correctly sorts by `| order(order asc)`. No bug here.
+- **Field name consistency** — schema: `name: "order"`, title: "Display Order". GROQ: `order(order asc)`. Frontend: `a.order`. All match.
+- **Elain pinning** — `sortKittens()` correctly puts Reserved kittens first, then sorts Available by `a.order`. No issue with this logic.
+- **Root cause** — `useCdn: true` causes the Netlify build to read stale CDN data instead of the live Sanity dataset.
+
+### Fix
+Changed `useCdn: true` → `useCdn: false` in the `createClient()` call.
+
+This site is static Astro — all Sanity fetches happen at build time on Netlify servers, not in the user's browser. The CDN exists to reduce client-side request latency. It provides no benefit for build-time fetches and actively causes stale reads during rebuilds.
+
+**Before:** `useCdn: true`
+**After:** `useCdn: false`
+
+### Webhook Note
+If Display Order changes still don't appear after this fix, check that the Sanity → Netlify webhook is still active. A Netlify rebuild must fire on every Sanity publish for order changes to take effect. Verify at manage.sanity.io → project k6e71wky → API → Webhooks. The webhook was configured in the March 2026 session. I cannot verify Netlify build logs directly — check Netlify site dashboard → Deploys to confirm a build triggers when Sara publishes in Studio.
+
+### Conventions (updated)
+- **Sanity client always uses `useCdn: false`:** Static Astro + Netlify = build-time fetches only. The CDN is never beneficial and can cause stale builds.
+
+### Deferred
+- **Add Google Ads conversion label:** Still needed in `src/pages/kitten-application.astro` (carry-forward from PR #41).
+- **`npx sanity deploy` from project root:** Still needed to push show results schema + kitten slug/about fields + healthEthics schema to Sanity Studio UI (carry-forward from multiple sessions).
+- **Parents banner image, Google Workspace email, Plausible analytics:** Carry forward.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Mobile testing on real device:** Carry forward.
+
+### Files Changed This Session (PR #51 — targeting staging)
+```
+src/lib/sanity.ts   (useCdn: true → useCdn: false)
+CLAUDE.md           (session log appended)
+```
