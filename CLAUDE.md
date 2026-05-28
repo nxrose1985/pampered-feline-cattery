@@ -1824,3 +1824,44 @@ public/bringing-home-guide.pdf                 (regenerated from updated script)
 src/pages/bringing-home-your-kitten.astro      (same content changes applied to web page)
 CLAUDE.md                                      (session log appended)
 ```
+
+---
+
+## Session: 2026-05-28 (PR #51 — fix kitten display order not updating after Sanity publish)
+
+### Root Cause
+`getClient()` in `src/lib/sanity.ts` was initialized with `useCdn: true`. Sanity's CDN caches GROQ query responses for up to 2 minutes. When Sara publishes a Display Order change in Sanity Studio, the Sanity → Netlify webhook triggers a rebuild immediately — but the rebuild's GROQ queries hit the CDN, which may still be serving the pre-publish cached response. The rebuild completes with stale `order` values baked into the static HTML.
+
+### Diagnosis Summary
+- **GROQ query** — `kittensByLitterQuery` correctly sorts by `| order(order asc)`. No bug here.
+- **Field name consistency** — schema: `name: "order"`, title: "Display Order". GROQ: `order(order asc)`. Frontend: `a.order`. All match.
+- **Elain pinning** — `sortKittens()` correctly puts Reserved kittens first, then sorts Available by `a.order`. No issue.
+- **Root cause** — `useCdn: true` causes the Netlify build to read stale CDN data instead of the live Sanity dataset.
+
+### Fix
+Changed `useCdn: true` → `useCdn: false` in the `createClient()` call. Static Astro fetches at build time on Netlify servers — the CDN provides no benefit and actively causes stale reads during rebuilds.
+
+### Conventions (updated)
+- **Sanity client always uses `useCdn: false`:** Static Astro + Netlify = build-time fetches only. The CDN is never beneficial and can cause stale builds.
+
+---
+
+## Session: 2026-05-28 (hotfix — cherry-pick useCdn fix directly to main)
+
+### Decisions
+- **Skipped staging merge.** PR #51 targeted staging, but the fix is a single verified line needing immediate production deployment. Cherry-picked commit `bad9039` (the `useCdn: false` change only) directly onto main.
+- **CLAUDE.md session log commit excluded.** The second commit on the fix branch (`2f7dacf` — CLAUDE.md only) was intentionally not cherry-picked. Only `src/lib/sanity.ts` hit main.
+- **Diff verified clean before push.** Confirmed the cherry-pick touched exactly one file, one line.
+
+### Result
+- **Commit on main:** `423fea8`
+- **Netlify build:** auto-triggered on push to main
+
+### Webhook Note
+If Display Order changes still don't appear after this fix, verify the Sanity → Netlify webhook is active: manage.sanity.io → project k6e71wky → API → Webhooks. A rebuild must fire on every Sanity publish for order changes to take effect.
+
+### Files Changed This Session
+```
+src/lib/sanity.ts   (cherry-picked useCdn: true → useCdn: false onto main)
+CLAUDE.md           (session log appended)
+```
