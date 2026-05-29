@@ -1865,3 +1865,45 @@ If Display Order changes still don't appear after this fix, verify the Sanity �
 src/lib/sanity.ts   (cherry-picked useCdn: true → useCdn: false onto main)
 CLAUDE.md           (session log appended)
 ```
+
+---
+
+## Session: 2026-05-28 (staging — flip kitten sort to Available-first)
+
+### Decisions
+- **Sort order flipped:** Available kittens now appear before Reserved kittens. Within each group, Display Order ascending (lower number first) breaks ties. Elain (the keeper, status Reserved) falls into the Reserved group naturally — no separate pinning logic.
+
+### Before / After
+
+**Before:**
+```ts
+// Sort: Reserved first (credibility/demand signal), then Available by display order
+function sortKittens(list: any[]) {
+  return [...list].sort((a, b) => {
+    if (a.status === "Reserved" && b.status !== "Reserved") return -1;
+    if (a.status !== "Reserved" && b.status === "Reserved") return 1;
+    return (a.order ?? 99) - (b.order ?? 99);
+  });
+}
+```
+
+**After:**
+```ts
+// Sort: Available first, then Reserved. Within each group, sort by display order ascending.
+function sortKittens(list: any[]) {
+  return [...list].sort((a, b) => {
+    if (a.status === "Available" && b.status !== "Available") return -1;
+    if (a.status !== "Available" && b.status === "Available") return 1;
+    return (a.order ?? 99) - (b.order ?? 99);
+  });
+}
+```
+
+### Verification
+Dev server confirmed correct output against live Sanity data: 4 Available kittens (Tarquin, Helion, Kallias, Amren) appeared first, followed by 4 Reserved kittens (Azriel, Elain, Lucien, Morrigan). Each group sorted by Sara's Display Order values from Sanity Studio.
+
+### Files Changed This Session (committed to staging, `eb59524`)
+```
+src/components/CurrentLitter.astro   (sortKittens: Reserved-first → Available-first)
+CLAUDE.md                            (session log appended)
+```

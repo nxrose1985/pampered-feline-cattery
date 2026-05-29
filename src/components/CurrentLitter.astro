@@ -23,11 +23,11 @@ const fallbackKittens = [
   { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7 },
 ];
 
-// Sort: Reserved first (credibility/demand signal), then Available by display order
+// Sort: Available first, then Reserved. Within each group, sort by display order ascending.
 function sortKittens(list: any[]) {
   return [...list].sort((a, b) => {
-    if (a.status === "Reserved" && b.status !== "Reserved") return -1;
-    if (a.status !== "Reserved" && b.status === "Reserved") return 1;
+    if (a.status === "Available" && b.status !== "Available") return -1;
+    if (a.status !== "Available" && b.status === "Available") return 1;
     return (a.order ?? 99) - (b.order ?? 99);
   });
 }
