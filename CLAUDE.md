@@ -1907,3 +1907,26 @@ Dev server confirmed correct output against live Sanity data: 4 Available kitten
 src/components/CurrentLitter.astro   (sortKittens: Reserved-first → Available-first)
 CLAUDE.md                            (session log appended)
 ```
+
+---
+
+## Session: 2026-05-28 (merge staging → main — kitten sort fix to production)
+
+### What landed on main
+Two commits from staging, both expected:
+- `eb59524` — `sortKittens()` flip in `src/components/CurrentLitter.astro`
+- `959d8c2` — CLAUDE.md session log
+
+No other staging content. Confirmed before merging.
+
+### Merge conflict
+CLAUDE.md conflicted because main had three session logs (2026-05-25 bringing-home, 2026-05-28 PR #51, 2026-05-28 hotfix) that staging didn't, and staging had the sort-flip log that main didn't. Resolved by keeping all entries from both sides in chronological order.
+
+### Result
+- **Merge commit on main:** `953e660`
+- **Netlify build:** auto-triggered on push to main
+
+### Files Changed This Session
+```
+CLAUDE.md   (conflict resolved, session log appended)
+```
