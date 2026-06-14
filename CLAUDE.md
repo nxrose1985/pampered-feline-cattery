@@ -1846,3 +1846,55 @@ Dev server confirmed correct output against live Sanity data: 4 Available kitten
 src/components/CurrentLitter.astro   (sortKittens: Reserved-first → Available-first)
 CLAUDE.md                            (session log appended)
 ```
+
+---
+
+## Session: 2026-06-13 (fix/faq-list-rendering — FAQ answer list rendering)
+
+### Problem
+FAQ answers stored in Sanity with leading-hyphen list items rendered as run-on paragraphs. The previous renderer (`<p>{faq.answer}</p>`) had no line or list parsing at all. This caused entries like:
+```
+- Standard pet kittens: $3,600
+- Rare color: $4,000
+```
+to display as "- Standard pet kittens: $3,600 - Rare color: $4,000", where the list-item hyphens read visually as price-range separators.
+
+### Root Cause
+No parser existed. The `<p>` element concatenated all newlines into a single text node.
+
+### Fix
+Added `parseFaqAnswer(text: string): FaqBlock[]` to the frontmatter of `src/pages/index.astro`. Replaced `<p>{faq.answer}</p>` with a mapped block renderer that emits `<p>`, `<ul>`, or `<ol>` elements based on the parsed structure.
+
+### Parsing Convention (for content editors and future contributors)
+FAQ answers stored in Sanity follow these rules for list rendering:
+
+| Marker | Example | Renders as |
+|---|---|---|
+| `- ` at start of line | `- Standard pet kittens: $3,600` | `<ul>` item with gold dot bullet |
+| `* ` at start of line | `* First item` | `<ul>` item with gold dot bullet |
+| `• ` at start of line | `• First item` | `<ul>` item with gold dot bullet |
+| `N. ` at start of line | `1. Submit application` | `<ol>` item with decimal number |
+| Blank line | (empty) | Closes current list or paragraph; starts new block |
+| Any other line | Normal prose | `<p>` element |
+
+**Bare inline hyphens are never treated as list markers.** Only a hyphen (or `*` or `•`) at the very beginning of a line, followed by a space, is a marker. This protects hyphenated words (`free-fed`, `age-appropriate`, `blue-grey`) and inline price ranges (`$3,600 - Rare color`) from being split.
+
+Consecutive items of the same marker type group into a single `<ul>` or `<ol>`. A non-list line closes the current list and begins a new paragraph block.
+
+### Styling
+- `<ul>` items: gold dot bullet (`<span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0">`) with flex layout, matching the bringing-home page convention
+- `<ol>` items: `list-decimal list-inside` Tailwind utilities
+- Both: `space-y-2` spacing, `text-bone/70 leading-relaxed` typography
+- Wrapper: `<div class="mt-4 pr-10 space-y-3">` (preserves prior container spacing)
+
+### Verified
+- Ordered list (application process) renders as numbered steps
+- Pricing FAQ: intro `<p>` + `<ul>` with four gold-dot bullet tiers — `$3,600` inline hyphen NOT split
+- "free-fed" in food FAQ preserved intact inside a `<li>` — not parsed as a marker
+- Prose-only answers (no newlines) render as a single `<p>` unchanged
+
+### Files Changed This Session (branch fix/faq-list-rendering, targeting staging)
+```
+src/pages/index.astro   (parseFaqAnswer function added to frontmatter; <p>{faq.answer}</p> replaced with block renderer)
+CLAUDE.md               (session log appended)
+```

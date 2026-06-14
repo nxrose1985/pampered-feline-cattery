@@ -43,6 +43,66 @@ const faqSchemaJson = JSON.stringify({
     },
   })),
 });
+
+type FaqBlock =
+  | { type: "para"; text: string }
+  | { type: "ul"; items: string[] }
+  | { type: "ol"; items: string[] };
+
+function parseFaqAnswer(text: string): FaqBlock[] {
+  const lines = text.split("\n");
+  const blocks: FaqBlock[] = [];
+  let listType: "ul" | "ol" | null = null;
+  let listItems: string[] = [];
+  let paraLines: string[] = [];
+
+  const flushList = () => {
+    if (listItems.length === 0) return;
+    if (listType === "ul") blocks.push({ type: "ul", items: [...listItems] });
+    else if (listType === "ol") blocks.push({ type: "ol", items: [...listItems] });
+    listItems = [];
+    listType = null;
+  };
+  const flushPara = () => {
+    if (paraLines.length === 0) return;
+    blocks.push({ type: "para", text: paraLines.join(" ") });
+    paraLines = [];
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed === "") { flushList(); flushPara(); continue; }
+
+    // Unordered: only "- text", "* text", or "• text" at the very start of a line.
+    // A hyphen inside or between words (free-fed, $3,600 - rare) is never matched.
+    const ulMatch = /^[-*•] (.+)/.exec(trimmed);
+    if (ulMatch) {
+      flushPara();
+      if (listType === "ol") flushList();
+      listType = "ul";
+      listItems.push(ulMatch[1]);
+      continue;
+    }
+
+    // Ordered: "1. text", "2. text", etc.
+    const olMatch = /^\d+\. (.+)/.exec(trimmed);
+    if (olMatch) {
+      flushPara();
+      if (listType === "ul") flushList();
+      listType = "ol";
+      listItems.push(olMatch[1]);
+      continue;
+    }
+
+    // Prose line — accumulate into paragraph; a list above is already closed
+    flushList();
+    paraLines.push(trimmed);
+  }
+
+  flushList();
+  flushPara();
+  return blocks;
+}
 ---
 
 <BaseLayout
@@ -515,9 +575,34 @@ const faqSchemaJson = JSON.stringify({
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
                   </svg>
                 </summary>
-                <p class="text-bone/70 leading-relaxed mt-4 pr-10">
-                  {faq.answer}
-                </p>
+                <div class="mt-4 pr-10 space-y-3">
+                  {parseFaqAnswer(faq.answer).map((block) => {
+                    if (block.type === "para") {
+                      return <p class="text-bone/70 leading-relaxed">{block.text}</p>;
+                    }
+                    if (block.type === "ul") {
+                      return (
+                        <ul class="space-y-2">
+                          {block.items.map((item) => (
+                            <li class="flex items-start gap-3 text-bone/70 leading-relaxed">
+                              <span class="mt-1.5 w-1 h-1 rounded-full bg-gold/60 flex-shrink-0" aria-hidden="true"></span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      );
+                    }
+                    if (block.type === "ol") {
+                      return (
+                        <ol class="space-y-2 list-decimal list-inside text-bone/70 leading-relaxed pl-1">
+                          {block.items.map((item) => (
+                            <li>{item}</li>
+                          ))}
+                        </ol>
+                      );
+                    }
+                  })}
+                </div>
               </details>
             </ScrollReveal>
           ))}
