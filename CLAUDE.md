@@ -2133,3 +2133,56 @@ public/kitten-purchase-agreement.pdf   (NEW — copied from contracts/PamperedFe
 src/pages/kitten-application.astro     (Kitten Purchase Agreement (PDF) link added to hero, mirroring bringing-home-guide.pdf's link pattern)
 CLAUDE.md                              (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (folded into PR #57 — corrected contract PDF, consolidate to one file, $400→$500 audit)
+
+### Decisions
+- **`public/kitten-purchase-agreement.pdf` overwritten with the corrected re-export.** Verified by checksum before and after (`3d14c1e9...` → `3c2428a0...`, 115549 → 115950 bytes) and by reading the new PDF directly: the FeLV/FIV clause on page 3 now reads "a refund of the purchase price minus the **$500** deposit" — the stray `$400` from the previous draft is gone. No other dollar figures in the document changed (still `$5,000` CFA-papers penalty, `$2,500` rehoming penalty, `$3,000`/`$2,000` breeding penalties — all unrelated to the deposit).
+- **Consolidated to one contract file.** Found three live references to the old `public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` (not two, as the earlier session's notes assumed) — `Nav.astro`'s Info dropdown, the homepage `#contract` "Download Contract (PDF)" button, and a third one in `bringing-home-your-kitten.astro`'s "Review your contract" section that hadn't been noticed before. All three repointed to `/kitten-purchase-agreement.pdf`. The old file was `git rm`'d; `public/contracts/` is now gone entirely (it held nothing else). Confirmed in the build: old path 404s, new path 200s, zero remaining references to the old filename or `/contracts/` anywhere in `dist/`.
+- **Homepage `#contract` "Deposit and Payment" accordion fixed:** `$400` → `$500`. Before: *"A $400 non-refundable deposit is due upon signing your purchase agreement. This deposit secures your reservation and is applied toward the total purchase price. The remaining balance is due one week before your kitten goes home. We accept Zelle, bank transfers, and cash."* Only the dollar figure changed — the payment methods listed here (Zelle, bank transfers, cash) still don't exactly match the PDF's (Zelle, Venmo, ACH transfer, cash); left alone since only the amount was in scope.
+- **Full `$400`/`400` codebase audit performed, reported to the user, not auto-fixed** (this was scoped as a report-and-confirm step, distinct from the explicit fix instructions in steps 1–3). Findings, in priority order:
+  - **Live and currently contradicting itself:** every kitten detail page's "Deposit" line renders `kitten.reservationFee` from **live Sanity data**, which is `400` for all 8 kitten documents (confirmed via fresh build output, not fallback — Sanity data was reachable and took precedence). On the 4 Available kittens' pages, this sits on the same page as `ReserveRequest`'s hardcoded "$500 non-refundable deposit" disclaimer (from PR #56) — so those 4 pages currently show **both $400 and $500** to a visitor at the same time. This is a Sanity **content** fix (each kitten document's Display Deposit / reservationFee field), not a code fix — flagged for the user to decide whether to patch via Studio or a script, not touched here.
+  - **Code fallback, currently dormant** (live Sanity FAQ/settings data already overrides these and already says $500 — confirmed no `$400` renders anywhere in the built homepage FAQ): `src/lib/sanity.ts` — `fallbackSettings.reservationFee: 400` (line 276, not referenced by any rendered `.astro` file), `fallbackSettings.paymentMethods` text (line 277, also not referenced anywhere), `fallbackFaqs` answers for "What does a kitten cost?" (line 304) and "What payment methods do you accept?" (line 305).
+  - **Code fallback, orphaned component:** `src/components/AdoptionSteps.astro` line 61 says "$400 non-refundable deposit" — but the component isn't imported by any page in `src/pages/`, so it never renders on the live site at all.
+  - **Fallback kitten arrays (code, backstop only):** `src/components/CurrentLitter.astro` and `src/lib/sanity.ts`'s `fallbackKittens`/similar arrays all carry `reservationFee: 400` per kitten — these are the code-side twin of the live Sanity data issue above; would need the same `400` → `500` update if Sara wants the fallback to match once the live data is fixed.
+  - **Historical seed script:** `scripts/upload-kittens.mjs` seeds `reservationFee: 400` for all 8 kittens — this is very likely how `400` ended up in the live Sanity documents in the first place (a one-time migration script, already run). Flagged so nobody re-runs it and regresses a future fix without updating the script first.
+  - **Not a hit / explicitly excluded:** kitten prices ($3,600/$4,000/$4,200/$4,500 — untouched per instruction), `400ms`/`4000ms` CSS/JS timing values, `400` font-weight values in Google Fonts URLs, `?w=400` image-resize query params, `package-lock.json` hash fragments, and CLAUDE.md's own historical session-log prose (left as a historical record, not live copy).
+- **Sire naming investigated, not changed.** Traced where "Aedion" comes from across the site:
+  - **Live Sanity `cat` document** (role `king`): `name` field is literally `"Aedion"` — confirmed live (not fallback) by checking the built homepage's "Meet the Parents" cards, which render Aedion, Rowan, Feyra.
+  - **Live Sanity `showResult` document:** `catName: "Aedion"`, title "Champion," CFA, Baltimore MD, December 7, 2025 — with a real uploaded certificate PDF (`cdn.sanity.io/files/...`). The date and location text differ slightly from the old code fallback, confirming this is genuinely live data Sara entered in Studio, not leftover fallback.
+  - **Historical evidence the two names refer to the same cat:** `scripts/upload-cats.mjs` references a Wisdom Panel PDF filename, `Aedion_WisdomPanelProfile_FormerName-Eyktan Navarro.pdf` — the filename itself labels "Eyktan Navarro" as Aedion's **former** name. That strongly suggests "Aedion" is the cat's current call name / cattery name, and "Eyktan Navarro" (or "CH Eyktan Navarro" per the user's records) is his prior registered/pedigree name from before acquisition — not a second cat.
+  - **`cat` schema has one `name` field only** — no separate field for a registered/pedigree name distinct from the display name, so there's no way today for the site to show both "Aedion" and "CH Eyktan Navarro" at once without a schema change.
+  - **Kitten detail pages currently show no parent names at all.** The `[slug].astro` template supports `kitten.sire`/`kitten.dam` and would render them if set, but none of the 8 live kitten Sanity documents have those fields populated — confirmed via build output, zero "Sire" text renders anywhere in `dist/kittens/*/index.html`.
+  - **The new SEO page's "Aedion" mention is my own hardcoded prose** (written in the PR #57 session, not pulled from Sanity), sourced from the same live `showResult` data described above — it's consistent with what's live elsewhere on the site, not an invented claim, but it is hardcoded text that would need a manual edit if the user decides "Aedion" should change.
+  - **Not touched.** Per instruction, nothing was changed — this is a report only.
+
+### Conventions
+- **When asked to "search and report" vs. "fix," keep those genuinely separate.** Steps 1–3 in this session were explicit fix instructions; step 4 was explicitly "report every hit so I can confirm each is fixed or intentional" — a different kind of ask. Auto-fixing everything found in step 4 would have overridden the user's own review step.
+- **Distinguish "live Sanity data" from "code fallback" when reporting a content bug.** A grep hit in a fallback array only matters if Sanity is unreachable at build time; a grep hit that's actually rendering in a fresh build's `dist/` output is a live bug. Always rebuild and check the built HTML before reporting severity, not just the source.
+
+### Verified
+- Checksum comparison before/after confirms the contract PDF was genuinely replaced with a different file, not a stale copy.
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing, unrelated errors as baseline.
+- `dist/`: zero remaining references to `PamperedFeline-KittenPurchaseAgreement.pdf` or `/contracts/`; `dist/contracts/` directory no longer exists.
+- Live dev server: homepage "Deposit and Payment" text confirmed reading "$500"; Nav download link and homepage "Download Contract" button both resolve to `/kitten-purchase-agreement.pdf`; `fetch()` to the old path returned 404, to the new path returned 200.
+
+### Deferred
+- **Live Sanity `reservationFee: 400` on all 8 kitten documents** — needs a content-side fix (Studio edit or patch script) to match the $500 policy; flagged as the highest-priority open item from this session, not touched.
+- **Fallback array `reservationFee: 400` values** in `CurrentLitter.astro` and `sanity.ts` — code-side twin of the above, should be updated together once the live data is corrected.
+- **`scripts/upload-kittens.mjs` still seeds `reservationFee: 400`** — update before ever re-running it.
+- **Sire naming decision:** user to confirm whether "Aedion" (current live name, with a real CFA Champion certificate on file) or "CH Eyktan Navarro" (per the user's own records) is what should display publicly, and whether these are the same cat under two names or need to be corrected/reconciled.
+- **Dormant `$400` fallback text** (`fallbackSettings`, `fallbackFaqs`, `AdoptionSteps.astro`) — low priority since none currently render, but worth cleaning up so a future Sanity outage wouldn't briefly show stale figures.
+- All prior deferred items carry forward: reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+
+### Files Changed This Session (folded into PR #57 — targeting staging)
+```
+public/kitten-purchase-agreement.pdf              (OVERWRITTEN — corrected $500 version, verified by checksum)
+public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf   (DELETED — old contract file, git rm)
+src/components/Nav.astro                          (Info dropdown link repointed to /kitten-purchase-agreement.pdf)
+src/pages/index.astro                              (homepage #contract "Download Contract" link repointed; $400 → $500 in Deposit and Payment accordion)
+src/pages/bringing-home-your-kitten.astro         (contract link repointed to /kitten-purchase-agreement.pdf)
+CLAUDE.md                                          (session log appended)
+```
