@@ -10,6 +10,12 @@ function telHref(phone: string): string {
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
 }
 
+function smsHref(phone: string): string {
+  const digits = phone.replace(/[^\d]/g, "");
+  const e164 = digits.length === 10 ? `+1${digits}` : `+${digits}`;
+  return `sms:${e164}`;
+}
+
 function instagramUrl(handle: string): string {
   return `https://instagram.com/${handle}`;
 }
@@ -39,6 +45,12 @@ function instagramUrl(handle: string): string {
         {settings.phone && (
           <p class="text-sm">
             Call/Text: <a href={telHref(settings.phone)} class="text-ivory/60 hover:text-gold transition-colors">{settings.phone}</a>
+          </p>
+        )}
+        {settings.phone && (
+          <p class="text-sm">
+            Questions? Text or call anytime —{" "}
+            <a href={smsHref(settings.phone)} class="text-ivory/60 hover:text-gold transition-colors">{settings.phone}</a>.
           </p>
         )}
         {settings.instagramHandle && (

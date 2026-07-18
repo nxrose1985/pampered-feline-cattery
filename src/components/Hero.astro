@@ -50,10 +50,10 @@ function smsHref(phone: string): string {
 
     {phone && (
       <p class="mt-6 text-sm text-bone/50">
+        Questions? Text or call anytime —{" "}
         <a href={smsHref(phone)} class="text-bone/75 hover:text-gold underline underline-offset-2 transition-colors">
           {phone}
-        </a>
-        {" "}— we usually reply within a few hours.
+        </a>. We usually reply within a few hours.
       </p>
     )}
   </div>

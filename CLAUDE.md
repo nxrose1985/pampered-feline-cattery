@@ -2377,3 +2377,31 @@ All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eykt
 src/components/KittenCard.astro   (carousel slide div: min-w-full → w-full)
 CLAUDE.md                         (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (PR #62 — "Text us" CTA copy/placement tweaks)
+
+### Decisions
+- **Homepage hero reassurance line rewritten.** Was: "{phone} — we usually reply within a few hours." Now: "Questions? Text or call anytime — {phone}. We usually reply within a few hours." — `{phone}` is still the `sms:` link (via the same `smsHref()` helper added in PR #60), just repositioned mid-sentence instead of leading the line. Confirmed rendered text in-browser via `textContent`: `"Questions? Text or call anytime —  (949) 606-5919 . We usually reply within a few hours."` (the double spaces are just JSX text-node whitespace, invisible in rendered HTML).
+- **Same invitation added to the footer,** as a new line directly below the existing "Call/Text: {phone}" line (both inside the same conditional-on-`settings.phone` contact block, right column). Text: "Questions? Text or call anytime — {phone}." with `{phone}` as its own `sms:` link. This is additive — the pre-existing "Call/Text:" `tel:` line was not touched or replaced, since the request said "near the existing contact info," not "instead of."
+- **`smsHref()` helper duplicated into `Footer.astro`,** matching the same per-file duplication convention already established across `BaseLayout.astro`, `Hero.astro`, `Nav.astro`, and `Footer.astro`'s own pre-existing `telHref()` — small formatting helpers used in a handful of files don't get a shared `src/lib/` util in this codebase.
+- **Both placements still read `settings.phone` from Sanity, nothing hardcoded** — confirmed by re-running the same `astro build` + grep verification pattern used in PR #60/#61: the live phone number renders correctly in both spots, sourced through the existing `getSettings()` (with its PR #60 duplicate-`siteSettings`-document workaround still in effect, untouched by this session).
+- **Styling matched to each surface's existing conventions, not copied wholesale:** the hero line keeps its existing `text-bone/50` muted color and `text-bone/75 hover:text-gold underline` link style; the footer line uses the footer's own `text-sm` / `text-ivory/60 hover:text-gold` pattern (matching the adjacent "Call/Text" line exactly) rather than the hero's styling — "match the footer's existing styling" was the explicit instruction, not "match the hero's."
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing baseline errors, none touching the changed files.
+- Built HTML: grepped for the new "Questions? Text or call anytime" copy on the homepage — confirmed one instance in the hero, one in the footer, both with `href="sms:+19496065919"` (the live Sanity phone number in E.164 form, same as PR #60's existing sms links). Old hero copy ("we usually reply within a few hours." with no leading "Questions?") confirmed fully gone — zero remaining matches.
+- Footer copy confirmed present on non-homepage pages too (`/kittens/helion`, `/404`) — footer renders in `BaseLayout`, so this is genuinely site-wide by construction, not something that needed per-page wiring.
+- Live dev server, desktop viewport (1280×900): screenshot + `textContent` inspection confirms both the hero line and the footer's four contact lines (Northern Virginia, Email, Call/Text, and the new Questions line) render in the expected order with the expected text.
+
+### Deferred
+All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data, the three duplicate `siteSettings` Sanity documents still needing consolidation (separate write-safety task).
+
+### Files Changed This Session (PR #62 — targeting staging)
+```
+src/components/Hero.astro     (reassurance line copy rewritten — "Questions? Text or call anytime — {phone}. We usually reply within a few hours.")
+src/components/Footer.astro   (smsHref() helper added; new "Questions? Text or call anytime — {phone}." line added below the existing Call/Text line)
+CLAUDE.md                     (session log appended)
+```
