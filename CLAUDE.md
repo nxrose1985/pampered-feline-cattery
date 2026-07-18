@@ -2101,3 +2101,35 @@ src/pages/maine-coon-kittens-northern-virginia.astro   (NEW — local SEO landin
 src/components/Footer.astro                            (link to the new page added under the Northern Virginia location line)
 CLAUDE.md                                               (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (folded into PR #57 — updated kitten purchase agreement PDF)
+
+### Decisions
+- **`public/kitten-purchase-agreement.pdf` added:** Copied from `contracts/PamperedFeline-KittenPurchaseAgreement_Draft.pdf` in the main checkout (the private, gitignored `contracts/` folder — read before copying to confirm it was the blank template and not one of the buyer-specific signed copies also in that folder). It's a clean, unsigned template: no buyer name, no kitten name, no signatures filled in. Sire/Dam fields are pre-filled (Aedion, Feyra) with a March 12, 2026 date of birth, consistent with the current litter.
+- **Link added to `src/pages/kitten-application.astro`'s hero,** mirroring `bringing-home-your-kitten.astro`'s existing PDF download pattern exactly: same `inline-flex` button styling (`border border-bone/20 text-bone/70`, hover `border-bone/50 text-bone`), same download SVG icon, `target="_blank" rel="noopener noreferrer"`. Labeled "Kitten Purchase Agreement (PDF)" per the request. Placed here (not the FAQ) because a buyer reviewing this page is about to apply — reading the contract terms right before starting the application is the natural moment, and it avoids introducing a second, differently-labeled contract link into the FAQ accordion.
+- **Did not touch the two existing links to the OLD contract PDF** (`public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf`, referenced from the Nav "Info" dropdown and the homepage's own "Download Contract (PDF)" button in the `#contract` accordion) — out of scope for this request, which only asked to add a new link, not replace the old one. Flagging this because the site now has two different contract PDFs live at two different paths; worth a decision on whether the old links should be repointed to the new file in a follow-up, once Sara confirms the new draft is final.
+- **Did not edit `$400`/`$500` deposit language anywhere on the site.** Explicitly out of scope per this session's instructions — there's a separate, already-known "$500 deposit fix" task (the homepage's `#contract` accordion still says "$400 non-refundable deposit," inconsistent with the `$500` figure introduced in PR #56's `ReserveRequest` component). Not touched here.
+- **Found (and did not silently fix) one internal inconsistency in the PDF itself:** the document is consistently `$500` everywhere except one buried clause under "FeLV and FIV testing" (page 3), which reads "a refund of the purchase price minus the **$400** deposit" — a leftover from before the deposit amount changed. This is inside a legal document the user authored, not something to silently edit; flagging it here and in the chat response so Sara can correct the source file.
+
+### Conventions
+- **PDF download link pattern (confirmed, now used twice):** `<a href="/{file}.pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-8 py-4 border border-bone/20 text-bone/70 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone transition-colors">` with a download SVG icon (`M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z`) preceding the label text. Established by `bringing-home-your-kitten.astro`, now also used by `kitten-application.astro`.
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- Built HTML: the link in `dist/kitten-application/index.html` has the correct `href`, `target="_blank"`, `rel="noopener noreferrer"`, and label text; `dist/kitten-purchase-agreement.pdf` exists at the expected path.
+- Live dev server: navigated directly to `/kitten-purchase-agreement.pdf` and the browser triggered a real file download (not a 404), confirming the static file serves correctly.
+
+### Deferred
+- **Decide whether to repoint the old contract links** (Nav Info dropdown, homepage `#contract` accordion) to the new `kitten-purchase-agreement.pdf`, or retire the old `public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` — two different contract PDFs are now live at two different paths.
+- **Fix the buried `$400` reference inside the new PDF's FeLV/FIV clause** — inconsistent with the `$500` figure used everywhere else in the same document. Requires editing the source document, not the website.
+- **The separate `$500` deposit fix** (homepage `#contract` accordion still says `$400`) remains open — explicitly not addressed in this session per the user's instruction.
+- All prior deferred items carry forward: reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+
+### Files Changed This Session (folded into PR #57 — targeting staging)
+```
+public/kitten-purchase-agreement.pdf   (NEW — copied from contracts/PamperedFeline-KittenPurchaseAgreement_Draft.pdf, unsigned template)
+src/pages/kitten-application.astro     (Kitten Purchase Agreement (PDF) link added to hero, mirroring bringing-home-guide.pdf's link pattern)
+CLAUDE.md                              (session log appended)
+```
