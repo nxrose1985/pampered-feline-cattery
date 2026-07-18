@@ -16,16 +16,16 @@ const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:ou
 
 const submitLabel = kittenName ? `Request to Reserve ${kittenName}` : "Submit Reservation Request";
 const successCopy = kittenName
-  ? `Request received. Sara reviews requests personally and will follow up by email within 24 hours. If it's a good fit, you'll receive a secure Stripe payment link for the $500 non-refundable deposit — ${kittenName} is reserved once that clears.`
-  : "Request received. Sara reviews requests personally and will follow up by email within 24 hours. If it's a good fit, you'll receive a secure Stripe payment link for the $500 non-refundable deposit — the kitten is reserved once that clears.";
+  ? `Request received. We review every request personally and will follow up by email within 24 hours. If it's a good fit, you'll receive a secure payment link for the $500 non-refundable deposit — ${kittenName} is reserved once that clears.`
+  : "Request received. We review every request personally and will follow up by email within 24 hours. If it's a good fit, you'll receive a secure payment link for the $500 non-refundable deposit — the kitten is reserved once that clears.";
 ---
 
-<div class={`rounded-sm px-6 py-5 mb-6 border ${isDark ? "bg-bone/[0.03] border-bone/10" : "bg-ivory-warm border-charcoal/10"}`}>
+<div class={`rounded-sm px-6 py-5 mb-6 border text-left ${isDark ? "bg-bone/[0.03] border-bone/10" : "bg-ivory-warm border-charcoal/10"}`}>
   <p class={`text-xs font-medium tracking-widest uppercase mb-2 ${isDark ? "text-gold/70" : "text-gold-dark"}`}>
     Before You Submit
   </p>
   <p class={`text-sm leading-relaxed ${isDark ? "text-bone/70" : "text-charcoal-light"}`}>
-    A request is not a reservation. Sara reviews every request by hand. If it's a good fit, she'll email you a secure Stripe payment link for the <strong class={isDark ? "text-bone" : "text-charcoal"}>$500 non-refundable deposit</strong>, which applies toward the total price.{" "}
+    Please note that a request is not a reservation. We review each request and if it seems like a good fit we will email you a secure payment link for the <strong class={isDark ? "text-bone" : "text-charcoal"}>$500 non-refundable deposit</strong>, which applies towards the total price.{" "}
     {kittenName ? `${kittenName} is` : "The kitten is"} officially reserved once the deposit clears.
   </p>
 </div>
