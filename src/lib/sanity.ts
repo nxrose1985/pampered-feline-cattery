@@ -288,7 +288,19 @@ export async function getSettings(): Promise<SiteSettings> {
 
   try {
     const result = await client.fetch<SiteSettings | null>(siteSettingsQuery);
-    return result ?? fallbackSettings;
+    if (!result) return fallbackSettings;
+
+    // Multiple siteSettings documents exist in the dataset (a longstanding data issue —
+    // see CLAUDE.md). The unordered query above doesn't reliably return the one with `phone`
+    // set, so look it up separately from whichever document actually has it defined.
+    if (!result.phone) {
+      const phoneDoc = await client.fetch<{ phone?: string } | null>(
+        `*[_type == "siteSettings" && defined(phone)][0]{ phone }`
+      );
+      if (phoneDoc?.phone) result.phone = phoneDoc.phone;
+    }
+
+    return result;
   } catch (error) {
     console.error("Failed to fetch site settings from Sanity:", error);
     return fallbackSettings;
