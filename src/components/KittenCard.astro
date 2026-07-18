@@ -27,6 +27,7 @@ interface Props {
   variant?: "light" | "dark";
   personalityAssessment?: PersonalityAssessment;
   linkTo?: string;
+  phone?: string;
 }
 
 const {
@@ -44,7 +45,12 @@ const {
   variant = "light",
   personalityAssessment,
   linkTo,
+  phone,
 } = Astro.props;
+
+function telHref(p: string): string {
+  return `tel:${p.replace(/[^\d+]/g, "")}`;
+}
 
 const meetHref = slug ? `/kittens/${slug}` : null;
 
@@ -260,6 +266,18 @@ const dateLabel = formatDate(availableDate);
       </div>
     )}
 
+    {phone && (
+      <p class={`text-xs uppercase tracking-widest mb-4 ${isDark ? "text-bone/50" : "text-charcoal-light/60"}`}>
+        Call/Text{" "}
+        <a
+          href={telHref(phone)}
+          class={`font-medium underline underline-offset-2 ${isDark ? "text-bone hover:text-gold" : "text-charcoal hover:text-gold-dark"}`}
+        >
+          {phone}
+        </a>
+      </p>
+    )}
+
     <div class={`flex flex-col gap-2 ${meetHref || (status === "Available" && !linkTo) ? "" : "hidden"}`}>
       {status === "Available" && !linkTo && (
         <a
@@ -271,6 +289,20 @@ const dateLabel = formatDate(availableDate);
           }`}
         >
           Apply for This Kitten
+        </a>
+      )}
+      {status === "Available" && !linkTo && (
+        <a
+          href="#quick-inquiry"
+          data-quick-inquiry-trigger=""
+          data-quick-inquiry-kitten={name}
+          class={`inline-block w-full text-center px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
+            isDark
+              ? "border-bone/30 text-bone/60 hover:border-bone/60 hover:text-bone"
+              : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"
+          }`}
+        >
+          Text Me About This Kitten
         </a>
       )}
       {meetHref && (

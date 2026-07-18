@@ -6,6 +6,8 @@ import CatCard from "../components/CatCard.astro";
 import ContactForm from "../components/ContactForm.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
 import ShowResults from "../components/ShowResults.astro";
+import QuickInquiry from "../components/QuickInquiry.astro";
+import Waitlist from "../components/Waitlist.astro";
 import { getCats, getFaqs, getSettings, getHealthEthics, getShowResults } from "../lib/sanity";
 import type { Cat } from "../lib/sanity";
 
@@ -114,6 +116,60 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
   <!-- Kittens (id is set inside CurrentLitter component on its root <section>) -->
   <CurrentLitter />
+
+  <!-- ═══════════════════════════════════════
+       QUICK INQUIRY  id="quick-inquiry"
+  ════════════════════════════════════════ -->
+  <section id="quick-inquiry">
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+            Quick Inquiry
+          </p>
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-8 leading-tight">
+            Ask About a Kitten
+          </h2>
+          <p class="text-bone/70 text-lg leading-relaxed">
+            Leave your name and number and we'll text or call you back — no long form required.
+          </p>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <div class="py-16 md:py-24 bg-obsidian">
+      <div class="max-w-3xl mx-auto px-4">
+        <QuickInquiry variant="dark" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       WAITLIST  id="waitlist"
+  ════════════════════════════════════════ -->
+  <section id="waitlist">
+    <ScrollReveal animation="fadeUp">
+      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+            Future Litters
+          </p>
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-8 leading-tight">
+            Join the Waitlist
+          </h2>
+          <p class="text-bone/70 text-lg leading-relaxed">
+            Our current litter is available now — see the kittens above. Our next litter is expected December 2026 or January 2027. Join the waitlist to hear first.
+          </p>
+        </div>
+      </div>
+    </ScrollReveal>
+
+    <div class="py-16 md:py-24 bg-obsidian">
+      <div class="max-w-3xl mx-auto px-4">
+        <Waitlist variant="dark" />
+      </div>
+    </div>
+  </section>
 
   <!-- Meet the Parents bridge -->
   <div class="bg-obsidian pb-12 text-center">
@@ -869,12 +925,37 @@ function parseFaqAnswer(text: string): FaqBlock[] {
     </div>
 
     <div class="py-16 md:py-24 bg-obsidian">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">
+          Ready to Apply?
+        </h3>
+        <p class="text-bone/70 leading-relaxed mb-8">
+          Send a quick inquiry with your name and number for the fastest response, or complete the full application if you're ready to take the next step.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/#quick-inquiry"
+            class="px-8 py-3.5 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/85 transition-colors"
+          >
+            Send a Quick Inquiry
+          </a>
+          <a
+            href="/kitten-application"
+            class="px-8 py-3.5 border border-bone/25 text-bone/70 text-sm font-medium tracking-widest uppercase hover:border-bone/55 hover:text-bone transition-colors"
+          >
+            Or Complete the Full Application
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-16 md:py-24 bg-[#0f0e0d]">
       <div class="max-w-3xl mx-auto px-4">
         <ContactForm variant="dark" />
       </div>
     </div>
 
-    <div class="py-16 md:py-24 bg-[#0f0e0d]">
+    <div class="py-16 md:py-24 bg-obsidian">
       <div class="max-w-3xl mx-auto px-4 text-center">
         <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-6">
           Other Ways to Connect

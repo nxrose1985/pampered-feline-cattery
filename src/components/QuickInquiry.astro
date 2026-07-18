@@ -1,0 +1,139 @@
+---
+interface Props {
+  variant?: "light" | "dark";
+}
+const { variant = "light" } = Astro.props;
+const isDark = variant === "dark";
+
+const labelClass = `block text-sm font-medium tracking-widest uppercase mb-2 ${isDark ? "text-bone/60" : "text-charcoal-light"}`;
+const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:outline-none ${isDark ? "bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold" : "bg-ivory-warm border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:border-gold-dark"}`;
+
+const kittenOptions = ["Tarquin", "Kallias", "Helion", "Amren", "Not sure yet"];
+---
+
+<form
+  id="quick-inquiry-form"
+  name="quick-inquiry"
+  action="/"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="max-w-xl mx-auto space-y-6"
+>
+  <input type="hidden" name="form-name" value="quick-inquiry" />
+  <div aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+    <label><input name="bot-field" /></label>
+  </div>
+
+  <div id="quick-inquiry-fields" class="space-y-6">
+    <div>
+      <label for="quick-inquiry-name" class={labelClass}>Name</label>
+      <input
+        type="text"
+        id="quick-inquiry-name"
+        name="name"
+        required
+        class={inputClass}
+        placeholder="Your full name"
+      />
+    </div>
+
+    <div>
+      <label for="quick-inquiry-phone" class={labelClass}>Phone</label>
+      <input
+        type="tel"
+        id="quick-inquiry-phone"
+        name="phone"
+        required
+        class={inputClass}
+        placeholder="(703) 555-0123"
+      />
+    </div>
+
+    <div>
+      <label for="quick-inquiry-kitten" class={labelClass}>Which Kitten</label>
+      <select
+        id="quick-inquiry-kitten"
+        name="kitten"
+        class={inputClass}
+      >
+        {kittenOptions.map((k) => <option value={k}>{k}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <button
+      type="submit"
+      id="quick-inquiry-submit"
+      class={`w-full sm:w-auto px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isDark ? "bg-bone text-obsidian hover:bg-bone/85" : "bg-charcoal text-ivory hover:bg-charcoal-light"}`}
+    >
+      Send
+    </button>
+
+    <p id="quick-inquiry-success" class="hidden text-sm leading-relaxed" style="color: #86efac;">
+      Got it. We'll text or call you shortly.
+    </p>
+
+    <p id="quick-inquiry-error" class="hidden text-sm leading-relaxed" style="color: #fca5a5;">
+      Something went wrong. Please email us directly at
+      <a href="mailto:pamperedfelinemainecoons@gmail.com" class="underline underline-offset-2">
+        pamperedfelinemainecoons@gmail.com
+      </a>.
+    </p>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById("quick-inquiry-form") as HTMLFormElement | null;
+  const fields = document.getElementById("quick-inquiry-fields");
+  const submitBtn = document.getElementById("quick-inquiry-submit") as HTMLButtonElement | null;
+  const successMsg = document.getElementById("quick-inquiry-success");
+  const errorMsg = document.getElementById("quick-inquiry-error");
+  const kittenSelect = document.getElementById("quick-inquiry-kitten") as HTMLSelectElement | null;
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+      if (errorMsg) errorMsg.classList.add("hidden");
+
+      try {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => params.append(key, value.toString()));
+
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+        });
+
+        if (fields) fields.style.display = "none";
+        if (submitBtn) submitBtn.style.display = "none";
+        if (successMsg) successMsg.classList.remove("hidden");
+      } catch {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send";
+        }
+        if (errorMsg) errorMsg.classList.remove("hidden");
+      }
+    });
+  }
+
+  // Preselect the kitten when triggered from a KittenCard's "Text Me About This Kitten" button.
+  document.querySelectorAll('[data-quick-inquiry-trigger]').forEach((el) => {
+    el.addEventListener("click", () => {
+      const kittenName = (el as HTMLElement).dataset.quickInquiryKitten;
+      if (kittenSelect && kittenName) {
+        const hasOption = Array.from(kittenSelect.options).some((o) => o.value === kittenName);
+        if (hasOption) kittenSelect.value = kittenName;
+      }
+    });
+  });
+</script>

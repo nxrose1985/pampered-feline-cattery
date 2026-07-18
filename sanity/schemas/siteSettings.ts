@@ -34,6 +34,12 @@ export const siteSettings = defineType({
       type: "string",
     }),
     defineField({
+      name: "phone",
+      title: "Phone Number",
+      type: "string",
+      description: 'e.g. "(703) 555-0123". Displayed as a tappable call/text link across the site.',
+    }),
+    defineField({
       name: "instagramHandle",
       title: "Instagram Handle",
       type: "string",

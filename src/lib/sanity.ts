@@ -89,6 +89,7 @@ export interface SiteSettings {
   reservationFee?: number;
   paymentMethods?: string;
   contactEmail?: string;
+  phone?: string;
   instagramHandle?: string;
   availabilityStatus?: "Kittens Available" | "Waitlist Open" | "No Kittens Available";
   parentsBannerImage?: { asset: { url: string } };
@@ -184,6 +185,7 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   reservationFee,
   paymentMethods,
   contactEmail,
+  phone,
   instagramHandle,
   availabilityStatus,
   "parentsBannerImage": parentsBannerImage { asset-> { url } }
@@ -262,6 +264,7 @@ const fallbackSettings: SiteSettings = {
   reservationFee: 400,
   paymentMethods: "We accept Zelle and bank wire transfer. A $400 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.",
   contactEmail: "pamperedfelinemainecoons@gmail.com",
+  phone: undefined,
   instagramHandle: undefined,
   availabilityStatus: "Kittens Available",
   parentsBannerImage: undefined,
