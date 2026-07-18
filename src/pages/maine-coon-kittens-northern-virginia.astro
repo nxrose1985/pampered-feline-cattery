@@ -1,0 +1,322 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScrollReveal from "../components/ScrollReveal.astro";
+import { getKittensByLitter, getSettings } from "../lib/sanity";
+
+const litterId = "march-2026";
+
+const [sanityKittens, settings] = await Promise.all([
+  getKittensByLitter(litterId),
+  getSettings(),
+]);
+
+const fallbackKittens = [
+  { name: "Helion",  slug: "helion",  color: "Cream Shaded Silver",                sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3800, availableDate: "2026-06-04", order: 1, image: undefined as { asset: { url: string } } | undefined },
+  { name: "Tarquin", slug: "tarquin", color: "Cream Shaded Silver",                sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3800, availableDate: "2026-06-04", order: 2, image: undefined as { asset: { url: string } } | undefined },
+  { name: "Kallias", slug: "kallias", color: "Poly Cream Shaded Silver (6/6/6/6)",  sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 3900, availableDate: "2026-06-04", order: 3, image: undefined as { asset: { url: string } } | undefined },
+  { name: "Amren",   slug: "amren",   color: "Blue Tortie",                        sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, availableDate: "2026-07-08", order: 7, image: undefined as { asset: { url: string } } | undefined },
+];
+
+const availableKittens = (sanityKittens.length > 0 ? sanityKittens : fallbackKittens)
+  .filter((k: any) => k.status === "Available")
+  .sort((a: any, b: any) => (a.order ?? 99) - (b.order ?? 99));
+
+function sanityCardUrl(url?: string): string | undefined {
+  if (!url || !url.includes("cdn.sanity.io")) return url;
+  return `${url}?w=600&q=80&auto=format`;
+}
+
+function formatPrice(p?: number): string | null {
+  if (p === undefined || p === null) return null;
+  return `$${p.toLocaleString("en-US")}`;
+}
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? "https://pamperedfelinemainecoons.com").href;
+
+const breadcrumbJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": new URL("/", Astro.site ?? "https://pamperedfelinemainecoons.com").href,
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Maine Coon Kittens in Northern Virginia",
+      "item": pageUrl,
+    },
+  ],
+});
+---
+
+<BaseLayout
+  title="Maine Coon Kittens in Northern Virginia | Pampered Feline Maine Coons"
+  description="CFA-registered Maine Coon kittens in Northern Virginia. European champion bloodlines, HCM cardiac screening, and Wisdom Panel health testing. In-person pickup only, no shipping."
+>
+
+  <!-- Breadcrumb -->
+  <div class="bg-obsidian border-b border-bone/10">
+    <div class="max-w-4xl mx-auto px-4 py-4">
+      <nav aria-label="Breadcrumb" class="text-sm tracking-wide text-bone/40">
+        <a href="/" class="hover:text-bone transition-colors">Home</a>
+        <span class="mx-2" aria-hidden="true">/</span>
+        <span class="text-bone/70">Maine Coon Kittens in Northern Virginia</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-obsidian pt-14 pb-16 md:pt-20 md:pb-24">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+        Northern Virginia
+      </p>
+      <h1 class="font-heading text-4xl md:text-6xl font-semibold text-bone mb-6 leading-tight">
+        Maine Coon Kittens in Northern Virginia
+      </h1>
+      <p class="text-bone/70 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+        A small, home-based Maine Coon cattery raising CFA-registered, European-line kittens in Northern Virginia. Pickup is in person, in our home, every time.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+        <a
+          href="#available-kittens"
+          class="px-8 py-3.5 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/85 transition-colors"
+        >
+          See Available Kittens
+        </a>
+        <a
+          href="/kitten-application"
+          class="px-8 py-3.5 border border-bone/25 text-bone/70 text-sm font-medium tracking-widest uppercase hover:border-bone/55 hover:text-bone transition-colors"
+        >
+          Apply for a Kitten
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- A Small Program in Northern Virginia -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="max-w-3xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+          The Cattery
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-6 leading-tight">
+          A Home-Based Program, Not a Storefront
+        </h2>
+        <p class="text-bone/70 text-lg leading-relaxed mb-6">
+          Pampered Feline Maine Coons is a small, home-based cattery in Northern Virginia. We breed selectively, with limited litters, careful pairings, and hands-on care from birth. Kittens are raised underfoot in our home, not in a kennel or cattery building, and handled daily from the day they're born.
+        </p>
+        <p class="text-bone/70 text-lg leading-relaxed">
+          Every kitten leaves with a health guarantee, a written purchase agreement, and a family that already knows their name. We are CFA registered, and our sire Aedion holds a CFA Champion title.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <!-- About the Breed -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-obsidian">
+      <div class="max-w-3xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+          The Breed
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-6 leading-tight">
+          What Is a Maine Coon
+        </h2>
+        <p class="text-bone/70 text-lg leading-relaxed mb-6">
+          Maine Coons are one of the largest domestic cat breeds, known for tufted ears, a long shaggy coat, and a broad, muscular frame that develops fully over three to five years. They're often called gentle giants for good reason: the breed has a reputation for steady, affectionate temperaments and a genuine attachment to their people, sometimes described as more dog-like than cat-like in how closely they follow their family from room to room.
+        </p>
+        <p class="text-bone/70 text-lg leading-relaxed">
+          We select our breeding cats for balanced European type, meaning bone, structure, strong muzzles, and clean profiles, with color and coat as secondary considerations. Temperament matters just as much: we select for confidence and steady company, not just looks.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <!-- What Sets This Program Apart -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="max-w-3xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+          Our Standards
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10 leading-tight">
+          What Sets This Program Apart
+        </h2>
+
+        <div class="space-y-10">
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone mb-2">CFA Registration and European Champion Lines</h3>
+            <p class="text-bone/70 leading-relaxed">
+              Our cats are CFA registered, and every kitten's pedigree traces back to European championship bloodlines. Our sire Aedion holds a CFA Champion title, earned at the Greater Baltimore Cat Club show.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone mb-2">HCM Cardiac Screening</h3>
+            <p class="text-bone/70 leading-relaxed">
+              Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. Hypertrophic cardiomyopathy, the most common heart disease in cats, involves over a hundred genetic variants in Maine Coons, and only one has an available DNA test. Cardiac ultrasound catches structural heart changes that DNA testing alone cannot.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone mb-2">Wisdom Panel Genetic Screening</h3>
+            <p class="text-bone/70 leading-relaxed">
+              Beyond cardiac screening, every breeding cat receives a full Wisdom Panel genetic health screen covering fifty heritable conditions, including HCM, SMA, and PKDef markers. Test results for both parents are available to buyers.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone mb-2">Indoor-Only Placement</h3>
+            <p class="text-bone/70 leading-relaxed">
+              Every kitten is placed as an indoor-only companion under our purchase agreement. Free-roaming outdoor access isn't permitted; supervised harness walks and enclosed catios are. It's a condition of the health guarantee, and it's how we protect the long-term health and safety of every cat we place.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <!-- Local Northern Virginia Angle -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-obsidian">
+      <div class="max-w-3xl mx-auto px-4">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
+          Local Pickup Only
+        </p>
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-6 leading-tight">
+          We Don't Ship. You Meet Us Here.
+        </h2>
+        <p class="text-bone/70 text-lg leading-relaxed mb-6">
+          We don't ship kittens, and we don't use cargo or courier services of any kind. Every kitten goes home the same way: an in-person pickup at our home in Northern Virginia, where you can meet the parents, see how the kittens were raised, and ask questions face to face before you take your kitten home.
+        </p>
+        <p class="text-bone/70 text-lg leading-relaxed">
+          That keeps our program small by design, and it means every family who brings home a Pampered Feline kitten has stood in our home first. We work with families across Northern Virginia and the greater Washington, DC metro area, from Arlington and Alexandria to Fairfax, Loudoun, and Prince William County.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <!-- ═══════════════════════════════════════
+       AVAILABLE KITTENS  id="available-kittens"
+  ════════════════════════════════════════ -->
+  <section id="available-kittens" class="py-16 md:py-24 bg-[#0f0e0d]">
+    <div class="max-w-6xl mx-auto px-4">
+      <ScrollReveal animation="fadeUp">
+        <div class="text-center mb-12 md:mb-16">
+          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">
+            Available Now
+          </p>
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4 leading-tight">
+            Kittens Available in Northern Virginia
+          </h2>
+          <p class="text-bone/60 text-base max-w-2xl mx-auto">
+            Every kitten listed here is available today. Click a name to meet them, see their full gallery, and read their story.
+          </p>
+        </div>
+      </ScrollReveal>
+
+      {availableKittens.length > 0 ? (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {availableKittens.map((kitten: any, i: number) => {
+            const imgUrl = sanityCardUrl(kitten.image?.asset?.url);
+            const priceLabel = formatPrice(kitten.price);
+            return (
+              <ScrollReveal animation="fadeUp" delay={i * 0.08}>
+                <a
+                  href={`/kittens/${kitten.slug}`}
+                  class="block rounded-sm overflow-hidden bg-bone/[0.04] border border-bone/10 hover:border-gold/30 transition-colors group"
+                >
+                  {imgUrl ? (
+                    <div class="aspect-square overflow-hidden bg-bone/[0.03]">
+                      <img
+                        src={imgUrl}
+                        alt={`${kitten.name}, ${kitten.color} Maine Coon kitten in Northern Virginia`}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <div class="aspect-square flex items-center justify-center bg-bone/[0.03]">
+                      <svg class="w-12 h-12 text-bone/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+                  <div class="p-5">
+                    <h3 class="font-heading text-xl font-semibold text-bone mb-1 group-hover:text-gold transition-colors">
+                      {kitten.name}
+                    </h3>
+                    <p class="text-xs uppercase tracking-widest text-gold/70 mb-2">{kitten.color}</p>
+                    {priceLabel && (
+                      <p class="text-sm text-bone/50">{priceLabel}</p>
+                    )}
+                  </div>
+                </a>
+              </ScrollReveal>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="text-center max-w-xl mx-auto">
+          <p class="text-bone/70 text-lg leading-relaxed mb-8">
+            We don't have any kittens available in Northern Virginia right now. Join our waitlist and we'll reach out as soon as our next litter is ready.
+          </p>
+          <a
+            href="/#waitlist"
+            class="inline-block px-8 py-3.5 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/85 transition-colors"
+          >
+            Join the Waitlist
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <ScrollReveal animation="fadeUp">
+    <section class="py-16 md:py-24 bg-obsidian text-center">
+      <div class="max-w-2xl mx-auto px-4">
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-6 leading-tight">
+          Ready to Meet a Kitten in Person?
+        </h2>
+        <p class="text-bone/70 text-lg leading-relaxed mb-8">
+          Fill out our application and we'll follow up to schedule your visit. Pickup is always in person, at our home in Northern Virginia.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/kitten-application"
+            class="px-8 py-3.5 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/85 transition-colors"
+          >
+            Apply for a Kitten
+          </a>
+          <a
+            href="/#faq"
+            class="px-8 py-3.5 border border-bone/25 text-bone/70 text-sm font-medium tracking-widest uppercase hover:border-bone/55 hover:text-bone transition-colors"
+          >
+            Read Our FAQ
+          </a>
+        </div>
+        {settings.phone && (
+          <p class="mt-8 text-xs uppercase tracking-widest text-bone/40">
+            Prefer to call?{" "}
+            <a
+              href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}
+              class="font-medium text-bone underline underline-offset-2 hover:text-gold"
+            >
+              {settings.phone}
+            </a>
+          </p>
+        )}
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <script type="application/ld+json" set:html={breadcrumbJson} />
+
+</BaseLayout>

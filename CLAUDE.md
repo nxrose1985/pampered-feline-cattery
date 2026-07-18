@@ -2059,3 +2059,45 @@ src/components/ReserveRequest.astro   (NEW — request-to-reserve form: name/ema
 src/pages/kittens/[slug].astro        (QuickInquiry → ReserveRequest; hero CTA text/href updated; bottom section id="quick-inquiry" → id="reserve-request"; Available shows ReserveRequest, Reserved/Placed shows "Join the Waitlist" link to /#waitlist)
 CLAUDE.md                             (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (PR #57 — local SEO landing page for Northern Virginia)
+
+### Decisions
+- **New static page created:** `src/pages/maine-coon-kittens-northern-virginia.astro` at `/maine-coon-kittens-northern-virginia`, targeting the "Maine Coon Kittens in Northern Virginia" query.
+- **All copy sourced from existing, already-published site content — nothing invented.** CFA registration and Aedion's CFA Champion title (Greater Baltimore Cat Club) come from `ShowResults`/the fallback show result. HCM echocardiogram cadence (annual males, biennial females) and the "100+ genetic variants, only one with a DNA test" framing come verbatim from the Health & Ethics genetic-testing copy in `index.astro`. The Wisdom Panel "fifty heritable conditions" figure, the indoor-only contract clause, and "European Championship Bloodlines" all match existing sitewide copy exactly. Price range framing ($3,600–$4,500) matches `BaseLayout`'s `LocalBusiness` JSON-LD `priceRange`.
+- **"No shipping, pickup is in-person Northern Virginia only" is a deliberate content update for this page, per this session's brief.** The FAQ/contract copy elsewhere on the site still mentions a flight-nanny shipping option from an earlier session (2026-04-21) — that content was left untouched (out of scope for this PR) but this new page reflects the current, corrected policy the brief specified. Worth flagging to Sara: if the flight-nanny language is genuinely retired, the FAQ and any other shipping-policy mentions should be updated to match in a future session so the site doesn't contradict itself.
+- **Northern Virginia locality names used are geographic fact, not a business claim:** "Arlington, Alexandria, Fairfax, Loudoun, and Prince William County" is used only to describe what the Northern Virginia region encompasses (standard local-SEO framing), not to claim a physical presence in each. `areaServed` in the sitewide `LocalBusiness` JSON-LD already lists "Northern Virginia" and "Washington, DC Metro Area," so this is consistent with existing site claims.
+- **Available Kittens section fetches the same way `CurrentLitter.astro` does:** `getKittensByLitter("march-2026")`, filtered to `status === "Available"`, sorted by `order` ascending. This means the section is fully dynamic — a kitten flipped to Placed or Reserved in Sanity Studio drops off this page on the next rebuild with zero code changes.
+- **Not a reuse of `KittenCard.astro`:** `KittenCard`'s "Text Me About This Kitten" button links to the in-page anchor `#quick-inquiry`, which doesn't exist on this page — embedding `KittenCard` here would have shipped a dead link. Built a lighter-weight custom card instead: photo, name, color, price, the whole card linking to `/kittens/{slug}`. No carousel, no lightbox, no CTA stack — the point of this page is to route search traffic to the kitten detail pages, which already carry the full experience (photos, story, Request to Reserve).
+- **Fallback array trimmed to only the fields this page's card needs** (name, slug, color, sex, status, isPolydactyl, litter, price, availableDate, order, image) rather than duplicating the full `Kitten` fallback shape from `CurrentLitter`/`[slug].astro` — this page never reads `personality`, `gallery`, `bowTieColor`, etc., so there was nothing to gain from carrying those fields into a third fallback copy.
+- **SEO:**
+  - Title set exactly as specified: "Maine Coon Kittens in Northern Virginia | Pampered Feline Maine Coons".
+  - Meta description written for the query, mentioning CFA registration, European bloodlines, HCM/Wisdom Panel testing, and no-shipping/pickup-only.
+  - `LocalBusiness` JSON-LD is inherited automatically — the page uses `BaseLayout` like every other page, and `BaseLayout` already emits it in `<head>` on every route. No page-level change needed.
+  - `BreadcrumbList` JSON-LD added directly on this page (Home → Maine Coon Kittens in Northern Virginia), plus a matching visible breadcrumb nav at the top of the page for users.
+- **Sitemap:** no `astro.config.mjs` change needed. The sitemap filter is already `(page) => !page.includes('/404')`, so any new static route is picked up automatically. Confirmed in the build output — `maine-coon-kittens-northern-virginia` appears in `dist/sitemap-0.xml`.
+- **Footer link added:** a small text link ("Maine Coon Kittens in Northern Virginia") under the "Northern Virginia" location line in `Footer.astro`'s brand column, `text-ivory/40 hover:text-gold`. Present on every page since `Footer` renders in `BaseLayout`. This was the only footer change — no new columns, no layout restructuring.
+
+### Conventions
+- **When embedding a component built for one page's anchor structure (like `KittenCard`'s `#quick-inquiry` link) on a different page, check every internal anchor href before reusing it wholesale.** A component that "matches existing patterns" visually can still ship a dead link if the page it's dropped into doesn't have the same in-page sections. Building a lighter custom card here was less code than reusing `KittenCard` and patching around the mismatch.
+- **New local-SEO landing pages should fetch kitten data the same way `CurrentLitter.astro` does** (`getKittensByLitter` + filter `Available` + sort by `order`) so a status change in Sanity Studio propagates everywhere without per-page logic drift.
+
+### Verified
+- `astro build`: 13 pages generated cleanly (up from 12 — the new page, no regressions elsewhere).
+- `astro check`: same 8 pre-existing, unrelated errors as baseline (Sanity schema typing, Google Ads `dataLayer` typing) — none touch the changed files.
+- `dist/sitemap-0.xml` contains `maine-coon-kittens-northern-virginia`.
+- Built HTML confirmed: correct `<title>`, correct meta description, `BreadcrumbList` JSON-LD present, `LocalBusiness` JSON-LD present (inherited), footer link present on `dist/index.html`.
+- Live dev server against real Sanity data: page rendered all sections correctly; Available Kittens section showed exactly the 4 currently-Available kittens (Helion $3,800, Tarquin $3,800, Kallias $3,900, Amren $3,600) with live prices from Sanity, not the fallback numbers — confirming Sanity data took precedence as expected. Clicking a kitten card (Kallias) navigated to `/kittens/kallias` and rendered that kitten's detail page correctly. No console errors.
+
+### Deferred
+- **Reconcile shipping-policy copy sitewide:** this page states pickup is in-person Northern Virginia only, no shipping — but the existing FAQ (from the 2026-04-21 session) still describes a flight-nanny in-cabin shipping option. If that policy has genuinely changed, a future session should update the FAQ and any other shipping mentions to match so the site doesn't contradict itself.
+- All prior deferred items carry forward: Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+
+### Files Changed This Session (PR #57 — targeting staging)
+```
+src/pages/maine-coon-kittens-northern-virginia.astro   (NEW — local SEO landing page: cattery/breed/program copy, dynamic Available Kittens grid, BreadcrumbList JSON-LD)
+src/components/Footer.astro                            (link to the new page added under the Northern Virginia location line)
+CLAUDE.md                                               (session log appended)
+```
