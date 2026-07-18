@@ -1,7 +1,7 @@
 ---
 import KittenCard from "./KittenCard.astro";
 import ScrollReveal from "./ScrollReveal.astro";
-import { getKittensByLitter } from "../lib/sanity";
+import { getKittensByLitter, getSettings } from "../lib/sanity";
 import type { Kitten } from "../lib/sanity";
 
 interface Props {
@@ -10,7 +10,10 @@ interface Props {
 
 const { litterId = "march-2026" } = Astro.props;
 
-const sanityKittens = await getKittensByLitter(litterId);
+const [sanityKittens, settings] = await Promise.all([
+  getKittensByLitter(litterId),
+  getSettings(),
+]);
 
 const fallbackKittens = [
   { name: "Elain",    slug: "elain",    color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8 },
@@ -71,6 +74,7 @@ const kittens = sortKittens(sanityKittens.length > 0 ? sanityKittens : fallbackK
             availableDate={kitten.availableDate}
             variant="dark"
             personalityAssessment={kitten.personalityAssessment}
+            phone={settings.phone}
           />
         </ScrollReveal>
       ))}

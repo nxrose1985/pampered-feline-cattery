@@ -5,6 +5,14 @@ const settings = await getSettings();
 const currentYear = new Date().getFullYear();
 
 const email = settings.contactEmail ?? "[PLACEHOLDER]";
+
+function telHref(phone: string): string {
+  return `tel:${phone.replace(/[^\d+]/g, "")}`;
+}
+
+function instagramUrl(handle: string): string {
+  return `https://instagram.com/${handle}`;
+}
 ---
 
 <footer class="bg-obsidian text-ivory/80">
@@ -21,8 +29,18 @@ const email = settings.contactEmail ?? "[PLACEHOLDER]";
 
       <div class="text-center md:text-right space-y-2">
         <p class="text-sm">
-          Email: <span class="text-ivory/60">{email}</span>
+          Email: <a href={`mailto:${email}`} class="text-ivory/60 hover:text-gold transition-colors">{email}</a>
         </p>
+        {settings.phone && (
+          <p class="text-sm">
+            Call/Text: <a href={telHref(settings.phone)} class="text-ivory/60 hover:text-gold transition-colors">{settings.phone}</a>
+          </p>
+        )}
+        {settings.instagramHandle && (
+          <p class="text-sm">
+            <a href={instagramUrl(settings.instagramHandle)} target="_blank" rel="noopener noreferrer" class="text-ivory/60 hover:text-gold transition-colors">Instagram</a>
+          </p>
+        )}
       </div>
     </div>
 

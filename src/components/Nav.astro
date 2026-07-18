@@ -1,4 +1,16 @@
 ---
+import { getSettings } from "../lib/sanity";
+
+const settings = await getSettings();
+
+function telHref(phone: string): string {
+  return `tel:${phone.replace(/[^\d+]/g, "")}`;
+}
+
+function instagramUrl(handle: string): string {
+  return `https://instagram.com/${handle}`;
+}
+
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/#our-cats", label: "Our Cats" },
@@ -75,6 +87,18 @@ const linkClass = "text-sm font-medium tracking-widest uppercase text-charcoal-l
           ))}
         </div>
       </li>
+
+      {settings.phone && (
+        <li>
+          <a href={telHref(settings.phone)} class={linkClass}>{settings.phone}</a>
+        </li>
+      )}
+
+      {settings.instagramHandle && (
+        <li>
+          <a href={instagramUrl(settings.instagramHandle)} target="_blank" rel="noopener noreferrer" class={linkClass}>Instagram</a>
+        </li>
+      )}
     </ul>
   </nav>
 
@@ -115,6 +139,18 @@ const linkClass = "text-sm font-medium tracking-widest uppercase text-charcoal-l
           ))}
         </ul>
       </li>
+
+      {settings.phone && (
+        <li>
+          <a href={telHref(settings.phone)} class={`block ${linkClass}`}>{settings.phone}</a>
+        </li>
+      )}
+
+      {settings.instagramHandle && (
+        <li>
+          <a href={instagramUrl(settings.instagramHandle)} target="_blank" rel="noopener noreferrer" class={`block ${linkClass}`}>Instagram</a>
+        </li>
+      )}
     </ul>
   </div>
 </header>

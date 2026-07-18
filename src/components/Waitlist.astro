@@ -1,0 +1,149 @@
+---
+interface Props {
+  variant?: "light" | "dark";
+}
+const { variant = "light" } = Astro.props;
+const isDark = variant === "dark";
+
+const labelClass = `block text-sm font-medium tracking-widest uppercase mb-2 ${isDark ? "text-bone/60" : "text-charcoal-light"}`;
+const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:outline-none ${isDark ? "bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold" : "bg-ivory-warm border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:border-gold-dark"}`;
+
+const lookingForOptions = ["Any", "Male", "Female", "Polydactyl", "Silver", "Smoke"];
+---
+
+<form
+  id="waitlist-form"
+  name="waitlist"
+  action="/"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="max-w-xl mx-auto space-y-6"
+>
+  <input type="hidden" name="form-name" value="waitlist" />
+  <div aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+    <label><input name="bot-field" /></label>
+  </div>
+
+  <div id="waitlist-fields" class="space-y-6">
+    <div>
+      <label for="waitlist-name" class={labelClass}>Name</label>
+      <input
+        type="text"
+        id="waitlist-name"
+        name="name"
+        required
+        class={inputClass}
+        placeholder="Your full name"
+      />
+    </div>
+
+    <div>
+      <label for="waitlist-email" class={labelClass}>Email</label>
+      <input
+        type="email"
+        id="waitlist-email"
+        name="email"
+        required
+        class={inputClass}
+        placeholder="your@email.com"
+      />
+    </div>
+
+    <div>
+      <label for="waitlist-phone" class={labelClass}>Phone</label>
+      <input
+        type="tel"
+        id="waitlist-phone"
+        name="phone"
+        class={inputClass}
+        placeholder="(703) 555-0123"
+      />
+    </div>
+
+    <div>
+      <label for="waitlist-looking-for" class={labelClass}>Looking For</label>
+      <select
+        id="waitlist-looking-for"
+        name="looking-for"
+        class={inputClass}
+      >
+        {lookingForOptions.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </div>
+
+    <div>
+      <label for="waitlist-notes" class={labelClass}>Notes</label>
+      <textarea
+        id="waitlist-notes"
+        name="notes"
+        rows="4"
+        class={`${inputClass} resize-vertical`}
+        placeholder="Anything else we should know?"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <button
+      type="submit"
+      id="waitlist-submit"
+      class={`w-full sm:w-auto px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isDark ? "bg-bone text-obsidian hover:bg-bone/85" : "bg-charcoal text-ivory hover:bg-charcoal-light"}`}
+    >
+      Join the Waitlist
+    </button>
+
+    <p id="waitlist-success" class="hidden text-sm leading-relaxed" style="color: #86efac;">
+      You're on the list. We'll reach out as the next litter approaches.
+    </p>
+
+    <p id="waitlist-error" class="hidden text-sm leading-relaxed" style="color: #fca5a5;">
+      Something went wrong. Please email us directly at
+      <a href="mailto:pamperedfelinemainecoons@gmail.com" class="underline underline-offset-2">
+        pamperedfelinemainecoons@gmail.com
+      </a>.
+    </p>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById("waitlist-form") as HTMLFormElement | null;
+  const fields = document.getElementById("waitlist-fields");
+  const submitBtn = document.getElementById("waitlist-submit") as HTMLButtonElement | null;
+  const successMsg = document.getElementById("waitlist-success");
+  const errorMsg = document.getElementById("waitlist-error");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+      if (errorMsg) errorMsg.classList.add("hidden");
+
+      try {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => params.append(key, value.toString()));
+
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+        });
+
+        if (fields) fields.style.display = "none";
+        if (submitBtn) submitBtn.style.display = "none";
+        if (successMsg) successMsg.classList.remove("hidden");
+      } catch {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Join the Waitlist";
+        }
+        if (errorMsg) errorMsg.classList.remove("hidden");
+      }
+    });
+  }
+</script>
