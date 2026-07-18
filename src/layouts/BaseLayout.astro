@@ -16,6 +16,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://pampered
 
 const settings = await getSettings();
 
+function smsHref(phone: string): string {
+  const digits = phone.replace(/[^\d]/g, "");
+  const e164 = digits.length === 10 ? `+1${digits}` : `+${digits}`;
+  return `sms:${e164}`;
+}
+
 const localBusinessJson = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -91,5 +97,18 @@ const localBusinessJson = JSON.stringify({
       <slot />
     </main>
     <Footer />
+
+    {settings.phone && (
+      <a
+        href={smsHref(settings.phone)}
+        class="fixed z-40 bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-6 md:translate-x-0 md:bottom-6 flex items-center gap-2 px-5 py-2.5 rounded-full bg-obsidian/95 border border-gold/30 text-bone text-xs font-medium tracking-widest uppercase shadow-lg backdrop-blur-sm hover:border-gold/60 hover:bg-obsidian transition-colors"
+        aria-label={`Text us at ${settings.phone}`}
+      >
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        Text us
+      </a>
+    )}
   </body>
 </html>

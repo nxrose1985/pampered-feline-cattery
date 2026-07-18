@@ -450,10 +450,10 @@ function formatAssessmentDate(d?: string) {
   {kitten.status === "Available" && (
     <section id="quick-inquiry" class="bg-obsidian py-16 md:py-20 text-center">
       <div class="max-w-xl mx-auto px-4">
-        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4 text-left">
           Ask About {kitten.name}
         </h2>
-        <p class="text-bone/60 mb-8 leading-relaxed">
+        <p class="text-bone/60 mb-8 leading-relaxed text-left">
           Leave your name and number and we'll text or call you back — no long form required.
         </p>
         <QuickInquiry variant="dark" kittenName={kitten.name} />
@@ -466,10 +466,10 @@ function formatAssessmentDate(d?: string) {
     <div class="max-w-xl mx-auto px-4">
       {kitten.status === "Available" ? (
         <>
-          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4 text-left">
             Reserve {kitten.name}
           </h2>
-          <p class="text-bone/60 mb-8 leading-relaxed">
+          <p class="text-bone/60 mb-8 leading-relaxed text-left">
             Fill out a short form to start the process. Sara reviews every request personally.
           </p>
           <ReserveRequest variant="dark" kittenName={kitten.name} />

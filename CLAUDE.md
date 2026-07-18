@@ -2273,6 +2273,86 @@ CLAUDE.md                           (session log appended)
 
 ---
 
+## Session: 2026-07-18 (PR #59 — reserve request copy + left-aligned form headings)
+
+### Decisions
+- **`ReserveRequest.astro` "Before You Submit" disclaimer rewritten to the exact approved wording,** preserving the existing `{kittenName ? ... : "The kitten is"}` conditional and the `<strong>` wrap around the deposit amount. New copy: "Please note that a request is not a reservation. We review each request and if it seems like a good fit we will email you a secure payment link for the **$500 non-refundable deposit**, which applies towards the total price. {name} is officially reserved once the deposit clears." — "towards" (not "toward") and "applies" preserved exactly as specified.
+- **Success message rewritten to match:** "Sara reviews requests personally" → "We review every request personally"; "a secure Stripe payment link" → "a secure payment link" (Stripe dropped entirely, since no Stripe integration exists — see PR #56 notes, this form only emails Sara, never touches payment). Both the `kittenName` and fallback variants updated identically. Confirmed via `grep -rl "Stripe" dist/` after build: zero matches sitewide.
+- **Left-alignment approach chosen after auditing every `text-center` instance tied to these five forms, per the session's explicit caution about shared classes:** `text-center` in this codebase is always a per-instance Tailwind utility class, never a shared/global custom CSS class — so no risk of a single edit leaking into unrelated components. However, in two places (`kittens/[slug].astro`'s `#quick-inquiry` and `#reserve-request` sections, and `kitten-application.astro`'s hero) the `text-center` sits on a **shared ancestor** that also wraps the form call or a CTA button that should stay centered. In those cases, flipping the ancestor to `text-left` would have shifted the form's submit button and the PDF download button out of their current centered position — out of scope per "keep the field labels and inputs as they are." Instead, `text-left` was added directly to only the heading/intro/disclaimer elements themselves, which overrides the inherited center without touching anything else in the same container.
+- **`index.astro`'s three sections (`#quick-inquiry`, `#waitlist`, `#contact`) needed no such workaround:** in every case the heading+intro block is a separate sibling `<div>` from the div containing the actual `<QuickInquiry>`/`<Waitlist>`/`<ContactForm>` call, so `text-center` → `text-left` was changed directly on the heading wrapper with zero risk to the form below it. Verified via computed styles: `#contact-submit`'s parent has `text-align: start` (its original, unaffected default — this div never had `text-center` to begin with).
+- **`kittens/[slug].astro`:** added `text-left` to the `#quick-inquiry` h2 ("Ask About {name}") and intro `<p>`, and to the `#reserve-request` Available-branch h2 ("Reserve {name}") and intro `<p>`. The non-Available branch (Reserved/Placed heading + "Join the Waitlist" link) was left untouched — it doesn't render a form and wasn't named in the request's form list.
+- **`ReserveRequest.astro`'s "Before You Submit" block got its own `text-left` class directly on the component,** rather than relying on the calling page's alignment — this is the "form-specific class over a global one" the user asked to prefer, and it means the disclaimer renders left-aligned regardless of what alignment the calling page's wrapper uses.
+- **`kitten-application.astro` hero:** `text-left` added directly to the "Adoption" label, the `<h1>`, and the intro `<p>` (the `max-w-2xl mx-auto` centering constraint was replaced with `max-w-2xl` alone — dropping `mx-auto` so the paragraph box sits flush against the same left edge as the `<h1>` instead of floating as a centered, narrower column next to a left-aligned heading, which would have looked visually broken). The "Kitten Purchase Agreement (PDF)" download button was not wrapped or touched — it still inherits `text-center` from the outer hero div and stays centered, since it isn't a heading or intro.
+- **`Waitlist.astro` and `ContactForm.astro` needed zero internal changes** — both are pure form components with no heading/intro of their own; all heading/intro text for these two lives entirely in `index.astro`, which was already handled.
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing, unrelated baseline errors (Sanity schema `__experimental_actions` typing, Google Ads `dataLayer` typing) — none touch the changed files.
+- Built HTML: `grep -c "applies towards"` = 1, `grep -c "applies toward the"` = 0, zero `Stripe` references anywhere in `dist/`.
+- Live dev server, computed styles (`getComputedStyle().textAlign`) checked directly in-browser:
+  - `/kittens/helion`: quick-inquiry heading/intro and reserve-request heading/intro/disclaimer all compute `text-align: left`; the reserve submit button's parent still computes `text-align: center` (unaffected).
+  - `/kitten-application`: label/h1/intro all compute `text-align: left`; the PDF link's parent still computes `text-align: center` (unaffected).
+  - `/#kittens` (homepage): quick-inquiry, waitlist, and contact `<h2>` all compute `text-align: left`; the contact form's submit button parent computes `text-align: start` (its original unaffected default).
+- Screenshot taken of the homepage Quick Inquiry section confirming the visual left-alignment against the dark obsidian background.
+
+### Deferred
+- All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+
+### Files Changed This Session (PR #59 — targeting staging)
+```
+src/components/ReserveRequest.astro   (disclaimer copy rewritten; success copy rewritten — "we" not "Sara", Stripe dropped; text-left added to disclaimer block)
+src/pages/index.astro                 (#quick-inquiry, #waitlist, #contact heading-wrapper divs: text-center → text-left)
+src/pages/kittens/[slug].astro        (#quick-inquiry and #reserve-request Available-branch heading + intro: text-left added directly to elements)
+src/pages/kitten-application.astro    (hero label/h1/intro: text-left added; intro paragraph's mx-auto centering removed)
+CLAUDE.md                             (session log appended)
+```
+
+---
+
+## Session: 2026-07-18 (PR #60 — site-wide "Text us" CTA)
+
+### Decisions
+- **Two placements added, both reading `settings.phone` from Sanity — no hardcoded number anywhere:**
+  1. **Sticky "Text us" pill** added to `BaseLayout.astro` (renders on every page, since `BaseLayout` already calls `getSettings()` for the `LocalBusiness` JSON-LD). Fixed position: `bottom-4` horizontally centered on mobile, `md:right-6 md:bottom-6` (bottom-right corner) on desktop/tablet. Small rounded pill (`rounded-full`), `bg-obsidian/95` with a `border-gold/30` hairline, `text-bone`, chat-bubble outline icon + "Text us" label in the same uppercase tracking-widest style used by every other button on the site. `z-40` (below the `z-50` lightbox). Conditionally rendered via `{settings.phone && (...)}`.
+  2. **Hero reassurance line** added to `Hero.astro` below the existing CTA button row: the phone number itself as the `sms:` link, followed by "— we usually reply within a few hours." Small, muted (`text-bone/50`), doesn't compete with the headline. `phone` passed as a new prop from `index.astro` (`<Hero phone={settings.phone} />`).
+- **`sms:` link format matches the exact example given** (`sms:+19496065919`, E.164 with `+1` country code) via a small `smsHref()` helper duplicated in both `BaseLayout.astro` and `Hero.astro`, following the same per-file `telHref()` duplication convention already established in `Nav.astro`/`Footer.astro` rather than introducing a shared util for two call sites. Helper: strips non-digits, prepends `+1` for a bare 10-digit number, otherwise prepends `+` to whatever digits remain (handles an already-11-digit number with a leading country code too).
+- **Root cause found while verifying "the field is already populated": three separate `siteSettings` documents exist in the Sanity dataset,** not one. Queried directly via the Sanity MCP (`query_documents`, raw perspective) rather than trusting the claim at face value:
+  - `0da97e9a-493b-...` (updated 2026-04-28) — has `contactEmail`, `availabilityStatus`, `reservationFee`. No `phone`.
+  - `527b6503-441e-...` (updated 2026-04-28) — has `availabilityStatus`, `parentsBannerImage`, `reservationFee`. No `phone`.
+  - `siteSettings` (fixed ID — the canonical singleton per the convention documented elsewhere in this file for `healthEthics`) — updated **today**, has `phone: "(949) 606-5919"` and a newer `parentsBannerImage`. No `contactEmail`.
+  - The existing GROQ query (`*[_type == "siteSettings"][0]`, no explicit ordering) was non-deterministically returning `0da97e9a` — the document Sara's phone edit never touched. This is why the field "being populated" wasn't rendering anything before this session's fix.
+- **Fix scoped narrowly to avoid regressing anything else:** rather than repointing the whole `siteSettings` query at the canonical fixed-ID document (which would have blanked `contactEmail` back to the `[PLACEHOLDER]` fallback, since the canonical doc doesn't have that field, and would have caused the canonical doc's newer `parentsBannerImage` to suddenly start rendering as an unplanned, unreviewed side effect), `getSettings()` in `sanity.ts` now does a small secondary lookup **only when `phone` is missing from the primary result**: `*[_type == "siteSettings" && defined(phone)][0]{ phone }`, merging just that one field onto the returned object. Every other field's current rendered value (email, banner, etc.) is provably unchanged — verified via build diff (see Verified below).
+- **Duplicate documents were NOT touched, merged, or deleted.** Per the standing Sanity write-safety policy (dry-run + timestamped backup required before any production write, especially anything resembling a fetch-then-delete), cleaning up the duplicates is out of scope for this PR and would need its own careful, reviewed pass. Flagged to the user directly rather than silently fixed or silently ignored.
+- **Mobile overlap caught and fixed:** the sticky button's fixed `bottom-4` position intruded ~13px into `Hero.astro`'s existing decorative "Scroll" indicator (`#hero-scroll-indicator`, `aria-hidden`) on mobile viewports only — confirmed via `getBoundingClientRect()` in a live browser, not just visual inspection. Fixed by nudging the scroll indicator's position from `bottom-8` to `bottom-16 md:bottom-8` (mobile-only adjustment; desktop was never affected since the button sits in the corner there, not under the centered indicator). Re-verified post-fix: ~18.8px clearance, no overlap.
+
+### Conventions
+- **Per-file `smsHref()`/`telHref()` duplication is the established pattern** for small formatting helpers used in only one or two files — matches how `telHref()` already exists independently in both `Nav.astro` and `Footer.astro`. Don't introduce a shared `src/lib/` util for a two-call-site helper.
+- **When a user claims a Sanity field "is already populated," verify directly against the live dataset (via the Sanity MCP or a read-only query) before building on top of that claim** — in this case the claim was correct but the field lived on a different document than the one the existing query returned, which would not have been visible from code inspection alone.
+- **A duplicate-singleton-document bug should be fixed as a narrow, additive read patch (merge only the specific missing field), not by repointing the whole query at "the right" document** — repointing changes every field at once and can silently regress or silently introduce content that hasn't been reviewed for this PR's scope.
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing baseline errors (Sanity schema typing, Google Ads `dataLayer` typing), none in touched files.
+- Built HTML: `href="sms:+19496065919"` present on the homepage (both placements), and on `/kittens/helion`, `/kitten-application`, and `/404` — confirms the sticky button is genuinely site-wide, not homepage-only.
+- Confirmed no unintended side effects from the `getSettings()` patch: `mailto:pamperedfelinemainecoons@gmail.com` still renders (contact email unaffected); zero occurrences of `parentsBannerImage`/"Aedion × Feyra" newly appearing on the homepage (banner behavior unchanged).
+- Live dev server, desktop viewport: screenshot confirms hero line rendered directly below the CTA buttons, sticky pill anchored bottom-right, not overlapping any content.
+- Live dev server, mobile viewport (375×812): screenshot + `getBoundingClientRect()` confirms the sticky pill is centered at the bottom of the viewport; scroll-indicator overlap caught, fixed, and re-verified as resolved (negative overlap = clearance, ~18.8px).
+
+### Deferred
+- **Clean up the duplicate `siteSettings` documents in Sanity** (three exist; fields are scattered across them inconsistently). Needs a careful, reviewed pass — likely consolidating everything onto the canonical `_id: "siteSettings"` document and deleting the two stray ones — following the standing Sanity write-safety policy (dry-run + timestamped backup first, target by explicit ID). Not done in this session; flagged for a dedicated follow-up.
+- All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image decision (now further complicated by the duplicate-document discovery), Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+
+### Files Changed This Session (PR #60 — targeting staging)
+```
+src/lib/sanity.ts        (getSettings(): added a targeted secondary lookup that merges `phone` from whichever siteSettings document actually has it defined, when the primary query's result is missing it)
+src/layouts/BaseLayout.astro  (smsHref() helper; sticky "Text us" pill added after Footer, fixed bottom-center on mobile / bottom-right on desktop, conditional on settings.phone)
+src/components/Hero.astro     (phone prop added; smsHref() helper; reassurance line with sms: link added below the CTA buttons; scroll-indicator bottom offset adjusted on mobile to clear the new sticky button)
+src/pages/index.astro         (settings.phone passed to <Hero phone={...} />)
+CLAUDE.md                     (session log appended)
+```
+
+---
+
 ## Session: 2026-07-18 (PR #61 — fix kitten carousel image cropping bug)
 
 ### Root Cause
@@ -2290,7 +2370,7 @@ One-line change: `min-w-full` → `w-full` on the slide div (`src/components/Kit
 - Confirmed no other file in the codebase shares this carousel markup — the kitten detail page (`[slug].astro`) uses a separate thumbnail-strip pattern, unaffected.
 
 ### Deferred
-All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data. Also carried forward from the parallel PR #60 session (not yet merged to staging as of this session): the three duplicate `siteSettings` Sanity documents still need consolidation.
+All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data. Also carried forward: the three duplicate `siteSettings` Sanity documents still need consolidation (separate write-safety task, tracked outside this PR sequence).
 
 ### Files Changed This Session (PR #61 — targeting staging)
 ```

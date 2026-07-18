@@ -1,9 +1,16 @@
 ---
 interface Props {
   heroImage?: string;
+  phone?: string;
 }
 
-const { heroImage } = Astro.props;
+const { heroImage, phone } = Astro.props;
+
+function smsHref(phone: string): string {
+  const digits = phone.replace(/[^\d]/g, "");
+  const e164 = digits.length === 10 ? `+1${digits}` : `+${digits}`;
+  return `sms:${e164}`;
+}
 ---
 
 <section id="hero-section" class="relative min-h-[90vh] flex flex-col items-center justify-center bg-obsidian overflow-hidden">
@@ -40,9 +47,18 @@ const { heroImage } = Astro.props;
         View Available Kittens
       </a>
     </div>
+
+    {phone && (
+      <p class="mt-6 text-sm text-bone/50">
+        <a href={smsHref(phone)} class="text-bone/75 hover:text-gold underline underline-offset-2 transition-colors">
+          {phone}
+        </a>
+        {" "}— we usually reply within a few hours.
+      </p>
+    )}
   </div>
 
-  <div id="hero-scroll-indicator" class="absolute bottom-8 inset-x-0 flex flex-col items-center gap-2" aria-hidden="true">
+  <div id="hero-scroll-indicator" class="absolute bottom-16 md:bottom-8 inset-x-0 flex flex-col items-center gap-2" aria-hidden="true">
     <span class="text-[10px] tracking-[0.4em] uppercase font-body font-medium text-bone/40">Scroll</span>
     <svg class="w-4 h-4 text-bone/40 scroll-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
