@@ -2186,3 +2186,43 @@ src/pages/index.astro                              (homepage #contract "Download
 src/pages/bringing-home-your-kitten.astro         (contract link repointed to /kitten-purchase-agreement.pdf)
 CLAUDE.md                                          (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (folded into PR #57 — clean up dormant $400 fallback references)
+
+### Decisions
+- **`src/lib/sanity.ts` fixed:** `fallbackSettings.reservationFee` 400 → 500; `fallbackSettings.paymentMethods` text ("A $400 non-refundable deposit...") → $500; the two `fallbackFaqs` answers that mentioned $400 ("What does a kitten cost?" and "What payment methods do you accept?") → $500. None of these currently render on the live site (live Sanity settings/FAQ data already say $500), so this is purely closing the gap for if Sanity is ever unreachable at build time.
+- **Found a third fallback array the request didn't name, fixed it too:** the user's instructions called out `CurrentLitter.astro` (4 kittens) and "sanity.ts fallback kitten arrays" for `reservationFee: 400`, but `sanity.ts` itself has no kitten array — the actual second location is `src/pages/kittens/[slug].astro`'s own `fallbackKittens` array, which had `reservationFee: 400` on **7** kittens (Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren — everyone except Elain, whose fee is correctly `null`). This is the exact same "dormant landmine" pattern the request was trying to eliminate — the kitten detail page renders `${kitten.reservationFee}` directly — so it was in scope even though not explicitly named. Fixed both this file (7 instances) and `CurrentLitter.astro` (4 instances), 11 total. Verified via `grep -c` before and after: 0 remaining `reservationFee: 400` anywhere in `src/`.
+- **`scripts/upload-kittens.mjs` fixed:** all 7 seeded `reservationFee: 400` values (the 8th kitten, Elain, correctly seeds `null`) changed to 500. This is very likely the script that originally put `400` into the live Sanity documents — updated so a future re-run won't reintroduce the bug.
+- **`src/components/AdoptionSteps.astro` deleted.** Confirmed zero importers first: `grep -rn "AdoptionSteps"` across all `.astro`/`.ts`/`.js`/`.mjs` files (excluding `node_modules`/`dist`) returned nothing — the component was never imported by any page. `git rm`'d rather than just deleted, so the removal is tracked cleanly.
+- **Live Sanity `reservationFee` values were explicitly NOT touched** — the user is handling that in Studio separately. No script was written or run against Sanity in this session.
+- **Kitten prices were explicitly NOT touched** — verified after all edits that `price: 3600`/`4000`/`4200`/`4500` values are all still present and unchanged in both `CurrentLitter.astro` and `[slug].astro`.
+- **New finding, not fixed, flagged instead: live Sanity FAQ content has its own separate $400 mention.** A full-build grep of `dist/` for `$400` turned up a hit in the live-rendered homepage FAQ (the "Do you have a contract? What does it cover?" answer): *"FeLV/FIV testing: Must be conducted within 72 hours. If positive, kitten is returned with full documentation for replacement or refund (minus $400 deposit)."* This is genuinely live Sanity content (this exact expanded contract-summary wording isn't in the code's `fallbackFaqs` array at all), not a fallback/code issue — same category as the `reservationFee` fix the user is doing in Studio, so left untouched here and reported instead. Worth fixing in the same Studio session as the `reservationFee` values, since it's the same underlying $400→$500 policy change and the wording mirrors the exact clause that was already fixed in the PDF.
+
+### Conventions
+- **When a request names N specific locations for a pattern, still grep for the pattern globally before declaring done.** The user's own instructions undercounted by one file here (same as the contract-PDF-links task undercounting by one earlier in this PR) — in both cases a full-codebase grep caught what the enumerated list missed. Trust the search, not just the list.
+- **A full production `astro build` + `grep dist/` for the target string is the real completion check for "no more live X," not just grepping `src/`.** This is how the live Sanity FAQ $400 was caught — it wouldn't show up in any source-file grep since it's not in the codebase at all.
+
+### Verified
+- `grep -rn "reservationFee: 400" src/` returns zero results after the edit (was 11 across two files).
+- `grep -rn "reservationFee.*400\|400.*deposit\|deposit.*400\|\\$400"` across all `.ts`/`.astro`/`.mjs`/`.js` source files returns zero results after deleting `AdoptionSteps.astro` (was one, exactly matching that file).
+- `astro build`: 13 pages generated cleanly, no regressions from removing `AdoptionSteps.astro`.
+- `astro check`: same 8 pre-existing, unrelated errors as baseline (38 files checked, down from 39 — one fewer file, as expected).
+- `grep -rl '\$400' dist/` after a fresh build returns only a coincidental binary match inside a kitten JPEG filename (irrelevant) and `dist/index.html` — traced that one hit to the live Sanity FAQ content described above, not to anything this session touched or was asked to touch.
+- Confirmed kitten prices ($3,600/$4,000/$4,200/$4,500) present and unchanged in both edited fallback arrays after the edit.
+
+### Deferred
+- **Live Sanity `reservationFee` values on all 8 kitten documents** — user is fixing in Studio separately, not touched here.
+- **Newly found: live Sanity FAQ answer for "Do you have a contract? What does it cover?"** still says "minus $400 deposit" in its FeLV/FIV testing clause — recommend fixing in the same Studio session as the `reservationFee` values.
+- All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+
+### Files Changed This Session (folded into PR #57 — targeting staging)
+```
+src/lib/sanity.ts                    (fallbackSettings.reservationFee 400→500; paymentMethods $400→$500; 2 FAQ fallback answers $400→$500)
+src/components/CurrentLitter.astro   (4x reservationFee: 400 → 500)
+src/pages/kittens/[slug].astro       (7x reservationFee: 400 → 500 — third location, not explicitly named in the request, found via grep)
+scripts/upload-kittens.mjs           (7x reservationFee: 400 → 500, seed script)
+src/components/AdoptionSteps.astro   (DELETED — zero importers confirmed before removal)
+CLAUDE.md                            (session log appended)
+```

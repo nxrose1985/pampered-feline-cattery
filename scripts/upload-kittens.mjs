@@ -56,13 +56,13 @@ const client = createClient({ projectId, dataset, token, apiVersion: "2024-01-01
 
 // Kitten data — matches Sanity schema field names exactly
 const kittens = [
-  { name: "Helion",   color: "Cream Shaded Silver", sex: "Male",   isPolydactyl: false, price: 4000,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 1 },
-  { name: "Tarquin",  color: "Cream Shaded Silver", sex: "Male",   isPolydactyl: false, price: 4000,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 2 },
-  { name: "Kallias",  color: "Cream Shaded Silver", sex: "Male",   isPolydactyl: true,  price: 4500,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 3 },
-  { name: "Azriel",   color: "Blue Silver Tabby",   sex: "Male",   isPolydactyl: true,  price: 4200,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 4 },
-  { name: "Lucien",   color: "Red Tabby",           sex: "Male",   isPolydactyl: true,  price: 4200,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 5 },
-  { name: "Morrigan", color: "Blue Tortie",         sex: "Female", isPolydactyl: false, price: 3600,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 6 },
-  { name: "Amren",    color: "Blue Tortie",         sex: "Female", isPolydactyl: false, price: 3600,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 400, availableDate: "2026-06-04", order: 7 },
+  { name: "Helion",   color: "Cream Shaded Silver", sex: "Male",   isPolydactyl: false, price: 4000,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 1 },
+  { name: "Tarquin",  color: "Cream Shaded Silver", sex: "Male",   isPolydactyl: false, price: 4000,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 2 },
+  { name: "Kallias",  color: "Cream Shaded Silver", sex: "Male",   isPolydactyl: true,  price: 4500,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 3 },
+  { name: "Azriel",   color: "Blue Silver Tabby",   sex: "Male",   isPolydactyl: true,  price: 4200,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 4 },
+  { name: "Lucien",   color: "Red Tabby",           sex: "Male",   isPolydactyl: true,  price: 4200,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 5 },
+  { name: "Morrigan", color: "Blue Tortie",         sex: "Female", isPolydactyl: false, price: 3600,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 6 },
+  { name: "Amren",    color: "Blue Tortie",         sex: "Female", isPolydactyl: false, price: 3600,  status: "Available", breed: "Maine Coon", litter: "march-2026", reservationFee: 500, availableDate: "2026-06-04", order: 7 },
   { name: "Elain",    color: "Blue Shaded Silver",  sex: "Female", isPolydactyl: false, price: null,  status: "Reserved",  breed: "Maine Coon", litter: "march-2026", reservationFee: null, availableDate: "2026-06-04", order: 8 },
 ];
 

@@ -16,10 +16,10 @@ const [sanityKittens, settings] = await Promise.all([
 ]);
 
 const fallbackKittens = [
-  { name: "Helion",   slug: "helion",   color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1 },
-  { name: "Tarquin",  slug: "tarquin",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2 },
-  { name: "Kallias",  slug: "kallias",  color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3 },
-  { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7 },
+  { name: "Helion",   slug: "helion",   color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 1 },
+  { name: "Tarquin",  slug: "tarquin",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 2 },
+  { name: "Kallias",  slug: "kallias",  color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 500, availableDate: "2026-06-04", order: 3 },
+  { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 500, availableDate: "2026-07-08", order: 7 },
 ];
 
 // Sort: Available first, then Reserved. Within each group, sort by display order ascending.
