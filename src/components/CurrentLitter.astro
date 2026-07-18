@@ -65,7 +65,9 @@ const kittens = sortKittens(
             slug={kitten.slug}
             sex={kitten.sex}
             color={kitten.color ?? ""}
+            bowTieColor={kitten.bowTieColor}
             personality={kitten.personality}
+            shortStory={kitten.shortStory}
             status={kitten.status}
             image={kitten.image?.asset?.url}
             gallery={kitten.gallery}
@@ -182,6 +184,72 @@ const kittens = sortKittens(
         const startIdx = parseInt((el as HTMLElement).dataset.lightboxIndex || '0', 10);
         if (imgs.length > 0) openLightbox(imgs, startIdx, name);
       }
+    });
+  });
+
+  // Kitten photo carousels: CSS scroll-snap track, arrows, dots, keyboard nav.
+  document.querySelectorAll('[data-kitten-carousel]').forEach(carousel => {
+    const el = carousel as HTMLElement;
+    if (!el.closest('#kittens')) return;
+
+    const track = el.querySelector('[data-carousel-track]') as HTMLElement | null;
+    if (!track) return;
+
+    const slides = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
+    const dots = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-dot]'));
+    const prevBtn = el.querySelector('[data-carousel-prev]') as HTMLElement | null;
+    const nextBtn = el.querySelector('[data-carousel-next]') as HTMLElement | null;
+    if (slides.length < 2) return;
+
+    let current = 0;
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    function setActive(idx: number) {
+      current = idx;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('opacity-90', i === idx);
+        dot.classList.toggle('opacity-40', i !== idx);
+      });
+    }
+
+    function goTo(idx: number, smooth = true) {
+      const clamped = (idx + slides.length) % slides.length;
+      track!.scrollTo({ left: clamped * track!.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
+      setActive(clamped);
+    }
+
+    track.addEventListener('scroll', () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const width = track!.clientWidth || 1;
+        const idx = Math.round(track!.scrollLeft / width);
+        setActive(Math.max(0, Math.min(slides.length - 1, idx)));
+      }, 100);
+    }, { passive: true });
+
+    prevBtn?.addEventListener('click', () => goTo(current - 1));
+    nextBtn?.addEventListener('click', () => goTo(current + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+    track.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      if (key === 'ArrowLeft') {
+        e.preventDefault();
+        goTo(current - 1);
+      } else if (key === 'ArrowRight') {
+        e.preventDefault();
+        goTo(current + 1);
+      } else if (key === 'Enter' || key === ' ') {
+        e.preventDefault();
+        const activeSlide = slides[current];
+        const imgs: string[] = JSON.parse(activeSlide.dataset.lightboxImages || '[]');
+        const name = activeSlide.dataset.lightboxName || '';
+        if (imgs.length > 0) openLightbox(imgs, current, name);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      goTo(current, false);
     });
   });
 </script>
