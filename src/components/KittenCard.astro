@@ -17,7 +17,9 @@ interface Props {
   slug?: string;
   sex: string;
   color: string;
+  bowTieColor?: "Teal" | "Emerald" | "Burnt Orange";
   personality?: string;
+  shortStory?: string;
   status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
   image?: string;
   gallery?: Array<{ asset: { url: string } }>;
@@ -35,7 +37,9 @@ const {
   slug,
   sex,
   color,
+  bowTieColor,
   personality,
+  shortStory,
   status,
   image,
   gallery,
@@ -47,6 +51,14 @@ const {
   linkTo,
   phone,
 } = Astro.props;
+
+const bowTieSwatch: Record<string, string> = {
+  Teal: "#0d9488",
+  Emerald: "#059669",
+  "Burnt Orange": "#c2410c",
+};
+
+const blurb = shortStory || personality;
 
 function telHref(p: string): string {
   return `tel:${p.replace(/[^\d+]/g, "")}`;
@@ -118,37 +130,74 @@ const dateLabel = formatDate(availableDate);
 >
   {allImages.length > 0 ? (
     <div
-      class={`relative aspect-square overflow-hidden ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"} cursor-pointer`}
-      data-lightbox-images={JSON.stringify(allImages)}
-      data-lightbox-name={name}
-      data-lightbox-trigger=""
-      data-lightbox-index="0"
-      role="button"
-      tabindex="0"
-      aria-label={`View photos of ${name}`}
+      class={`relative aspect-square overflow-hidden ${isDark ? "bg-bone/[0.03]" : "bg-charcoal/5"}`}
+      data-kitten-carousel
     >
-      <img
-        src={displayImages[0]}
-        alt={`${name}, ${color} Maine Coon kitten`}
-        class="w-full h-full object-cover"
-        loading="eager"
-      />
+      <div
+        class="flex h-full overflow-x-auto snap-x snap-mandatory scroll-smooth [touch-action:pan-y] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-gold"
+        data-carousel-track
+        tabindex="0"
+        aria-roledescription="carousel"
+        aria-label={`Photos of ${name}, ${color} Maine Coon kitten, ${allImages.length} photo${allImages.length === 1 ? "" : "s"}`}
+      >
+        {displayImages.map((src, i) => (
+          <div
+            class="min-w-full h-full shrink-0 snap-center"
+            data-carousel-slide={i}
+            data-lightbox-images={JSON.stringify(allImages)}
+            data-lightbox-name={name}
+            data-lightbox-trigger=""
+            data-lightbox-index={i}
+          >
+            <img
+              src={src}
+              alt={`${name}, ${color} Maine Coon kitten, photo ${i + 1} of ${allImages.length}`}
+              class="w-full h-full object-cover pointer-events-none"
+              loading={i === 0 ? "eager" : "lazy"}
+            />
+          </div>
+        ))}
+      </div>
 
       {isPolydactyl && (
-        <span class={`absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-10 ${isDark ? "bg-gold/20 text-gold" : "bg-charcoal text-ivory"}`}>
+        <span class={`absolute top-4 left-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-20 pointer-events-none ${isDark ? "bg-gold/20 text-gold" : "bg-charcoal text-ivory"}`}>
           Polydactyl
         </span>
       )}
 
-      <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-10 ${statusClass}`}>
+      <span class={`absolute top-4 right-4 px-3 py-1 text-xs font-medium uppercase tracking-widest rounded-sm z-20 pointer-events-none ${statusClass}`}>
         {status}
       </span>
 
       {allImages.length > 1 && (
-        <span class="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 rounded-sm bg-black/40 text-white text-xs">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
-          {allImages.length}
-        </span>
+        <>
+          <button
+            type="button"
+            class="absolute left-2 top-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-black/40 text-white/80 hover:text-white hover:bg-black/60 transition-colors"
+            data-carousel-prev
+            aria-label={`Previous photo of ${name}`}
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <button
+            type="button"
+            class="absolute right-2 top-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-black/40 text-white/80 hover:text-white hover:bg-black/60 transition-colors"
+            data-carousel-next
+            aria-label={`Next photo of ${name}`}
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          </button>
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+            {allImages.map((_, i) => (
+              <button
+                type="button"
+                class={`w-1.5 h-1.5 rounded-full transition-opacity ${i === 0 ? "bg-white opacity-90" : "bg-white opacity-40"}`}
+                data-carousel-dot={i}
+                aria-label={`Go to photo ${i + 1} of ${name}`}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   ) : (
@@ -175,7 +224,16 @@ const dateLabel = formatDate(availableDate);
   <div class="p-6">
     <h3 class={`font-heading text-2xl font-semibold mb-1 ${isDark ? "text-bone" : "text-charcoal"}`}>{name}</h3>
     <p class={`text-sm uppercase tracking-widest mb-1 ${isDark ? "text-gold" : "text-gold-dark"}`}>{color}</p>
-    <p class={`text-sm mb-4 ${isDark ? "text-bone/60" : "text-charcoal-light/70"}`}>{sex}</p>
+    <p class={`flex items-center gap-2 text-sm mb-4 ${isDark ? "text-bone/60" : "text-charcoal-light/70"}`}>
+      {sex}
+      {bowTieColor && (
+        <span class="inline-flex items-center gap-1.5 text-xs">
+          <span class="text-bone/20">·</span>
+          <span class="w-2.5 h-2.5 rounded-full border border-white/20" style={`background-color: ${bowTieSwatch[bowTieColor]}`} />
+          {bowTieColor} Bow Tie
+        </span>
+      )}
+    </p>
 
     {(priceLabel || dateLabel) && (
       <dl class={`text-xs uppercase tracking-widest space-y-1 mb-4 ${isDark ? "text-bone/70" : "text-charcoal-light"}`}>
@@ -194,8 +252,18 @@ const dateLabel = formatDate(availableDate);
       </dl>
     )}
 
-    {personality && !pa?.personalitySummary && (
-      <p class={`leading-relaxed mb-4 ${isDark ? "text-bone/80" : "text-charcoal-light"}`}>{personality}</p>
+    {blurb && !pa?.personalitySummary && (
+      <p class={`leading-relaxed mb-2 ${isDark ? "text-bone/80" : "text-charcoal-light"}`}>{blurb}</p>
+    )}
+
+    {meetHref && (
+      <a
+        href={meetHref}
+        class={`inline-flex items-center gap-1 text-xs font-medium uppercase tracking-widest mb-4 transition-colors ${isDark ? "text-gold/70 hover:text-gold" : "text-gold-dark/70 hover:text-gold-dark"}`}
+      >
+        Read {name}'s full story
+        <span aria-hidden="true">&rarr;</span>
+      </a>
     )}
 
     {hasAssessment && (

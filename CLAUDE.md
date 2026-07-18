@@ -1982,3 +1982,40 @@ Consecutive items of the same marker type group into a single `<ul>` or `<ol>`. 
 src/pages/index.astro   (parseFaqAnswer function added to frontmatter; <p>{faq.answer}</p> replaced with block renderer)
 CLAUDE.md               (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (PR #55 — inline photo carousel on homepage kitten cards)
+
+### Decisions
+- **KittenCard hero image replaced with a CSS scroll-snap carousel:** The static `<img src={displayImages[0]}>` + photo-count badge is replaced with a horizontally scrolling track (`overflow-x-auto snap-x snap-mandatory`) holding one `<div data-carousel-slide>` per image. No carousel library, no framework island — still static HTML with a small amount of vanilla JS.
+- **Swipe handled natively:** No custom touch/gesture JS. CSS scroll-snap plus the browser's native touch scrolling handles swipe; the browser's native click-vs-drag distinction means a tap opens the lightbox but a swipe does not, with zero extra code (unlike the old PR #13 crossfade carousel, which needed manual swipe-vs-tap detection because it wasn't using native scroll).
+- **`touch-action: pan-y` on the track** (via Tailwind arbitrary property `[touch-action:pan-y]`) so vertical page scroll passes through during a horizontal swipe on mobile.
+- **Arrows hidden below `sm` breakpoint:** `hidden sm:flex` on the prev/next buttons — touch users swipe, desktop/tablet users get click targets. Confirmed via computed `display` at 375px viewport.
+- **Dots and arrow-button clicks scroll via `track.scrollTo({ left: idx * clientWidth, behavior: 'smooth' })`,** wrapping with modulo for circular navigation. A debounced `scroll` listener on the track (100ms) recomputes the active index from `scrollLeft / clientWidth` and updates dot opacity — this is purely visual sync, not required for lightbox correctness.
+- **Lightbox reuses the existing per-trigger click/keydown pattern unchanged:** Each slide `<div>` carries its own static `data-lightbox-trigger`, `data-lightbox-images` (full array), `data-lightbox-name`, and `data-lightbox-index={i}` (that slide's own index, not a dynamically-synced value). Since slides have no `tabindex`, they're mouse/touch-clickable but never keyboard-focusable individually — this let the existing generic `[data-lightbox-trigger]` listener registration in `CurrentLitter.astro` work with zero changes.
+- **Carousel keyboard navigation is a separate concern from the lightbox:** Only the track itself is a tab stop (`tabindex="0"`, inset `focus-visible:outline` so the ring isn't clipped by the card's `overflow-hidden`). `ArrowLeft`/`ArrowRight` move the visible slide; `Enter`/`Space` opens the lightbox at the currently active slide (tracked via a `current` variable maintained by the same scroll listener). This avoids stacking every photo into the card's tab order.
+- **Carousel init JS lives in `CurrentLitter.astro`'s existing inline `<script>`,** extending the same block that already handles the kitten lightbox, rather than adding a new `<script>` in `KittenCard.astro` (the pattern `CatCard.astro` uses for its own separate crossfade carousel). Deliberate choice per the session brief — keeps carousel and lightbox coordination logic in one place.
+- **Resize handling:** a `window resize` listener re-snaps the track to the current index instantly (`goTo(current, false)`) so the scroll position stays aligned to a slide boundary across breakpoint changes (card width changes at `sm`/`lg`/`xl`).
+- **Single-image kittens get no carousel controls:** `slides.length < 2` bails out of `initKittenCarousels` before attaching arrow/dot/keydown listeners — matches the existing `allImages.length > 1` guard in the markup that skips rendering arrows/dots at all.
+- **Homepage blurb source changed:** `personality` swapped for `shortStory ?? personality` (`const blurb = shortStory || personality`). This was the home-page half of the `shortStory`/`about` field split from PR #26/#28 — `about` powers the kitten detail page, `shortStory` now powers the homepage card teaser.
+- **Bow tie color chip added:** Renders inline with the sex line (`Male · ● Teal Bow Tie`) when `bowTieColor` is set. Combined onto one line with the sex text (rather than its own line) to avoid a spacing bug where a conditionally-rendered element left inconsistent margin above the price/date block.
+- **"Read {name}'s full story" link added** below the blurb, linking to the same `/kittens/{slug}` URL as the existing "Meet {name}" button in the CTA stack. Deliberately kept both — the new link is an editorial teaser positioned with the story text; "Meet {name}" remains the explicit CTA button at the bottom of the card.
+- **No overflow-clipping issue found:** Checked both statically (no `overflow` rule anywhere in `ScrollReveal.astro` or `global.css`) and empirically via computed styles in a live dev server — `.scroll-reveal` and every ancestor up to `#kittens` compute `overflow: visible`. The only `overflow: hidden` in the card is the card's own outer wrapper (for rounded corners), which is expected and unrelated to `ScrollReveal`. `once: true` with no scrub means the GSAP transform also isn't active during user interaction. No fix needed.
+- **Verification performed against live Sanity data** in an isolated worktree (`.worktrees/kitten-carousel-pr3`) with the dev server run manually (`node node_modules/astro/astro.js dev --port 4325`) rather than via `preview_start {name}`, because `preview_start` resolves `.claude/launch.json` relative to the main checkout, not the worktree — it was serving the pre-edit `KittenCard.astro` from the main checkout until this was caught and worked around.
+
+### Conventions
+- **Native scroll-snap + native click, not custom gesture code:** When a carousel can be built on `overflow-x: auto` + `scroll-snap-type`, prefer it over manual touchstart/touchmove/touchend tracking — the browser already distinguishes tap from drag for `click` events, eliminating an entire class of swipe-vs-tap bugs the old crossfade carousels needed to work around.
+- **`preview_start {name}` runs from the main checkout, not a worktree:** When verifying changes in a `.worktrees/` branch, start the dev server manually from within the worktree directory (`node node_modules/astro/astro.js dev --port <alternate>`) and point `preview_start {url}` at that port. Confirmed by observing stale (pre-edit) markup served on the default flow.
+- **Worktrees need their own `.env` copy:** `.env` is gitignored, so a freshly created worktree has no Sanity credentials until copied from the main checkout (`cp ../../.env .env`).
+
+### Deferred
+- **Bow tie chip not visually confirmed against live data:** No kitten in the current Sanity dataset has `bowTieColor` set (it's an optional field). Code path verified structurally; renders nothing when unset, will render correctly once Sara sets it in Studio.
+- All prior deferred items carry forward: `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device.
+
+### Files Changed This Session (PR #55 — targeting staging)
+```
+src/components/KittenCard.astro     (hero image + count badge replaced with scroll-snap carousel; bowTieColor chip; shortStory/personality blurb fallback; "Read {name}'s full story" link)
+src/components/CurrentLitter.astro  (bowTieColor + shortStory props passed to KittenCard; carousel init JS added to existing inline script)
+CLAUDE.md                           (session log appended)
+```
