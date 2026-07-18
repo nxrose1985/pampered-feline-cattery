@@ -30,6 +30,19 @@ export const kitten = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "bowTieColor",
+      title: "Bow Tie Color",
+      type: "string",
+      description: "Bow tie color worn by this kitten in photos, used to distinguish the boys at a glance.",
+      options: {
+        list: [
+          { title: "Teal", value: "Teal" },
+          { title: "Emerald", value: "Emerald" },
+          { title: "Burnt Orange", value: "Burnt Orange" },
+        ],
+      },
+    }),
+    defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
@@ -42,6 +55,13 @@ export const kitten = defineType({
       title: "Personality Note",
       type: "text",
       rows: 3,
+    }),
+    defineField({
+      name: "shortStory",
+      title: "Short Story",
+      type: "text",
+      rows: 2,
+      description: "A two-sentence summary for the home page inline view and meta description. The full story goes in About This Kitten.",
     }),
     defineField({
       name: "about",
@@ -59,6 +79,7 @@ export const kitten = defineType({
           { title: "Available", value: "Available" },
           { title: "Reserved", value: "Reserved" },
           { title: "Under Evaluation", value: "Under Evaluation" },
+          { title: "Placed", value: "Placed" },
         ],
       },
       validation: (rule) => rule.required(),
@@ -113,10 +134,34 @@ export const kitten = defineType({
       type: "date",
     }),
     defineField({
+      name: "birthDate",
+      title: "Birth Date",
+      type: "date",
+    }),
+    defineField({
       name: "breed",
       title: "Breed",
       type: "string",
       description: 'e.g. "Maine Coon".',
+    }),
+    defineField({
+      name: "genetics",
+      title: "Genetics",
+      type: "text",
+      rows: 2,
+      description: 'Genetic panel summary, e.g. "Dd dilute carrier, Ii silver carrier, WP60 clear".',
+    }),
+    defineField({
+      name: "sire",
+      title: "Sire",
+      type: "string",
+      description: 'Father\'s name, e.g. "CH Eyktan Navarro".',
+    }),
+    defineField({
+      name: "dam",
+      title: "Dam",
+      type: "string",
+      description: 'Mother\'s name, e.g. "Feyra".',
     }),
     defineField({
       name: "personalityAssessment",

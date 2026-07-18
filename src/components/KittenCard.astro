@@ -18,7 +18,7 @@ interface Props {
   sex: string;
   color: string;
   personality?: string;
-  status: "Available" | "Reserved" | "Under Evaluation";
+  status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
   image?: string;
   gallery?: Array<{ asset: { url: string } }>;
   price?: number;
@@ -81,12 +81,14 @@ const statusColorsLight: Record<string, string> = {
   "Available": "bg-green/10 text-green",
   "Reserved": "bg-gold/10 text-gold-dark",
   "Under Evaluation": "bg-charcoal/10 text-charcoal-light",
+  "Placed": "bg-charcoal/5 text-charcoal-light/50",
 };
 
 const statusColorsDark: Record<string, string> = {
   "Available": "bg-green-light/25 text-bone",
   "Reserved": "bg-gold/20 text-gold",
   "Under Evaluation": "bg-bone/10 text-bone/70",
+  "Placed": "bg-bone/5 text-bone/40",
 };
 
 const statusClass = (isDark ? statusColorsDark : statusColorsLight)[status];
