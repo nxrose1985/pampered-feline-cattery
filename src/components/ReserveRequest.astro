@@ -1,0 +1,182 @@
+---
+interface Props {
+  variant?: "light" | "dark";
+  kittenName?: string;
+  kittenOptions?: string[];
+}
+const {
+  variant = "light",
+  kittenName,
+  kittenOptions = ["Not sure yet"],
+} = Astro.props;
+const isDark = variant === "dark";
+
+const labelClass = `block text-sm font-medium tracking-widest uppercase mb-2 ${isDark ? "text-bone/60" : "text-charcoal-light"}`;
+const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:outline-none ${isDark ? "bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold" : "bg-ivory-warm border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:border-gold-dark"}`;
+
+const submitLabel = kittenName ? `Request to Reserve ${kittenName}` : "Submit Reservation Request";
+const successCopy = kittenName
+  ? `Request received. Sara reviews requests personally and will follow up by email within 24 hours. If it's a good fit, you'll receive a secure Stripe payment link for the $500 non-refundable deposit — ${kittenName} is reserved once that clears.`
+  : "Request received. Sara reviews requests personally and will follow up by email within 24 hours. If it's a good fit, you'll receive a secure Stripe payment link for the $500 non-refundable deposit — the kitten is reserved once that clears.";
+---
+
+<div class={`rounded-sm px-6 py-5 mb-6 border ${isDark ? "bg-bone/[0.03] border-bone/10" : "bg-ivory-warm border-charcoal/10"}`}>
+  <p class={`text-xs font-medium tracking-widest uppercase mb-2 ${isDark ? "text-gold/70" : "text-gold-dark"}`}>
+    Before You Submit
+  </p>
+  <p class={`text-sm leading-relaxed ${isDark ? "text-bone/70" : "text-charcoal-light"}`}>
+    A request is not a reservation. Sara reviews every request by hand. If it's a good fit, she'll email you a secure Stripe payment link for the <strong class={isDark ? "text-bone" : "text-charcoal"}>$500 non-refundable deposit</strong>, which applies toward the total price.{" "}
+    {kittenName ? `${kittenName} is` : "The kitten is"} officially reserved once the deposit clears.
+  </p>
+</div>
+
+<form
+  id="reserve-request-form"
+  name="reserve-request"
+  action="/"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="max-w-xl mx-auto space-y-6"
+>
+  <input type="hidden" name="form-name" value="reserve-request" />
+  <div aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+    <label><input name="bot-field" /></label>
+  </div>
+
+  <div id="reserve-request-fields" class="space-y-6">
+    <div>
+      <label for="reserve-request-name" class={labelClass}>Name</label>
+      <input
+        type="text"
+        id="reserve-request-name"
+        name="name"
+        required
+        class={inputClass}
+        placeholder="Your full name"
+      />
+    </div>
+
+    <div>
+      <label for="reserve-request-email" class={labelClass}>Email</label>
+      <input
+        type="email"
+        id="reserve-request-email"
+        name="email"
+        required
+        class={inputClass}
+        placeholder="your@email.com"
+      />
+    </div>
+
+    <div>
+      <label for="reserve-request-phone" class={labelClass}>Phone</label>
+      <input
+        type="tel"
+        id="reserve-request-phone"
+        name="phone"
+        required
+        class={inputClass}
+        placeholder="(703) 555-0123"
+      />
+    </div>
+
+    {kittenName ? (
+      <div>
+        <span class={labelClass}>Kitten</span>
+        <input type="hidden" name="kitten" value={kittenName} />
+        <p class={`px-4 py-3 border text-base font-medium ${isDark ? "bg-obsidian border-bone/15 text-bone" : "bg-ivory-warm border-charcoal/15 text-charcoal"}`}>
+          {kittenName}
+        </p>
+      </div>
+    ) : (
+      <div>
+        <label for="reserve-request-kitten" class={labelClass}>Kitten</label>
+        <select
+          id="reserve-request-kitten"
+          name="kitten"
+          required
+          class={inputClass}
+        >
+          {kittenOptions.map((k) => <option value={k}>{k}</option>)}
+        </select>
+      </div>
+    )}
+
+    <div>
+      <label for="reserve-request-home" class={labelClass}>Tell Us About Your Home</label>
+      <textarea
+        id="reserve-request-home"
+        name="about-your-home"
+        rows="5"
+        required
+        class={`${inputClass} resize-vertical`}
+        placeholder="Your household, other pets, indoor-only plans, and any experience with the breed."
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <button
+      type="submit"
+      id="reserve-request-submit"
+      class={`w-full sm:w-auto px-8 py-3 text-sm font-medium tracking-widest uppercase transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isDark ? "bg-bone text-obsidian hover:bg-bone/85" : "bg-charcoal text-ivory hover:bg-charcoal-light"}`}
+    >
+      {submitLabel}
+    </button>
+
+    <p id="reserve-request-success" class="hidden text-sm leading-relaxed" style="color: #86efac;">
+      {successCopy}
+    </p>
+
+    <p id="reserve-request-error" class="hidden text-sm leading-relaxed" style="color: #fca5a5;">
+      Something went wrong. Please email us directly at
+      <a href="mailto:pamperedfelinemainecoons@gmail.com" class="underline underline-offset-2">
+        pamperedfelinemainecoons@gmail.com
+      </a>.
+    </p>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById("reserve-request-form") as HTMLFormElement | null;
+  const fields = document.getElementById("reserve-request-fields");
+  const submitBtn = document.getElementById("reserve-request-submit") as HTMLButtonElement | null;
+  const successMsg = document.getElementById("reserve-request-success");
+  const errorMsg = document.getElementById("reserve-request-error");
+  const originalLabel = submitBtn?.textContent ?? "";
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+      }
+      if (errorMsg) errorMsg.classList.add("hidden");
+
+      try {
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => params.append(key, value.toString()));
+
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+        });
+
+        if (fields) fields.style.display = "none";
+        if (submitBtn) submitBtn.style.display = "none";
+        if (successMsg) successMsg.classList.remove("hidden");
+      } catch {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
+        if (errorMsg) errorMsg.classList.remove("hidden");
+      }
+    });
+  }
+</script>

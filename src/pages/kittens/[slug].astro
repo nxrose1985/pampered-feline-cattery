@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ScrollReveal from "../../components/ScrollReveal.astro";
-import QuickInquiry from "../../components/QuickInquiry.astro";
+import ReserveRequest from "../../components/ReserveRequest.astro";
 import { getKittens, getKittenBySlug, getSettings } from "../../lib/sanity";
 import type { Kitten } from "../../lib/sanity";
 
@@ -305,12 +305,10 @@ function formatAssessmentDate(d?: string) {
           <!-- CTA -->
           {kitten.status === "Available" && (
             <a
-              href="#quick-inquiry"
-              data-quick-inquiry-trigger=""
-              data-quick-inquiry-kitten={kitten.name}
+              href="#reserve-request"
               class="inline-block w-full text-center px-8 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors mb-3"
             >
-              Inquire About {kitten.name}
+              Request to Reserve {kitten.name}
             </a>
           )}
           <a
@@ -434,29 +432,46 @@ function formatAssessmentDate(d?: string) {
   )}
 
   <!-- Bottom CTA -->
-  <section id="quick-inquiry" class="bg-[#0f0e0d] py-16 md:py-20 text-center">
+  <section id="reserve-request" class="bg-[#0f0e0d] py-16 md:py-20 text-center">
     <div class="max-w-xl mx-auto px-4">
-      <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
-        Interested in {kitten.name}?
-      </h2>
-      <p class="text-bone/60 mb-8 leading-relaxed">
-        {kitten.status === "Available"
-          ? "Fill out a short form and we'll follow up within 24 hours to answer your questions and confirm the fit."
-          : kitten.status === "Placed"
-          ? `${kitten.name} has found their forever home. Fill out a form to be added to our waitlist for future litters.`
-          : `${kitten.name} is currently reserved. Fill out a form to be added to our waitlist for future litters.`}
-      </p>
-      <QuickInquiry variant="dark" kittenOptions={[kitten.name, "Not sure yet"]} defaultKitten={kitten.name} />
-      {settings.phone && (
-        <p class="mt-6 text-xs uppercase tracking-widest text-bone/40">
-          Prefer to call?{" "}
+      {kitten.status === "Available" ? (
+        <>
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+            Reserve {kitten.name}
+          </h2>
+          <p class="text-bone/60 mb-8 leading-relaxed">
+            Fill out a short form to start the process. Sara reviews every request personally.
+          </p>
+          <ReserveRequest variant="dark" kittenName={kitten.name} />
+          {settings.phone && (
+            <p class="mt-6 text-xs uppercase tracking-widest text-bone/40">
+              Prefer to call?{" "}
+              <a
+                href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}
+                class="font-medium text-bone underline underline-offset-2 hover:text-gold"
+              >
+                {settings.phone}
+              </a>
+            </p>
+          )}
+        </>
+      ) : (
+        <>
+          <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+            {kitten.status === "Placed" ? `${kitten.name} Has Found a Home` : `${kitten.name} Is Reserved`}
+          </h2>
+          <p class="text-bone/60 mb-8 leading-relaxed">
+            {kitten.status === "Placed"
+              ? `${kitten.name} has found their forever home. Join the waitlist to hear about our future litters first.`
+              : `${kitten.name} is currently reserved. Join the waitlist to hear about our future litters first.`}
+          </p>
           <a
-            href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}
-            class="font-medium text-bone underline underline-offset-2 hover:text-gold"
+            href="/#waitlist"
+            class="inline-block w-full sm:w-auto text-center px-8 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors"
           >
-            {settings.phone}
+            Join the Waitlist
           </a>
-        </p>
+        </>
       )}
     </div>
   </section>
