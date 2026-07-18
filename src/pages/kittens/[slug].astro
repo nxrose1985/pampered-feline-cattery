@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ScrollReveal from "../../components/ScrollReveal.astro";
 import ReserveRequest from "../../components/ReserveRequest.astro";
+import QuickInquiry from "../../components/QuickInquiry.astro";
 import { getKittens, getKittenBySlug, getSettings } from "../../lib/sanity";
 import type { Kitten } from "../../lib/sanity";
 
@@ -304,12 +305,26 @@ function formatAssessmentDate(d?: string) {
 
           <!-- CTA -->
           {kitten.status === "Available" && (
-            <a
-              href="#reserve-request"
-              class="inline-block w-full text-center px-8 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors mb-3"
-            >
-              Request to Reserve {kitten.name}
-            </a>
+            <div class="flex flex-col gap-3 mb-3">
+              <a
+                href="#quick-inquiry"
+                class="inline-block w-full text-center px-8 py-4 border border-bone/20 text-bone/60 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone/90 transition-colors"
+              >
+                Text us about {kitten.name}
+              </a>
+              <a
+                href={`/kitten-application?kitten=${encodeURIComponent(kitten.name)}`}
+                class="inline-block w-full text-center px-8 py-4 border border-bone/20 text-bone/60 text-sm font-medium tracking-widest uppercase hover:border-bone/50 hover:text-bone/90 transition-colors"
+              >
+                Apply for {kitten.name}
+              </a>
+              <a
+                href="#reserve-request"
+                class="inline-block w-full text-center px-8 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors"
+              >
+                Reserve {kitten.name}
+              </a>
+            </div>
           )}
           <a
             href="/#kittens"
@@ -427,6 +442,21 @@ function formatAssessmentDate(d?: string) {
             </button>
           ))}
         </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Quick Inquiry -->
+  {kitten.status === "Available" && (
+    <section id="quick-inquiry" class="bg-obsidian py-16 md:py-20 text-center">
+      <div class="max-w-xl mx-auto px-4">
+        <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
+          Ask About {kitten.name}
+        </h2>
+        <p class="text-bone/60 mb-8 leading-relaxed">
+          Leave your name and number and we'll text or call you back — no long form required.
+        </p>
+        <QuickInquiry variant="dark" kittenName={kitten.name} />
       </div>
     </section>
   )}

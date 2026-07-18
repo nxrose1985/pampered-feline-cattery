@@ -349,16 +349,16 @@ const dateLabel = formatDate(availableDate);
     )}
 
     <div class={`flex flex-col gap-2 ${meetHref || (status === "Available" && !linkTo) ? "" : "hidden"}`}>
-      {status === "Available" && !linkTo && (
+      {meetHref && (
         <a
-          href="/kitten-application"
+          href={meetHref}
           class={`inline-block w-full text-center px-6 py-2 text-xs font-medium tracking-widest uppercase transition-colors ${
-            isDark
-              ? "bg-bone text-obsidian hover:bg-bone/90"
-              : "bg-charcoal text-ivory hover:bg-charcoal/90"
+            status === "Available" && !linkTo
+              ? (isDark ? "bg-bone text-obsidian hover:bg-bone/90" : "bg-charcoal text-ivory hover:bg-charcoal/90")
+              : `border ${isDark ? "border-bone/30 text-bone/60 hover:border-bone/60 hover:text-bone" : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"}`
           }`}
         >
-          Apply for This Kitten
+          Meet {name}
         </a>
       )}
       {status === "Available" && !linkTo && (
@@ -372,19 +372,7 @@ const dateLabel = formatDate(availableDate);
               : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"
           }`}
         >
-          Text Me About This Kitten
-        </a>
-      )}
-      {meetHref && (
-        <a
-          href={meetHref}
-          class={`inline-block w-full text-center px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
-            isDark
-              ? "border-bone/30 text-bone/60 hover:border-bone/60 hover:text-bone"
-              : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"
-          }`}
-        >
-          Meet {name}
+          Text us about {name}
         </a>
       )}
     </div>
