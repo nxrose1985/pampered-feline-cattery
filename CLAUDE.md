@@ -2350,3 +2350,30 @@ src/components/Hero.astro     (phone prop added; smsHref() helper; reassurance l
 src/pages/index.astro         (settings.phone passed to <Hero phone={...} />)
 CLAUDE.md                     (session log appended)
 ```
+
+---
+
+## Session: 2026-07-18 (PR #61 — fix kitten carousel image cropping bug)
+
+### Root Cause
+`KittenCard.astro`'s carousel slide wrapper used `min-w-full` (a **minimum**-width floor, not a fixed width) on each `[data-carousel-slide]` div. For square source photos this happened to look correct by coincidence (100% is also their natural fit), but for any **non-square** photo, the slide's flex-item sizing was driven by its own intrinsic content: the child `<img class="w-full h-full object-cover">`'s `width: 100%` resolved against that content-driven (not hard-capped) parent width, and for a landscape image at the carousel's fixed `h-full` height, the resulting box was wider than the track. Measured directly on live production: Helion has two landscape gallery photos (2048×1365, not square like the rest of his set) — their slide rendered at **512.7px** while the track was only **341.6px** wide (mobile, 375px viewport). This broke the carousel's index-based scroll math (`goTo()` computes `idx * track.clientWidth`, assuming every slide is exactly that width), producing misaligned frames — the reported symptom of the image sitting in a corner of an oversized box with empty space around it.
+
+### Fix
+One-line change: `min-w-full` → `w-full` on the slide div (`src/components/KittenCard.astro`, the `[data-carousel-slide]` element). This hard-caps every slide at exactly 100% of the track's width regardless of the image's own intrinsic aspect ratio, so `object-fit: cover` + `object-position: center` (both already correct, untouched) always have a guaranteed-uniform frame to crop into. No other file in `src/` used the `min-w-full` pattern — confirmed via grep, this was the only instance.
+- `aspect-square` (1:1) on the carousel container was kept as-is per explicit instruction — the actual uploaded photo set is nearly all square (2048×2048), so 1:1 already matches the source material well; switching to 4:5 would have added unneeded cropping to photos that are already square.
+- `object-fit: cover` / `object-position: 50% 50%` on the `<img>` were already correct before this session and were not touched.
+
+### Verified
+- Measured `getBoundingClientRect()` for every slide across all 4 visible kitten cards (33 slides total, live Sanity data) at both mobile (375px) and desktop (1280px) viewports — 100% of slides now compute `slideWidth === track.clientWidth` (exact match, ±0.5px), including Helion's two landscape photos which previously overflowed to 512.7px on mobile. Confirmed via screenshot: the landscape slide crops and centers cleanly within the square frame with no black void, at both viewport widths.
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing baseline errors (Sanity schema typing, Google Ads `dataLayer` typing), none touching the changed file.
+- Confirmed no other file in the codebase shares this carousel markup — the kitten detail page (`[slug].astro`) uses a separate thumbnail-strip pattern, unaffected.
+
+### Deferred
+All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data. Also carried forward: the three duplicate `siteSettings` Sanity documents still need consolidation (separate write-safety task, tracked outside this PR sequence).
+
+### Files Changed This Session (PR #61 — targeting staging)
+```
+src/components/KittenCard.astro   (carousel slide div: min-w-full → w-full)
+CLAUDE.md                         (session log appended)
+```
