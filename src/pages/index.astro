@@ -606,6 +606,51 @@ function parseFaqAnswer(text: string): FaqBlock[] {
               </details>
             </ScrollReveal>
           ))}
+
+          <ScrollReveal animation="fadeUp" delay={faqs.length * 0.05}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none min-h-[44px]">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone pr-4">
+                  How do I apply for a kitten?
+                </h3>
+                <svg class="w-5 h-5 text-bone/50 flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <div class="mt-4 pr-10 space-y-3">
+                <p class="text-bone/70 leading-relaxed">Fill out our kitten application. We ask about your home, your experience with cats, your plans for care, and which kitten interests you. We review every application within 48 hours and follow up by phone or email.</p>
+                <a
+                  href="/kitten-application"
+                  class="inline-block text-sm font-medium tracking-widest uppercase border border-bone/20 text-bone/60 px-6 py-3 hover:border-bone/50 hover:text-bone/90 transition-colors"
+                >
+                  Apply Now
+                </a>
+              </div>
+            </details>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fadeUp" delay={faqs.length * 0.05 + 0.05}>
+            <details class="group py-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none min-h-[44px]">
+                <h3 class="font-heading text-xl md:text-2xl font-semibold text-bone pr-4">
+                  Have more questions?
+                </h3>
+                <svg class="w-5 h-5 text-bone/50 flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                </svg>
+              </summary>
+              <div class="mt-4 pr-10 space-y-3">
+                <p class="text-bone/70 leading-relaxed">Email us at <a href="mailto:pamperedfelinemainecoons@gmail.com" class="text-bone/90 underline underline-offset-2 hover:text-gold/80 transition-colors">pamperedfelinemainecoons@gmail.com</a> or use our <a href="/#contact" class="text-bone/90 underline underline-offset-2 hover:text-gold/80 transition-colors">contact form</a>. We respond to all inquiries within 24 hours.</p>
+                <p class="text-bone/70 leading-relaxed">Serious inquiries should start with our kitten application.</p>
+                <a
+                  href="/kitten-application"
+                  class="inline-block text-sm font-medium tracking-widest uppercase border border-bone/20 text-bone/60 px-6 py-3 hover:border-bone/50 hover:text-bone/90 transition-colors"
+                >
+                  Apply Now
+                </a>
+              </div>
+            </details>
+          </ScrollReveal>
         </div>
       </div>
     </div>
