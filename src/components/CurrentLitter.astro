@@ -16,13 +16,9 @@ const [sanityKittens, settings] = await Promise.all([
 ]);
 
 const fallbackKittens = [
-  { name: "Elain",    slug: "elain",    color: "Poly Blue Shaded Silver (6/6/6/6)", sex: "Female", status: "Reserved" as const,  isPolydactyl: true,  litter: litterId, price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8 },
   { name: "Helion",   slug: "helion",   color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 1 },
   { name: "Tarquin",  slug: "tarquin",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 400, availableDate: "2026-06-04", order: 2 },
   { name: "Kallias",  slug: "kallias",  color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 400, availableDate: "2026-06-04", order: 3 },
-  { name: "Azriel",   slug: "azriel",   color: "Poly Blue Silver Tabby (6/6/6/6)",  sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-06-04", order: 4 },
-  { name: "Lucien",   slug: "lucien",   color: "Poly Red Tabby (7/7/6/6)",          sex: "Male",   status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4200, reservationFee: 400, availableDate: "2026-07-08", order: 5 },
-  { name: "Morrigan", slug: "morrigan", color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 6 },
   { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 400, availableDate: "2026-07-08", order: 7 },
 ];
 
@@ -35,7 +31,11 @@ function sortKittens(list: any[]) {
   });
 }
 
-const kittens = sortKittens(sanityKittens.length > 0 ? sanityKittens : fallbackKittens);
+const kittens = sortKittens(
+  (sanityKittens.length > 0 ? sanityKittens : fallbackKittens).filter(
+    (k: any) => k.status === "Available"
+  )
+);
 ---
 
 <section id="kittens" class="py-16 md:py-24 bg-obsidian text-bone">

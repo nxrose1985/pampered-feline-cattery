@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getKittens, getKittenBySlug } from "../../lib/sanity";
+import ScrollReveal from "../../components/ScrollReveal.astro";
+import QuickInquiry from "../../components/QuickInquiry.astro";
+import { getKittens, getKittenBySlug, getSettings } from "../../lib/sanity";
 import type { Kitten } from "../../lib/sanity";
 
 export async function getStaticPaths() {
@@ -42,6 +44,8 @@ if (!kitten) {
   return Astro.redirect("/");
 }
 
+const settings = await getSettings();
+
 const heroUrl = kitten.image?.asset?.url;
 const galleryUrls = (kitten.gallery ?? []).map((g) => g.asset.url).filter(Boolean);
 const allImageUrls = heroUrl ? [heroUrl, ...galleryUrls] : galleryUrls;
@@ -74,13 +78,47 @@ const statusColors: Record<string, string> = {
   "Available": "bg-green-light/25 text-bone",
   "Reserved": "bg-gold/20 text-gold",
   "Under Evaluation": "bg-bone/10 text-bone/70",
+  "Placed": "bg-bone/5 text-bone/40",
 };
 const statusClass = statusColors[kitten.status] ?? statusColors["Available"];
 
 const aboutFirstSentence = kitten.about?.split(". ")[0] ?? "";
-const metaDescription = aboutFirstSentence
-  ? `${aboutFirstSentence}. ${kitten.color} Maine Coon kitten available from Pampered Feline Maine Coons in Northern Virginia.`
-  : `${kitten.name} is a ${kitten.color} Maine Coon kitten available from Pampered Feline Maine Coons in Northern Virginia.`;
+const metaDescription = kitten.shortStory
+  ?? (aboutFirstSentence
+    ? `${aboutFirstSentence}. ${kitten.color} Maine Coon kitten available from Pampered Feline Maine Coons in Northern Virginia.`
+    : `${kitten.name} is a ${kitten.color} Maine Coon kitten available from Pampered Feline Maine Coons in Northern Virginia.`);
+
+const bowTieDotClasses: Record<string, string> = {
+  "Teal": "bg-teal-500",
+  "Emerald": "bg-emerald-500",
+  "Burnt Orange": "bg-orange-700",
+};
+
+const availabilityMap: Record<string, string> = {
+  "Available": "https://schema.org/InStock",
+  "Reserved": "https://schema.org/PreOrder",
+  "Under Evaluation": "https://schema.org/PreOrder",
+  "Placed": "https://schema.org/SoldOut",
+};
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? "https://pamperedfelinemainecoons.com").href;
+
+const productSchemaJson = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": `${kitten.name} — ${kitten.color} Maine Coon Kitten`,
+  "description": metaDescription,
+  ...(heroUrl ? { "image": [sanityUrl(heroUrl, 1200), ...galleryUrls.slice(0, 3).map((u) => sanityUrl(u, 1200))] } : {}),
+  "brand": { "@type": "Brand", "name": "Pampered Feline Maine Coons" },
+  "offers": {
+    "@type": "Offer",
+    "url": pageUrl,
+    "priceCurrency": "USD",
+    ...(kitten.price ? { "price": kitten.price } : {}),
+    "availability": availabilityMap[kitten.status] ?? "https://schema.org/PreOrder",
+    "itemCondition": "https://schema.org/NewCondition",
+  },
+});
 
 function formatAssessmentDate(d?: string) {
   if (!d) return null;
@@ -93,7 +131,7 @@ function formatAssessmentDate(d?: string) {
 ---
 
 <BaseLayout
-  title={`${kitten.name} — Pampered Feline Maine Coons`}
+  title={`${kitten.name} — ${kitten.color} Maine Coon Kitten in Northern Virginia | Pampered Feline Maine Coons`}
   description={metaDescription}
   ogImage={heroUrl ? sanityUrl(heroUrl, 1200) : undefined}
 >
@@ -190,6 +228,20 @@ function formatAssessmentDate(d?: string) {
           <p class="text-gold text-sm uppercase tracking-widest mb-1">{kitten.color}</p>
           <p class="text-bone/50 text-sm mb-8">{kitten.sex} · Maine Coon{kitten.breed && kitten.breed !== "Maine Coon" ? ` · ${kitten.breed}` : ""}</p>
 
+          {kitten.bowTieColor && (
+            <ScrollReveal animation="fadeIn">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-bone/5 border border-bone/10 text-xs uppercase tracking-widest text-bone/70">
+                  <span class={`w-2.5 h-2.5 rounded-full ${bowTieDotClasses[kitten.bowTieColor] ?? "bg-bone/40"}`} />
+                  {kitten.bowTieColor} Bow Tie
+                </span>
+              </div>
+              <p class="text-bone/40 text-xs mb-8">
+                Each of our boys wears a colored bow tie in photos so families can tell them apart at a glance.
+              </p>
+            </ScrollReveal>
+          )}
+
           <!-- Price / Date -->
           {(priceLabel || dateLabel || kitten.status === "Reserved") && (
             <dl class="text-xs uppercase tracking-widest space-y-2 mb-8 border-t border-b border-bone/10 py-5">
@@ -220,6 +272,29 @@ function formatAssessmentDate(d?: string) {
             </dl>
           )}
 
+          {(kitten.sire || kitten.dam || kitten.genetics) && (
+            <dl class="text-xs uppercase tracking-widest space-y-2 mb-8 border-b border-bone/10 pb-5">
+              {kitten.sire && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Sire</dt>
+                  <dd class="font-medium text-bone">{kitten.sire}</dd>
+                </div>
+              )}
+              {kitten.dam && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Dam</dt>
+                  <dd class="font-medium text-bone">{kitten.dam}</dd>
+                </div>
+              )}
+              {kitten.genetics && (
+                <div class="flex justify-between gap-4">
+                  <dt class="text-bone/40">Genetics</dt>
+                  <dd class="font-medium text-bone text-right">{kitten.genetics}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+
           <!-- About -->
           {kitten.about && (
             <div class="mb-8">
@@ -230,7 +305,9 @@ function formatAssessmentDate(d?: string) {
           <!-- CTA -->
           {kitten.status === "Available" && (
             <a
-              href="/#contact"
+              href="#quick-inquiry"
+              data-quick-inquiry-trigger=""
+              data-quick-inquiry-kitten={kitten.name}
               class="inline-block w-full text-center px-8 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors mb-3"
             >
               Inquire About {kitten.name}
@@ -357,7 +434,7 @@ function formatAssessmentDate(d?: string) {
   )}
 
   <!-- Bottom CTA -->
-  <section class="bg-[#0f0e0d] py-16 md:py-20 text-center">
+  <section id="quick-inquiry" class="bg-[#0f0e0d] py-16 md:py-20 text-center">
     <div class="max-w-xl mx-auto px-4">
       <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
         Interested in {kitten.name}?
@@ -365,14 +442,22 @@ function formatAssessmentDate(d?: string) {
       <p class="text-bone/60 mb-8 leading-relaxed">
         {kitten.status === "Available"
           ? "Fill out a short form and we'll follow up within 24 hours to answer your questions and confirm the fit."
+          : kitten.status === "Placed"
+          ? `${kitten.name} has found their forever home. Fill out a form to be added to our waitlist for future litters.`
           : `${kitten.name} is currently reserved. Fill out a form to be added to our waitlist for future litters.`}
       </p>
-      <a
-        href="/#contact"
-        class="inline-block px-10 py-4 bg-bone text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-bone/90 transition-colors"
-      >
-        {kitten.status === "Available" ? `Inquire About ${kitten.name}` : "Join the Waitlist"}
-      </a>
+      <QuickInquiry variant="dark" kittenOptions={[kitten.name, "Not sure yet"]} defaultKitten={kitten.name} />
+      {settings.phone && (
+        <p class="mt-6 text-xs uppercase tracking-widest text-bone/40">
+          Prefer to call?{" "}
+          <a
+            href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}
+            class="font-medium text-bone underline underline-offset-2 hover:text-gold"
+          >
+            {settings.phone}
+          </a>
+        </p>
+      )}
     </div>
   </section>
 
@@ -384,6 +469,8 @@ function formatAssessmentDate(d?: string) {
     <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[85vw] object-contain" />
     <div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-sm tracking-widest"></div>
   </div>
+
+  <script type="application/ld+json" set:html={productSchemaJson} />
 
 </BaseLayout>
 

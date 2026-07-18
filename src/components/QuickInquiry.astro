@@ -1,14 +1,18 @@
 ---
 interface Props {
   variant?: "light" | "dark";
+  kittenOptions?: string[];
+  defaultKitten?: string;
 }
-const { variant = "light" } = Astro.props;
+const {
+  variant = "light",
+  kittenOptions = ["Tarquin", "Kallias", "Helion", "Amren", "Not sure yet"],
+  defaultKitten,
+} = Astro.props;
 const isDark = variant === "dark";
 
 const labelClass = `block text-sm font-medium tracking-widest uppercase mb-2 ${isDark ? "text-bone/60" : "text-charcoal-light"}`;
 const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:outline-none ${isDark ? "bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold" : "bg-ivory-warm border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:border-gold-dark"}`;
-
-const kittenOptions = ["Tarquin", "Kallias", "Helion", "Amren", "Not sure yet"];
 ---
 
 <form
@@ -57,7 +61,7 @@ const kittenOptions = ["Tarquin", "Kallias", "Helion", "Amren", "Not sure yet"];
         name="kitten"
         class={inputClass}
       >
-        {kittenOptions.map((k) => <option value={k}>{k}</option>)}
+        {kittenOptions.map((k) => <option value={k} selected={k === defaultKitten}>{k}</option>)}
       </select>
     </div>
   </div>

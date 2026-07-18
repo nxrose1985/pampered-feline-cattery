@@ -64,9 +64,11 @@ export interface Kitten {
   slug?: string;
   sex: string;
   color: string;
+  bowTieColor?: "Teal" | "Emerald" | "Burnt Orange";
   personality: string;
+  shortStory?: string;
   about?: string;
-  status: "Available" | "Reserved" | "Under Evaluation";
+  status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
   image?: {
     asset: {
       url: string;
@@ -79,6 +81,10 @@ export interface Kitten {
   reservationFee?: number;
   availableDate?: string;
   breed?: string;
+  genetics?: string;
+  sire?: string;
+  dam?: string;
+  birthDate?: string;
   personalityAssessment?: PersonalityAssessment;
   gallery?: Array<{ asset: { url: string } }>;
 }
@@ -158,7 +164,9 @@ const kittenProjection = `{
   "slug": slug.current,
   sex,
   color,
+  bowTieColor,
   personality,
+  shortStory,
   about,
   status,
   "image": image { asset-> { url } },
@@ -169,6 +177,10 @@ const kittenProjection = `{
   reservationFee,
   availableDate,
   breed,
+  genetics,
+  sire,
+  dam,
+  birthDate,
   personalityAssessment,
   "gallery": gallery[] { asset-> { url } }
 }`;
