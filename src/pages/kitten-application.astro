@@ -63,6 +63,7 @@ const selectClass = "w-full px-4 py-3 text-base border bg-obsidian border-bone/1
         class="space-y-16"
       >
         <input type="hidden" name="form-name" value="kitten-application" />
+        <input type="hidden" name="kitten" id="kitten-field" value="" />
 
         <div id="application-fields" class="space-y-16">
 
@@ -378,6 +379,13 @@ const selectClass = "w-full px-4 py-3 text-base border bg-obsidian border-bone/1
   const submitBtn = document.getElementById("application-submit") as HTMLButtonElement | null;
   const successMsg = document.getElementById("application-success");
   const errorMsg = document.getElementById("application-error");
+
+  // Pre-fill the kitten field from a ?kitten= URL query param, set by "Apply for {name}" links elsewhere on the site.
+  const kittenField = document.getElementById("kitten-field") as HTMLInputElement | null;
+  if (kittenField) {
+    const kitten = new URLSearchParams(window.location.search).get("kitten");
+    if (kitten) kittenField.value = kitten;
+  }
 
   if (form) {
     form.addEventListener("submit", async (e) => {

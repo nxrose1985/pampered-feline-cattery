@@ -1,11 +1,13 @@
 ---
 interface Props {
   variant?: "light" | "dark";
+  kittenName?: string;
   kittenOptions?: string[];
   defaultKitten?: string;
 }
 const {
   variant = "light",
+  kittenName,
   kittenOptions = ["Tarquin", "Kallias", "Helion", "Amren", "Not sure yet"],
   defaultKitten,
 } = Astro.props;
@@ -54,16 +56,26 @@ const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:ou
       />
     </div>
 
-    <div>
-      <label for="quick-inquiry-kitten" class={labelClass}>Which Kitten</label>
-      <select
-        id="quick-inquiry-kitten"
-        name="kitten"
-        class={inputClass}
-      >
-        {kittenOptions.map((k) => <option value={k} selected={k === defaultKitten}>{k}</option>)}
-      </select>
-    </div>
+    {kittenName ? (
+      <div>
+        <span class={labelClass}>Which Kitten</span>
+        <input type="hidden" name="kitten" value={kittenName} />
+        <p class={`px-4 py-3 border text-base font-medium ${isDark ? "bg-obsidian border-bone/15 text-bone" : "bg-ivory-warm border-charcoal/15 text-charcoal"}`}>
+          {kittenName}
+        </p>
+      </div>
+    ) : (
+      <div>
+        <label for="quick-inquiry-kitten" class={labelClass}>Which Kitten</label>
+        <select
+          id="quick-inquiry-kitten"
+          name="kitten"
+          class={inputClass}
+        >
+          {kittenOptions.map((k) => <option value={k} selected={k === defaultKitten}>{k}</option>)}
+        </select>
+      </div>
+    )}
   </div>
 
   <div class="space-y-4">
