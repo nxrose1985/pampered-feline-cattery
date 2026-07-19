@@ -257,55 +257,16 @@ const kittens = sortKittens(
       goTo(current, false);
     });
 
-    // Touch drag: the track keeps touch-action:pan-y so a vertical swipe always
-    // scrolls the page natively. pan-y disables the browser's OWN horizontal pan
-    // on this element (that's what pan-y means), so a horizontal swipe needs to be
-    // driven manually here. Direction is decided from the first ~10px of movement;
-    // once a gesture commits to horizontal, preventDefault stops the page from also
-    // trying to rubber-band, and scrollLeft is dragged 1:1 with the finger. A
-    // vertical-dominant gesture is left completely alone (no preventDefault, no
-    // scrollLeft writes) so it scrolls the page exactly like touching non-carousel
-    // content would.
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartScrollLeft = 0;
-    let touchDirection: 'horizontal' | 'vertical' | null = null;
-    const DIRECTION_THRESHOLD = 10;
-
-    track.addEventListener('touchstart', (e) => {
-      const t = e.touches[0];
-      touchStartX = t.clientX;
-      touchStartY = t.clientY;
-      touchStartScrollLeft = track!.scrollLeft;
-      touchDirection = null;
-    }, { passive: true });
-
-    track.addEventListener('touchmove', (e) => {
-      const t = e.touches[0];
-      const dx = t.clientX - touchStartX;
-      const dy = t.clientY - touchStartY;
-
-      if (touchDirection === null) {
-        if (Math.abs(dx) > DIRECTION_THRESHOLD || Math.abs(dy) > DIRECTION_THRESHOLD) {
-          touchDirection = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
-        }
-      }
-
-      if (touchDirection === 'horizontal') {
-        e.preventDefault();
-        track!.scrollLeft = touchStartScrollLeft - dx;
-      }
-      // touchDirection === 'vertical' (or still undecided): do nothing, let the
-      // page scroll natively via touch-action:pan-y.
-    }, { passive: false });
-
-    track.addEventListener('touchend', () => {
-      if (touchDirection === 'horizontal') {
-        const width = track!.clientWidth || 1;
-        const idx = Math.round(track!.scrollLeft / width);
-        goTo(Math.max(0, Math.min(slides.length - 1, idx)));
-      }
-      touchDirection = null;
-    }, { passive: true });
+    // No custom touch JS, no touch-action restriction. The track has
+    // overflow-x but no overflow-y, so a vertical drag has nothing to scroll
+    // locally and the browser hands it to the page automatically. A
+    // horizontal drag finds the track's own horizontal overflow and scrolls
+    // it. This is the browser's default nested-scroll-container behavior
+    // (the same thing that makes any horizontal image strip inside a
+    // vertically-scrolling page work without special CSS) — native scrolling
+    // handles momentum, snapping, and the tap/drag distinction on its own.
+    // touch-action:pan-x was tried here and tested broken: on a CDP-driven
+    // real touch gesture it correctly enabled horizontal scroll but silently
+    // ate vertical swipes instead of letting them bubble to the page.
   });
 </script>
