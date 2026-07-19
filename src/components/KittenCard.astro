@@ -98,6 +98,17 @@ function telHref(p: string): string {
   return `tel:${p.replace(/[^\d+]/g, "")}`;
 }
 
+// "?&" is the cross-platform-safe separator: Android reads the query string
+// after "?" and splits on "&"; iOS Safari's sms: body parser matches on the
+// "&" regardless of the leading "?". Both platforms pre-fill the body.
+// E.164 formatting matches the sitewide sms: link convention (BaseLayout/Hero/Footer).
+function smsHref(p: string, kittenName: string): string {
+  const digits = p.replace(/[^\d]/g, "");
+  const e164 = digits.length === 10 ? `+1${digits}` : `+${digits}`;
+  const body = encodeURIComponent(`Hi! I'm interested in ${kittenName}.`);
+  return `sms:${e164}?&body=${body}`;
+}
+
 const meetHref = slug ? `/kittens/${slug}` : null;
 
 const galleryUrls = (gallery ?? []).map((g) => g.asset.url).filter(Boolean);
@@ -392,30 +403,27 @@ const dateLabel = formatDate(availableDate);
     )}
 
     <div class={`flex flex-col gap-2 ${meetHref || (status === "Available" && !linkTo) ? "" : "hidden"}`}>
+      {status === "Available" && !linkTo && (
+        <a
+          href={phone ? smsHref(phone, name) : "#quick-inquiry"}
+          {...(!phone ? { "data-quick-inquiry-trigger": "", "data-quick-inquiry-kitten": name } : {})}
+          class={`inline-block w-full text-center px-6 py-2 text-xs font-medium tracking-widest uppercase transition-colors ${
+            isDark ? "bg-bone text-obsidian hover:bg-bone/90" : "bg-charcoal text-ivory hover:bg-charcoal/90"
+          }`}
+        >
+          Text us about {name}
+        </a>
+      )}
       {meetHref && (
         <a
           href={meetHref}
-          class={`inline-block w-full text-center px-6 py-2 text-xs font-medium tracking-widest uppercase transition-colors ${
-            status === "Available" && !linkTo
-              ? (isDark ? "bg-bone text-obsidian hover:bg-bone/90" : "bg-charcoal text-ivory hover:bg-charcoal/90")
-              : `border ${isDark ? "border-bone/30 text-bone/60 hover:border-bone/60 hover:text-bone" : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"}`
-          }`}
-        >
-          Meet {name}
-        </a>
-      )}
-      {status === "Available" && !linkTo && (
-        <a
-          href="#quick-inquiry"
-          data-quick-inquiry-trigger=""
-          data-quick-inquiry-kitten={name}
           class={`inline-block w-full text-center px-6 py-2 border text-xs font-medium tracking-widest uppercase transition-colors ${
             isDark
               ? "border-bone/30 text-bone/60 hover:border-bone/60 hover:text-bone"
               : "border-charcoal/30 text-charcoal/60 hover:border-charcoal hover:text-charcoal"
           }`}
         >
-          Text us about {name}
+          Learn more about {name}
         </a>
       )}
     </div>
