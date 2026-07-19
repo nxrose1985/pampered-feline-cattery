@@ -1,21 +1,51 @@
 ---
+interface HeroImage {
+  asset: { url: string };
+  alt?: string;
+}
+
 interface Props {
   heroImage?: string;
+  heroImages?: HeroImage[];
   phone?: string;
 }
 
-const { heroImage, phone } = Astro.props;
+const { heroImage, heroImages, phone } = Astro.props;
 
 function smsHref(phone: string): string {
   const digits = phone.replace(/[^\d]/g, "");
   const e164 = digits.length === 10 ? `+1${digits}` : `+${digits}`;
   return `sms:${e164}`;
 }
+
+function sanityHeroUrl(url: string): string {
+  if (!url || !url.includes("cdn.sanity.io")) return url;
+  return `${url}?w=1920&q=80&auto=format`;
+}
+
+const rotatingImages = (heroImages ?? [])
+  .map((img) => ({ url: sanityHeroUrl(img.asset?.url), alt: img.alt ?? "" }))
+  .filter((img) => img.url);
 ---
 
 <section id="hero-section" class="relative min-h-[90vh] flex flex-col items-center justify-center bg-obsidian overflow-hidden">
 
-  {heroImage ? (
+  {rotatingImages.length > 0 ? (
+    <div class="absolute inset-0" id="hero-bg-rotator" aria-hidden="true">
+      {rotatingImages.map((img, i) => (
+        <img
+          src={img.url}
+          alt={img.alt}
+          class="hero-bg-slide absolute inset-0 w-full h-full object-cover"
+          data-hero-slide={i}
+          style={i === 0 ? "opacity: 1;" : "opacity: 0;"}
+          loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : "auto"}
+        />
+      ))}
+      <div class="absolute inset-0 hero-image-overlay"></div>
+    </div>
+  ) : heroImage ? (
     <div class="absolute inset-0">
       <img src={heroImage} alt="" class="w-full h-full object-cover" aria-hidden="true" />
       <div class="absolute inset-0 bg-obsidian/75"></div>
@@ -93,11 +123,49 @@ function smsHref(phone: string): string {
       },
     });
   }
+
+  // Slow crossfade through the rotating hero background images.
+  // The prefers-reduced-motion CSS rule below hides everything past the
+  // first slide regardless of this script, so a blocked/failed script
+  // still leaves a single static image, not a broken stack of photos.
+  const rotator = document.getElementById("hero-bg-rotator");
+  if (rotator) {
+    const slides = Array.from(rotator.querySelectorAll<HTMLElement>("[data-hero-slide]"));
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (slides.length > 1 && !prefersReducedMotion) {
+      let current = 0;
+      const HOLD_SECONDS = 6;
+      const FADE_SECONDS = 1.5;
+
+      setInterval(() => {
+        const next = (current + 1) % slides.length;
+        gsap.to(slides[current], { opacity: 0, duration: FADE_SECONDS, ease: "power1.inOut" });
+        gsap.to(slides[next], { opacity: 1, duration: FADE_SECONDS, ease: "power1.inOut" });
+        current = next;
+      }, HOLD_SECONDS * 1000);
+    }
+  }
 </script>
 
 <style>
   .hero-bg {
     background: radial-gradient(ellipse at 38% 35%, #1c1410 0%, #0e0b09 45%, #0A0A0A 100%);
+  }
+
+  /* Flat 58% black keeps every image legible at every edge (scroll indicator,
+     phone line included); the radial layer adds extra contrast right behind
+     the headline/subhead/CTAs where it matters most. */
+  .hero-image-overlay {
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 46%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0) 100%),
+      rgba(0, 0, 0, 0.58);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-slide:not(:first-child) {
+      display: none;
+    }
   }
 
   .hero-grain {
