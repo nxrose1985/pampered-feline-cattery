@@ -191,7 +191,7 @@ const kittensByLitterQuery = `*[_type == "kitten" && litter == $litter] | order(
 
 const kittenBySlugQuery = `*[_type == "kitten" && slug.current == $slug][0] ${kittenProjection}`;
 
-const siteSettingsQuery = `*[_type == "siteSettings"][0] {
+const siteSettingsQuery = `*[_id == "siteSettings"][0] {
   petKittenPriceMin,
   petKittenPriceMax,
   reservationFee,
@@ -288,19 +288,7 @@ export async function getSettings(): Promise<SiteSettings> {
 
   try {
     const result = await client.fetch<SiteSettings | null>(siteSettingsQuery);
-    if (!result) return fallbackSettings;
-
-    // Multiple siteSettings documents exist in the dataset (a longstanding data issue —
-    // see CLAUDE.md). The unordered query above doesn't reliably return the one with `phone`
-    // set, so look it up separately from whichever document actually has it defined.
-    if (!result.phone) {
-      const phoneDoc = await client.fetch<{ phone?: string } | null>(
-        `*[_type == "siteSettings" && defined(phone)][0]{ phone }`
-      );
-      if (phoneDoc?.phone) result.phone = phoneDoc.phone;
-    }
-
-    return result;
+    return result ?? fallbackSettings;
   } catch (error) {
     console.error("Failed to fetch site settings from Sanity:", error);
     return fallbackSettings;
