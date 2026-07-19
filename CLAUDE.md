@@ -2469,3 +2469,31 @@ src/components/Hero.astro     (reassurance line copy rewritten again — "{phone
 src/components/Footer.astro   (matching line rewritten to the same new wording)
 CLAUDE.md                     (session log appended)
 ```
+
+---
+
+## Session: 2026-07-19 (PR #64 — "considering two" editorial aside on Current Litter section)
+
+### Decisions
+- **Single quiet line added to `CurrentLitter.astro`'s intro block,** directly beneath the existing "European Championship Bloodlines · HCM Echo-Negative Parents" tagline, as a fifth `<p>` inside the same centered intro `<div>` — not a separate section or block. Text: "Considering two? Littermates settle in faster together — ask us about a pair." Only "ask us about a pair" is a link; the trailing period sits outside the `<a>`, matching the established pattern in `Hero.astro`'s sms-link line.
+- **Styling deliberately restrained to read as an editorial caption, not a promo banner:** `font-heading italic text-bone/40 text-sm md:text-base tracking-wide mt-6` — reuses the exact muted `text-bone/40` token already used one line above it (the tagline), so no new color was introduced. `font-heading` (Cormorant Garamond) + italic gives it a magazine-caption register distinct from the sans-serif body copy used in kitten cards below. `mt-6` (24px) matches the section's existing vertical rhythm.
+- **No background, border, fill, box, card, or badge classes applied anywhere** — confirmed via computed styles (`background-color: rgba(0,0,0,0)`, `border: 0px`, `box-shadow: none`, `padding: 0px`). It is a plain block-level `<p>`, structurally identical in kind to the three lines above it.
+- **Link styled as muted gold with underline, not a button:** `text-gold/70 hover:text-gold underline underline-offset-2 transition-colors` — the same gold-underline treatment already used for the sms link in `Hero.astro`'s reassurance line, scaled down in opacity (`/70` vs `/75`) to sit quietly against the `/40` surrounding text rather than compete with it.
+- **Links to `#quick-inquiry`,** the existing lightweight no-friction inquiry section already present on the homepage (confirmed via grep before choosing — `#contact` also exists but is the full contact form; `#quick-inquiry` is the "leave your name and number" widget, a better match for "ask us about a pair" as a soft close than a full form).
+- **No "discount," "deal," or "save" language anywhere in the copy** — used verbatim as specified.
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing baseline errors (Sanity schema typing, Google Ads `dataLayer` typing), none touching the changed file.
+- Built HTML: line appears exactly once on the homepage; link href confirmed `#quick-inquiry` with the correct muted-gold underline classes.
+- Computed styles pulled directly from a live dev server (real Sanity data) confirm: `font-family: "Cormorant Garamond", serif`, `font-style: italic`, `font-size: 16px`, `font-weight: 400` (not bold), `color` matching the bone/40 token, `text-align: center` (matches the rest of the intro block), `margin-top: 24px`, and zero background/border/shadow/padding. 32px of clearance confirmed between this line and the kitten card grid below it — no visual crowding.
+- **Screenshot capture (`computer` tool) was not available this session** — it timed out repeatedly in the Browser pane while all other browser tools (navigate, get_page_text, read_console_messages, javascript_tool) worked normally, indicating an environment-level renderer issue rather than anything related to this change. Verification was done via direct computed-style inspection instead, which confirms the rendered output byte-for-byte (color, font, size, weight, spacing, absence of any box/border) — reported to the user for their own visual confirmation once the PR preview is live.
+
+### Deferred
+All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data, the three duplicate `siteSettings` Sanity documents consolidation follow-up (healthEthics singleton enforcement not yet applied), Google Ads conversion label.
+
+### Files Changed This Session (PR #64 — targeting staging)
+```
+src/components/CurrentLitter.astro   ("Considering two?" editorial aside line added to the intro block, linking "ask us about a pair" to #quick-inquiry)
+CLAUDE.md                            (session log appended)
+```
