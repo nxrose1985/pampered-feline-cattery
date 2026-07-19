@@ -270,4 +270,33 @@ const kittens = sortKittens(
     // real touch gesture it correctly enabled horizontal scroll but silently
     // ate vertical swipes instead of letting them bubble to the page.
   });
+
+  // Kitten card "read more" / "read less": each button toggles only its own
+  // paragraph's rest-text span via closest(), so cards expand independently.
+  // The rest span animates open with a max-height transition, measured from
+  // its own scrollHeight (which reports the full content height even while
+  // clipped by overflow-hidden) — a 0fr/1fr grid-template-rows transition was
+  // tried first but didn't animate reliably, so this is the fallback.
+  document.querySelectorAll('[data-excerpt-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const p = btn.closest('p');
+      if (!p) return;
+      const rest = p.querySelector('[data-excerpt-rest]') as HTMLElement | null;
+      const ellipsis = p.querySelector('[data-excerpt-ellipsis]') as HTMLElement | null;
+      if (!rest) return;
+
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        rest.style.maxHeight = '0px';
+        ellipsis?.classList.remove('hidden');
+        btn.textContent = 'read more';
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        rest.style.maxHeight = `${rest.scrollHeight}px`;
+        ellipsis?.classList.add('hidden');
+        btn.textContent = 'read less';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
 </script>
