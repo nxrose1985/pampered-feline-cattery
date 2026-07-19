@@ -187,14 +187,19 @@ const dateLabel = formatDate(availableDate);
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
           </button>
-          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+          <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex z-20">
             {allImages.map((_, i) => (
               <button
                 type="button"
-                class={`w-1.5 h-1.5 rounded-full transition-opacity ${i === 0 ? "bg-white opacity-90" : "bg-white opacity-40"}`}
+                class="flex items-center justify-center w-6 h-6"
                 data-carousel-dot={i}
                 aria-label={`Go to photo ${i + 1} of ${name}`}
-              />
+              >
+                <span
+                  class={`block w-1.5 h-1.5 rounded-full transition-opacity pointer-events-none ${i === 0 ? "bg-white opacity-90" : "bg-white opacity-40"}`}
+                  data-carousel-dot-visual={i}
+                />
+              </button>
             ))}
           </div>
         </>
