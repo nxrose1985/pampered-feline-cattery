@@ -2405,3 +2405,24 @@ src/components/Hero.astro     (reassurance line copy rewritten — "Questions? T
 src/components/Footer.astro   (smsHref() helper added; new "Questions? Text or call anytime — {phone}." line added below the existing Call/Text line)
 CLAUDE.md                     (session log appended)
 ```
+
+---
+
+## Session: 2026-07-19 (PR #62 update — final phone-line wording)
+
+### Decisions
+- **Hero and footer phone-line copy rewritten again, replacing this same PR's earlier wording.** Was: "Questions? Text or call anytime — {phone}. We usually reply within a few hours." Now: "{phone} — call or text anytime. We're always here to answer questions." `{phone}` leads the line again (as it did before PR #62's first pass) and remains the same `sms:` link sourced from `settings.phone` via the existing `smsHref()` helper — no hardcoded number, no change to link behavior.
+- **Footer's separate pre-existing "Call/Text: {phone}" `tel:` line was left untouched**, same as the first PR #62 pass — this edit only touches the dedicated sms-link line below it.
+- **Folded directly into PR #62's existing branch** (`feat/text-us-copy-pr11`) rather than opening a new PR, since the PR was still open and unmerged at the time of this edit.
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- Built HTML: new phrase `call or text anytime. We're always here to answer questions.` appears exactly twice (hero + footer); old phrase `usually reply within a few hours` and `Questions? Text or call anytime` both fully absent; `href="sms:+19496065919"` unchanged.
+- Live dev server (worktree, real Sanity data): hero renders `(949) 606-5919 — call or text anytime. We're always here to answer questions.` directly under the CTA buttons.
+
+### Files Changed This Session (folds into PR #62 — targeting staging)
+```
+src/components/Hero.astro     (reassurance line copy rewritten again — "{phone} — call or text anytime. We're always here to answer questions.")
+src/components/Footer.astro   (matching line rewritten to the same new wording)
+CLAUDE.md                     (session log appended)
+```

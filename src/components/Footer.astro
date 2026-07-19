@@ -49,8 +49,7 @@ function instagramUrl(handle: string): string {
         )}
         {settings.phone && (
           <p class="text-sm">
-            Questions? Text or call anytime —{" "}
-            <a href={smsHref(settings.phone)} class="text-ivory/60 hover:text-gold transition-colors">{settings.phone}</a>.
+            <a href={smsHref(settings.phone)} class="text-ivory/60 hover:text-gold transition-colors">{settings.phone}</a> — call or text anytime. We're always here to answer questions.
           </p>
         )}
         {settings.instagramHandle && (
