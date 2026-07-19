@@ -201,6 +201,7 @@ const kittens = sortKittens(
 
     const slides = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
     const dots = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-dot]'));
+    const dotVisuals = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-dot-visual]'));
     const prevBtn = el.querySelector('[data-carousel-prev]') as HTMLElement | null;
     const nextBtn = el.querySelector('[data-carousel-next]') as HTMLElement | null;
     if (slides.length < 2) return;
@@ -210,7 +211,7 @@ const kittens = sortKittens(
 
     function setActive(idx: number) {
       current = idx;
-      dots.forEach((dot, i) => {
+      dotVisuals.forEach((dot, i) => {
         dot.classList.toggle('opacity-90', i === idx);
         dot.classList.toggle('opacity-40', i !== idx);
       });
@@ -255,5 +256,56 @@ const kittens = sortKittens(
     window.addEventListener('resize', () => {
       goTo(current, false);
     });
+
+    // Touch drag: the track keeps touch-action:pan-y so a vertical swipe always
+    // scrolls the page natively. pan-y disables the browser's OWN horizontal pan
+    // on this element (that's what pan-y means), so a horizontal swipe needs to be
+    // driven manually here. Direction is decided from the first ~10px of movement;
+    // once a gesture commits to horizontal, preventDefault stops the page from also
+    // trying to rubber-band, and scrollLeft is dragged 1:1 with the finger. A
+    // vertical-dominant gesture is left completely alone (no preventDefault, no
+    // scrollLeft writes) so it scrolls the page exactly like touching non-carousel
+    // content would.
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartScrollLeft = 0;
+    let touchDirection: 'horizontal' | 'vertical' | null = null;
+    const DIRECTION_THRESHOLD = 10;
+
+    track.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchStartScrollLeft = track!.scrollLeft;
+      touchDirection = null;
+    }, { passive: true });
+
+    track.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+
+      if (touchDirection === null) {
+        if (Math.abs(dx) > DIRECTION_THRESHOLD || Math.abs(dy) > DIRECTION_THRESHOLD) {
+          touchDirection = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+        }
+      }
+
+      if (touchDirection === 'horizontal') {
+        e.preventDefault();
+        track!.scrollLeft = touchStartScrollLeft - dx;
+      }
+      // touchDirection === 'vertical' (or still undecided): do nothing, let the
+      // page scroll natively via touch-action:pan-y.
+    }, { passive: false });
+
+    track.addEventListener('touchend', () => {
+      if (touchDirection === 'horizontal') {
+        const width = track!.clientWidth || 1;
+        const idx = Math.round(track!.scrollLeft / width);
+        goTo(Math.max(0, Math.min(slides.length - 1, idx)));
+      }
+      touchDirection = null;
+    }, { passive: true });
   });
 </script>
