@@ -16,10 +16,10 @@ const [sanityKittens, settings] = await Promise.all([
 ]);
 
 const fallbackKittens = [
-  { name: "Helion",   slug: "helion",   color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 1 },
-  { name: "Tarquin",  slug: "tarquin",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 2 },
-  { name: "Kallias",  slug: "kallias",  color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 500, availableDate: "2026-06-04", order: 3 },
-  { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 500, availableDate: "2026-07-08", order: 7 },
+  { name: "Helion",   slug: "helion",   color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 1, about: "Helion carries himself like he knows exactly how good-looking he is. His cream shaded silver coat shifts from pale champagne at the tips to a bright silver undercoat — in the right light he almost glows. He is steady and confident without being pushy, the kind of cat who settles into a new home on his own terms and then decides he owns it. He will do well in an active household and is likely to become his person's shadow. Named for the High Lord of the Day Court — radiant, unhurried, and completely sure of himself." },
+  { name: "Tarquin",  slug: "tarquin",  color: "Cream Shaded Silver",               sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 2, about: "Tarquin is the easygoing one. Where his cream shaded silver littermates are bold, Tarquin is warm — quick to purr, slow to startle, and genuinely happy in anyone's lap. His coat has the same luminous silver-cream shimmer as Helion's but his personality is softer, more collaborative. He would thrive as a companion for another cat or as the gentle anchor of a busy family home. Named for the High Lord of the Summer Court — generous, open, and deeply kind." },
+  { name: "Kallias",  slug: "kallias",  color: "Poly Cream Shaded Silver (6/6/6/6)", sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 4500, reservationFee: 500, availableDate: "2026-06-04", order: 3, about: "Kallias is the one who stops people mid-scroll. The cream shaded silver coat is already striking, but add six toes on each front paw and he becomes something genuinely rare. He is curious and physical — the kitten who investigates everything, climbs everything, and figures things out faster than you expect. His extra toes give him remarkable dexterity; don't be surprised if he learns to open things. He needs a home that will keep up with him. Named for the High Lord of the Winter Court — precise, capable, and quietly extraordinary." },
+  { name: "Amren",    slug: "amren",    color: "Blue Tortie",                       sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, reservationFee: 500, availableDate: "2026-07-08", order: 7, about: "Amren is compact, watchful, and quietly intense. Her blue tortie coat is softer in tone than Morrigan's — more muted blue, less contrast — which gives her a silvery, ethereal quality that suits her personality. She observes before she engages, sizes up a room before she enters it, and reserves her affection for people who have earned it. When she decides you're worth her time, you'll know. Named for the ancient, unknowable second-in-command of the Night Court — small, still, and not to be underestimated." },
 ];
 
 // Sort: Available first, then Reserved. Within each group, sort by display order ascending.
@@ -72,6 +72,7 @@ const kittens = sortKittens(
             bowTieColor={kitten.bowTieColor}
             personality={kitten.personality}
             shortStory={kitten.shortStory}
+            about={kitten.about}
             status={kitten.status}
             image={kitten.image?.asset?.url}
             gallery={kitten.gallery}

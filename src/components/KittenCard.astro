@@ -20,6 +20,7 @@ interface Props {
   bowTieColor?: "Teal" | "Emerald" | "Burnt Orange";
   personality?: string;
   shortStory?: string;
+  about?: string;
   status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
   image?: string;
   gallery?: Array<{ asset: { url: string } }>;
@@ -40,6 +41,7 @@ const {
   bowTieColor,
   personality,
   shortStory,
+  about,
   status,
   image,
   gallery,
@@ -58,7 +60,39 @@ const bowTieSwatch: Record<string, string> = {
   "Burnt Orange": "#c2410c",
 };
 
-const blurb = shortStory || personality;
+const excerptSource = about || shortStory || personality;
+
+// Excerpt targets ~2 sentences / 140-160 chars, cut cleanly at a word boundary,
+// with an ellipsis only when the source text was actually cut.
+function buildExcerpt(text: string | undefined, maxLen = 155): { text: string; truncated: boolean } | null {
+  if (!text) return null;
+  const clean = text.trim().replace(/\s+/g, " ");
+  if (!clean) return null;
+
+  if (clean.length <= maxLen) {
+    return { text: clean, truncated: false };
+  }
+
+  // Prefer ending after the first two sentences if that lands close to the target length.
+  const sentenceEnds = [...clean.matchAll(/[.!?](?=\s|$)/g)].map((m) => (m.index ?? 0) + 1);
+  if (sentenceEnds.length > 0) {
+    const twoSentenceEnd = sentenceEnds[1] ?? sentenceEnds[0];
+    if (twoSentenceEnd <= maxLen + 25) {
+      return {
+        text: clean.slice(0, twoSentenceEnd).trim(),
+        truncated: twoSentenceEnd < clean.length,
+      };
+    }
+  }
+
+  // Otherwise clamp to maxLen at the last full word.
+  const hardCut = clean.slice(0, maxLen);
+  const lastSpace = hardCut.lastIndexOf(" ");
+  const safeCut = lastSpace > 40 ? hardCut.slice(0, lastSpace) : hardCut;
+  return { text: safeCut.replace(/[,;:]+$/, "").trim(), truncated: true };
+}
+
+const excerpt = buildExcerpt(excerptSource);
 
 function telHref(p: string): string {
   return `tel:${p.replace(/[^\d+]/g, "")}`;
@@ -257,18 +291,22 @@ const dateLabel = formatDate(availableDate);
       </dl>
     )}
 
-    {blurb && !pa?.personalitySummary && (
-      <p class={`leading-relaxed mb-2 ${isDark ? "text-bone/80" : "text-charcoal-light"}`}>{blurb}</p>
-    )}
-
-    {meetHref && (
-      <a
-        href={meetHref}
-        class={`inline-flex items-center gap-1 text-xs font-medium uppercase tracking-widest mb-4 transition-colors ${isDark ? "text-gold/70 hover:text-gold" : "text-gold-dark/70 hover:text-gold-dark"}`}
-      >
-        Read {name}'s full story
-        <span aria-hidden="true">&rarr;</span>
-      </a>
+    {excerpt && !pa?.personalitySummary && (
+      <p class={`leading-relaxed mb-4 ${isDark ? "text-bone/80" : "text-charcoal-light"}`}>
+        {excerpt.text}
+        {excerpt.truncated && "…"}
+        {meetHref && (
+          <>
+            {" "}
+            <a
+              href={meetHref}
+              class={`font-medium underline underline-offset-2 transition-colors ${isDark ? "text-gold/70 hover:text-gold" : "text-gold-dark/70 hover:text-gold-dark"}`}
+            >
+              read more
+            </a>
+          </>
+        )}
+      </p>
     )}
 
     {hasAssessment && (
