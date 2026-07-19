@@ -89,6 +89,11 @@ export interface Kitten {
   gallery?: Array<{ asset: { url: string } }>;
 }
 
+export interface HeroImage {
+  asset: { url: string };
+  alt?: string;
+}
+
 export interface SiteSettings {
   petKittenPriceMin?: number;
   petKittenPriceMax?: number;
@@ -99,6 +104,7 @@ export interface SiteSettings {
   instagramHandle?: string;
   availabilityStatus?: "Kittens Available" | "Waitlist Open" | "No Kittens Available";
   parentsBannerImage?: { asset: { url: string } };
+  heroImages?: HeroImage[];
 }
 
 export interface Faq {
@@ -200,7 +206,8 @@ const siteSettingsQuery = `*[_id == "siteSettings"][0] {
   phone,
   instagramHandle,
   availabilityStatus,
-  "parentsBannerImage": parentsBannerImage { asset-> { url } }
+  "parentsBannerImage": parentsBannerImage { asset-> { url } },
+  "heroImages": heroImages[] { asset-> { url }, alt }
 }`;
 
 const faqQuery = `*[_type == "faq"] | order(order asc) {
@@ -280,6 +287,7 @@ const fallbackSettings: SiteSettings = {
   instagramHandle: undefined,
   availabilityStatus: "Kittens Available",
   parentsBannerImage: undefined,
+  heroImages: undefined,
 };
 
 export async function getSettings(): Promise<SiteSettings> {

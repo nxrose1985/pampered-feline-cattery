@@ -65,6 +65,26 @@ export const siteSettings = defineType({
       options: { hotspot: true },
       description: "Full-width banner image showing the sire and dam together (used above Meet the Parents section).",
     }),
+    defineField({
+      name: "heroImages",
+      title: "Homepage Hero Background Images",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt Text",
+              type: "string",
+              description: "Describe the photo for screen readers (optional).",
+            }),
+          ],
+        },
+      ],
+      description: "4 to 6 photos that slowly crossfade behind the homepage headline. Upload here and publish, no code changes needed.",
+    }),
   ],
   preview: {
     prepare() {
