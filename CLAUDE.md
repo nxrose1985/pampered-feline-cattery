@@ -2377,3 +2377,46 @@ All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eykt
 src/components/KittenCard.astro   (carousel slide div: min-w-full → w-full)
 CLAUDE.md                         (session log appended)
 ```
+
+---
+
+## Session: 2026-07-19 (PR #63 — siteSettings consolidation: getSettings() + Studio singleton enforcement)
+
+### Context
+This session executed the previously-approved 5-step siteSettings consolidation plan (dump-first → dry-run → execute → code fix → singleton enforcement) under the standing Sanity write-safety policy. Steps 1–3 were direct Sanity data operations (backup, merge patch, delete); this session's commit covers Steps 4–5, the resulting code changes.
+
+### Sanity Data Operations (Steps 1–3, executed directly via Sanity MCP + a one-off script — not part of this PR's diff)
+- **Dump:** Fresh backup written to `siteSettings-backup-2026-07-19T060131.json` in the main project root (gitignored, matches the existing `faq-backup-*.json` / `siteSettings-backup-*.json` pattern) after re-verifying live data was unchanged since the original PR #60-session investigation.
+- **Patch:** `patch_documents` (Sanity MCP) on the canonical `_id: "siteSettings"` document, adding `contactEmail`, `availabilityStatus`, `reservationFee` (the three fields only the two duplicate documents had). `phone` and `parentsBannerImage` (already on the canonical doc) were untouched — confirmed via diff before/after.
+  - **Revision-guard quirk encountered:** the first patch attempt used `ifRevisionId` set to the published document's dumped revision, but failed with an error referencing a `drafts.siteSettings` revision that doesn't actually exist (confirmed via a fresh independent `query_documents` call immediately after — only the published doc existed, no draft, and its revision matched the dump exactly). This looks like an MCP tool quirk in how the optimistic-lock guard resolves for a document with no existing draft, not genuine data drift. Retried without the guard, immediately re-verified the resulting draft's `_system.base.rev` matched the exact dumped revision before publishing — so the safety property the guard was meant to provide was independently confirmed by other means.
+- **Verify:** Published `siteSettings` document confirmed to have all 5 real fields (`contactEmail`, `availabilityStatus`, `reservationFee`, `phone`, `parentsBannerImage`) via direct `get_document` fetch.
+- **Delete:** The Sanity MCP toolset exposes no true document-delete operation (only `unpublish_documents`, which converts to a draft rather than removing it). Used a one-off Node script (`_tmp-delete-duplicate-sitesettings.mjs`, matching the project's established one-off-script pattern) with `@sanity/client`'s real `.delete()`, targeting the two duplicate IDs (`0da97e9a-493b-44d4-982a-a6386baf972d`, `527b6503-441e-4044-b6cc-01efec745a0b`) explicitly by ID, with a `_type` guard that aborts if either ID doesn't resolve to a `siteSettings` document. Both deleted successfully. **Script deleted immediately after use**, per the write-safety policy.
+- **Final state confirmed:** exactly one `siteSettings` document exists in the dataset (`_id: "siteSettings"`), holding all 5 fields.
+
+### Code Decisions (Step 4 — this PR)
+- **`siteSettingsQuery` changed from `*[_type == "siteSettings"][0]` to `*[_id == "siteSettings"][0]`.** Now deterministic by construction — there's exactly one document with that ID, so the query can never return a different document than intended, regardless of dataset state.
+- **PR #60's phone workaround removed from `getSettings()`.** The secondary `defined(phone)` lookup that merged `phone` in from whichever document had it is no longer needed — the canonical document the primary query now targets already has `phone` set. `getSettings()` is back to the simple `fetch → return result ?? fallbackSettings` shape it had before PR #60.
+
+### Code Decisions (Step 5 — this PR)
+- **Custom Sanity Studio structure added to `sanity.config.ts`,** replacing the previous bare `structureTool()` call. A `SINGLETON_TYPES` set (currently just `"siteSettings"`) is excluded from the generic document-type list (`S.documentTypeListItems().filter(...)`) and replaced with a single fixed list item that opens the canonical document directly by ID (`S.document().schemaType("siteSettings").documentId("siteSettings")`), bypassing the type-level list/create UI entirely. This is the standard Sanity singleton pattern — Studio no longer offers "+ Create new" for `siteSettings`, closing the exact gap that let the three duplicate documents accumulate in the first place (confirmed via investigation in the prior session: the schema's `__experimental_actions: ["update", "publish"]` only restricts actions on an already-open document, it does not hide the type from the generic list view).
+- **`__experimental_actions: ["update", "publish"]` on the `siteSettings` schema left unchanged** — confirmed present and correct; this project's existing convention for singleton document types.
+- **`healthEthics` has the identical structural gap** (also intended as a singleton per this file's own conventions, also with no structure-level enforcement) but was **not** touched — the approved plan scoped this fix to `siteSettings` only. Flagging as a candidate for the same fix in a future session, since the same failure mode (accidental duplicate creation via the generic "+ Create new" list) applies equally there.
+
+### Verified
+- `astro build`: 13 pages generated cleanly, no regressions.
+- `astro check`: same 8 pre-existing baseline errors (Sanity schema typing, Google Ads `dataLayer` typing), none touching the changed files.
+- Built HTML: `sms:+19496065919` link present (phone still resolves correctly through the new deterministic query); `mailto:pamperedfelinemainecoons@gmail.com` present (contact email still resolves); "A $500 non-refundable deposit" present (reservationFee still resolves).
+- **New, previously-dormant behavior surfaced by the consolidation:** the parents banner (`parentsBannerImage`) now renders on the homepage — one occurrence of the "Aedion × Feyra — Spring 2026" caption in the built HTML, where previously zero occurrences ever rendered (the old unordered query consistently picked a document without this field). Confirmed live in a dev server: the banner image loads a real photo (not broken), positioned correctly above the cat cards. **This is expected and correct** — the canonical document has always had this field set, it just was never being read before. Flagged to the user to spot-check the live site after this PR deploys, since it's a new visible element, not previously reviewed on production.
+
+### Deferred
+- All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
+- **`npx sanity deploy` needed** to push the new Studio structure (singleton siteSettings pinning) live — Sara won't see the change in Studio's nav until this runs. Carries forward alongside the existing pending schema-deploy items.
+- **Same singleton-enforcement gap on `healthEthics`** — not fixed this session, flagged as a follow-up candidate.
+- **Verify the parents banner renders correctly on production** after this PR merges and deploys (see Verified section above — this is genuinely new-to-production visible content).
+
+### Files Changed This Session (PR #63 — targeting staging)
+```
+src/lib/sanity.ts   (siteSettingsQuery: *[_type=="siteSettings"][0] → *[_id=="siteSettings"][0]; getSettings() phone workaround removed)
+sanity.config.ts    (custom Studio structure added — siteSettings pinned to fixed ID, excluded from generic "+ Create new" list)
+CLAUDE.md           (session log appended)
+```
