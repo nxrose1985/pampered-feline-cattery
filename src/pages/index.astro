@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import CurrentLitter from "../components/CurrentLitter.astro";
+import ForeverHomesFound from "../components/ForeverHomesFound.astro";
 import CatCard from "../components/CatCard.astro";
 import ContactForm from "../components/ContactForm.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
@@ -116,6 +117,9 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
   <!-- Kittens (id is set inside CurrentLitter component on its root <section>) -->
   <CurrentLitter />
+
+  <!-- Forever Homes Found (id is set inside the component on its root <section>) -->
+  <ForeverHomesFound />
 
   <!-- ═══════════════════════════════════════
        QUICK INQUIRY  id="quick-inquiry"
