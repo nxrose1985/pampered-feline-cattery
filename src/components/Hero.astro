@@ -124,24 +124,29 @@ const rotatingImages = (heroImages ?? [])
     });
   }
 
-  // Slow crossfade through the rotating hero background images.
-  // The prefers-reduced-motion CSS rule below hides everything past the
-  // first slide regardless of this script, so a blocked/failed script
-  // still leaves a single static image, not a broken stack of photos.
+  // Cycle through the rotating hero background images. Motion-sensitive
+  // visitors (prefers-reduced-motion) still see every uploaded photo, just
+  // swapped instantly instead of crossfaded, so there's no continuous
+  // animation but the full set of images is still shown.
   const rotator = document.getElementById("hero-bg-rotator");
   if (rotator) {
     const slides = Array.from(rotator.querySelectorAll<HTMLElement>("[data-hero-slide]"));
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (slides.length > 1 && !prefersReducedMotion) {
+    if (slides.length > 1) {
       let current = 0;
       const HOLD_SECONDS = 6;
       const FADE_SECONDS = 1.5;
 
       setInterval(() => {
         const next = (current + 1) % slides.length;
-        gsap.to(slides[current], { opacity: 0, duration: FADE_SECONDS, ease: "power1.inOut" });
-        gsap.to(slides[next], { opacity: 1, duration: FADE_SECONDS, ease: "power1.inOut" });
+        if (prefersReducedMotion) {
+          slides[current].style.opacity = "0";
+          slides[next].style.opacity = "1";
+        } else {
+          gsap.to(slides[current], { opacity: 0, duration: FADE_SECONDS, ease: "power1.inOut" });
+          gsap.to(slides[next], { opacity: 1, duration: FADE_SECONDS, ease: "power1.inOut" });
+        }
         current = next;
       }, HOLD_SECONDS * 1000);
     }
@@ -160,12 +165,6 @@ const rotatingImages = (heroImages ?? [])
     background:
       radial-gradient(ellipse 70% 60% at 50% 46%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0) 100%),
       rgba(0, 0, 0, 0.58);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-slide:not(:first-child) {
-      display: none;
-    }
   }
 
   .hero-grain {

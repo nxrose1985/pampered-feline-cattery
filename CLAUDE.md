@@ -2497,3 +2497,38 @@ All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eykt
 src/components/CurrentLitter.astro   ("Considering two?" editorial aside line added to the intro block, linking "ask us about a pair" to #quick-inquiry)
 CLAUDE.md                            (session log appended)
 ```
+
+---
+
+## Session: 2026-07-20 (PR #65 — hero crossfade reduced-motion instant-swap fix)
+
+### Context
+User reported PR #71's rotating hero background (5 images from `heroImages` in Sanity) appeared static in production — one image loads, overlay/text fine, but never crossfades to the others. Diagnosed before touching any code, per the three-hypothesis order given: (1) image count, (2) `prefers-reduced-motion`, (3) GSAP JS actually running.
+
+### Diagnosis (no code changed at this stage)
+- **Hypothesis 1 (only one image loading) — ruled out.** Queried the live Sanity `siteSettings` document directly via the Sanity MCP: `heroImages` has exactly 5 entries, all correctly wired to the canonical `_id: "siteSettings"` document. Loaded the page and inspected the DOM: all 5 `<img data-hero-slide>` elements render, initial opacities `[1,0,0,0,0]` as expected. The GROQ query and the `.map()` loop are both correct.
+- **Hypothesis 2 (`prefers-reduced-motion`) — confirmed as the actual, sole cause.** `window.matchMedia("(prefers-reduced-motion: reduce)").matches` returned `true` in the Browser pane, which is Electron/Chromium reading this Windows machine's real OS accessibility setting. Verified this traces to a genuine OS setting, not a sandbox artifact, by directly querying `SystemParametersInfo(SPI_GETCLIENTAREAANIMATION)` via a read-only PowerShell/user32 call — returned `False`, meaning "Animation effects" is off in this machine's Windows Accessibility settings. Chromium/Electron map that OS setting straight to `prefers-reduced-motion: reduce`. This is exactly the intentional design documented in the original PR #71 code comment: reduced motion → one static image, no crossfade, by choice — not a bug.
+- **Hypothesis 3 (GSAP crossfade JS not actually running) — ruled out.** Using Playwright's `page.emulateMedia({ reducedMotion: 'no-preference' })` (chosen specifically so the animated path could be tested without touching this machine's real OS setting — modifying system settings is out of bounds), loaded the page fresh and let real wall-clock time pass: at load, slide 0 was opaque; 7 seconds later, slide 0 had faded to 0 and slide 1 to 1, exactly matching the `HOLD_SECONDS=6` design. The interval and gsap.to tween genuinely run correctly on a real browser with real animation-frame ticking — this was the first time this specific code path had been verified outside the original sandbox that couldn't tick frames, and it checked out clean.
+- **Conclusion reported to the user before any fix:** no code bug existed. The "static" appearance was the reduced-motion fallback firing correctly. Per explicit instruction, stopped and asked how to proceed rather than guessing at a fix.
+
+### Decisions (fix, this PR)
+- **User chose: keep cycling through all 5 images for reduced-motion users, but swap instantly instead of crossfading** — respects the accessibility intent (no continuous/gradual motion) while still showing the full uploaded set, rather than freezing on image 1 forever.
+- **JS branch added inside the existing `setInterval`:** the `slides.length > 1 && !prefersReducedMotion` guard (which previously skipped the whole rotation setup for reduced-motion users) was loosened to just `slides.length > 1`; inside the interval callback, `prefersReducedMotion` now branches between a plain `style.opacity = "0"/"1"` assignment (instant, no tween) and the original `gsap.to(...)` crossfade (unchanged for normal-motion users).
+- **CSS `@media (prefers-reduced-motion: reduce) { .hero-bg-slide:not(:first-child) { display: none; } }` rule removed entirely.** This rule pre-dated the fix and permanently hid every slide but the first via `display: none`, which would have silently defeated the new instant-swap behavior (a hidden element's opacity changes are invisible). It was originally added as a defensive fallback in case the script failed to load — but the server-rendered inline `style="opacity: 0;"` on every non-first slide already provides that exact same safe default with no CSS needed, so removing it costs nothing.
+- **No new dependencies, no other files touched** — single-file change to `Hero.astro`, exactly as requested.
+
+### Verified
+- Real animation-frame ticking via Playwright (not just static DOM inspection) confirms both branches on a fresh worktree build:
+  - `emulateMedia({ reducedMotion: 'reduce' })`: at t=0 opacities `[1,0,0,0,0]`; at t≈6.3s `[0,1,0,0,0]`; at t≈12.3s `[0,0,1,0,0]` — instant 0/1 swap on schedule, cycling through slides 0→1→2, no intermediate opacity values at any sampled point.
+  - `emulateMedia({ reducedMotion: 'no-preference' })`: at t=0 opacities `[1,0,0,0,0]`; at t≈6.7s (mid-fade) `[0.0021, 0.9979, 0, 0, 0]` — confirms the original gradual crossfade still works exactly as before, no regression.
+- `astro build`: 13 pages generated cleanly, no errors.
+- Dev server run from a fresh worktree (`.worktrees/hero-reduced-motion-swap`) with its own `npm install` + copied `.env`, against live Sanity data (not fallback) — same "worktrees need their own `node_modules`/`.env`" pattern noted in earlier sessions.
+
+### Deferred
+All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data, the three duplicate `siteSettings` Sanity documents consolidation follow-up (healthEthics singleton enforcement not yet applied), Google Ads conversion label.
+
+### Files Changed This Session (PR #65 — targeting staging)
+```
+src/components/Hero.astro   (reduced-motion branch: instant opacity swap instead of skipping rotation entirely; reduced-motion CSS display:none rule removed)
+CLAUDE.md                   (session log appended)
+```
