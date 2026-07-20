@@ -63,14 +63,16 @@ const bowTieSwatch: Record<string, string> = {
 const excerptSource = about || shortStory || personality;
 
 // Excerpt targets ~2 sentences / 140-160 chars, cut cleanly at a word boundary,
-// with an ellipsis only when the source text was actually cut.
-function buildExcerpt(text: string | undefined, maxLen = 155): { text: string; truncated: boolean } | null {
+// with an ellipsis only when the source text was actually cut. `rest` is
+// whatever followed the cut point, so the "read more" toggle can splice it
+// back in as a natural continuation instead of linking away.
+function buildExcerpt(text: string | undefined, maxLen = 155): { text: string; truncated: boolean; rest: string } | null {
   if (!text) return null;
   const clean = text.trim().replace(/\s+/g, " ");
   if (!clean) return null;
 
   if (clean.length <= maxLen) {
-    return { text: clean, truncated: false };
+    return { text: clean, truncated: false, rest: "" };
   }
 
   // Prefer ending after the first two sentences if that lands close to the target length.
@@ -78,10 +80,9 @@ function buildExcerpt(text: string | undefined, maxLen = 155): { text: string; t
   if (sentenceEnds.length > 0) {
     const twoSentenceEnd = sentenceEnds[1] ?? sentenceEnds[0];
     if (twoSentenceEnd <= maxLen + 25) {
-      return {
-        text: clean.slice(0, twoSentenceEnd).trim(),
-        truncated: twoSentenceEnd < clean.length,
-      };
+      const cut = clean.slice(0, twoSentenceEnd).trim();
+      const truncated = twoSentenceEnd < clean.length;
+      return { text: cut, truncated, rest: truncated ? clean.slice(cut.length) : "" };
     }
   }
 
@@ -89,7 +90,8 @@ function buildExcerpt(text: string | undefined, maxLen = 155): { text: string; t
   const hardCut = clean.slice(0, maxLen);
   const lastSpace = hardCut.lastIndexOf(" ");
   const safeCut = lastSpace > 40 ? hardCut.slice(0, lastSpace) : hardCut;
-  return { text: safeCut.replace(/[,;:]+$/, "").trim(), truncated: true };
+  const cutText = safeCut.replace(/[,;:]+$/, "").trim();
+  return { text: cutText, truncated: true, rest: clean.slice(cutText.length) };
 }
 
 const excerpt = buildExcerpt(excerptSource);
@@ -305,16 +307,25 @@ const dateLabel = formatDate(availableDate);
     {excerpt && !pa?.personalitySummary && (
       <p class={`leading-relaxed mb-4 ${isDark ? "text-bone/80" : "text-charcoal-light"}`}>
         {excerpt.text}
-        {excerpt.truncated && "…"}
-        {meetHref && (
+        {excerpt.truncated && (
           <>
+            <span data-excerpt-ellipsis>…</span>
+            <span
+              data-excerpt-rest
+              class="block overflow-hidden transition-[max-height] duration-300 ease-out"
+              style="max-height: 0px;"
+            >
+              <span class="block">{" "}{excerpt.rest}</span>
+            </span>
             {" "}
-            <a
-              href={meetHref}
+            <button
+              type="button"
+              data-excerpt-toggle
+              aria-expanded="false"
               class={`font-medium underline underline-offset-2 transition-colors ${isDark ? "text-gold/70 hover:text-gold" : "text-gold-dark/70 hover:text-gold-dark"}`}
             >
               read more
-            </a>
+            </button>
           </>
         )}
       </p>
