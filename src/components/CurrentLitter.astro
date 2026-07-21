@@ -33,7 +33,7 @@ function sortKittens(list: any[]) {
 
 const kittens = sortKittens(
   (sanityKittens.length > 0 ? sanityKittens : fallbackKittens).filter(
-    (k: any) => k.status === "Available"
+    (k: any) => k.status === "Available" || k.status === "Reserved"
   )
 );
 ---
