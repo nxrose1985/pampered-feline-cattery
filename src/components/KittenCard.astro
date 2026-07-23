@@ -114,7 +114,11 @@ function smsHref(p: string, kittenName: string): string {
 const meetHref = slug ? `/kittens/${slug}` : null;
 
 const galleryUrls = (gallery ?? []).map((g) => g.asset.url).filter(Boolean);
-const allImages = image ? [image, ...galleryUrls] : galleryUrls;
+// Home card carousel is capped to the first 8 photos — large galleries (20+) blow out the
+// dot-indicator row and add unnecessary mobile image weight across 4+ cards. The full gallery
+// is still available on the kitten's own detail page (/kittens/[slug]), which doesn't use this cap.
+const MAX_CARD_PHOTOS = 8;
+const allImages = (image ? [image, ...galleryUrls] : galleryUrls).slice(0, MAX_CARD_PHOTOS);
 
 function sanityCardUrl(url: string): string {
   if (!url || !url.includes('cdn.sanity.io')) return url;
