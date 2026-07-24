@@ -114,17 +114,18 @@ function smsHref(p: string, kittenName: string): string {
 const meetHref = slug ? `/kittens/${slug}` : null;
 
 const galleryUrls = (gallery ?? []).map((g) => g.asset.url).filter(Boolean);
+const allImages = image ? [image, ...galleryUrls] : galleryUrls;
 // Home card carousel is capped to the first 8 photos — large galleries (20+) blow out the
-// dot-indicator row and add unnecessary mobile image weight across 4+ cards. The full gallery
-// is still available on the kitten's own detail page (/kittens/[slug]), which doesn't use this cap.
+// dot-indicator row and add unnecessary mobile image weight across 4+ cards. The lightbox and
+// the kitten's own detail page (/kittens/[slug]) both use the full, uncapped allImages array.
 const MAX_CARD_PHOTOS = 8;
-const allImages = (image ? [image, ...galleryUrls] : galleryUrls).slice(0, MAX_CARD_PHOTOS);
+const cardImages = allImages.slice(0, MAX_CARD_PHOTOS);
 
 function sanityCardUrl(url: string): string {
   if (!url || !url.includes('cdn.sanity.io')) return url;
   return `${url}?w=800&q=80&auto=format`;
 }
-const displayImages = allImages.map(sanityCardUrl);
+const displayImages = cardImages.map(sanityCardUrl);
 
 const pa = personalityAssessment;
 const hasAssessment = pa && (pa.personalitySummary || pa.confidenceLevel || pa.energyLevel);
@@ -202,7 +203,7 @@ const dateLabel = formatDate(availableDate);
           >
             <img
               src={src}
-              alt={`${name}, ${color} Maine Coon kitten, photo ${i + 1} of ${allImages.length}`}
+              alt={`${name}, ${color} Maine Coon kitten, photo ${i + 1} of ${cardImages.length}`}
               class="w-full h-full object-cover pointer-events-none"
               loading={i === 0 ? "eager" : "lazy"}
             />
@@ -220,7 +221,7 @@ const dateLabel = formatDate(availableDate);
         {status}
       </span>
 
-      {allImages.length > 1 && (
+      {cardImages.length > 1 && (
         <>
           <button
             type="button"
@@ -239,7 +240,7 @@ const dateLabel = formatDate(availableDate);
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
           </button>
           <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex z-20">
-            {allImages.map((_, i) => (
+            {cardImages.map((_, i) => (
               <button
                 type="button"
                 class="flex items-center justify-center w-6 h-6"
