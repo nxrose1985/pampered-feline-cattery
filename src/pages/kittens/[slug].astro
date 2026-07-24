@@ -512,6 +512,7 @@ function formatAssessmentDate(d?: string) {
     <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Previous">&#8249;</button>
     <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-3xl md:text-5xl leading-none px-3" aria-label="Next">&#8250;</button>
     <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[85vw] object-contain" />
+    <div id="lightbox-thumbs" class="hidden absolute bottom-16 left-1/2 -translate-x-1/2 max-w-[90vw] gap-2 overflow-x-auto snap-x snap-mandatory px-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"></div>
     <div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-sm tracking-widest"></div>
   </div>
 
@@ -546,14 +547,55 @@ function formatAssessmentDate(d?: string) {
   const lightbox = document.getElementById('kitten-lightbox') as HTMLElement;
   const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
   const lightboxCounter = document.getElementById('lightbox-counter') as HTMLElement;
+  const lightboxThumbs = document.getElementById('lightbox-thumbs') as HTMLElement;
   let images: string[] = [];
   let currentIndex = 0;
   let lastFocused: HTMLElement | null = null;
+
+  function sanityThumbUrl(url: string): string {
+    if (!url || !url.includes('cdn.sanity.io')) return url;
+    return `${url}?w=120&q=60&auto=format`;
+  }
+
+  // Rebuilt fresh on every openLightbox() call so a previous photo set
+  // never lingers. Hidden entirely for a single-photo kitten.
+  function renderThumbs() {
+    lightboxThumbs.innerHTML = '';
+    if (images.length <= 1) {
+      lightboxThumbs.classList.add('hidden');
+      lightboxThumbs.classList.remove('flex');
+      return;
+    }
+    lightboxThumbs.classList.remove('hidden');
+    lightboxThumbs.classList.add('flex');
+    images.forEach((src, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.thumbIndex = String(i);
+      btn.setAttribute('aria-label', `Go to photo ${i + 1}`);
+      btn.className = 'w-12 h-12 shrink-0 snap-center overflow-hidden rounded-sm border-2 border-transparent opacity-50 transition-opacity';
+      const img = document.createElement('img');
+      img.src = sanityThumbUrl(src);
+      img.loading = 'lazy';
+      img.alt = '';
+      img.className = 'w-full h-full object-cover';
+      btn.appendChild(img);
+      btn.addEventListener('click', () => { currentIndex = i; showImage(); });
+      lightboxThumbs.appendChild(btn);
+    });
+  }
+
+  // Isolated from the lightbox's own swipe-to-navigate touch handler below:
+  // without this, dragging across the strip to browse thumbs would also
+  // register as a >50px swipe on the main image and change photos.
+  lightboxThumbs.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+  lightboxThumbs.addEventListener('touchend', (e) => e.stopPropagation(), { passive: true });
 
   function openLightbox(imgs: string[], idx: number, name: string) {
     images = imgs;
     currentIndex = idx;
     lastFocused = document.activeElement as HTMLElement;
+    renderThumbs();
     showImage();
     lightbox.classList.remove('hidden');
     lightbox.classList.add('flex');
@@ -575,6 +617,14 @@ function formatAssessmentDate(d?: string) {
       prev.style.display = 'none';
       next.style.display = 'none';
     }
+    lightboxThumbs.querySelectorAll<HTMLElement>('[data-thumb-index]').forEach((el) => {
+      const active = parseInt(el.dataset.thumbIndex || '0', 10) === currentIndex;
+      el.classList.toggle('border-gold', active);
+      el.classList.toggle('opacity-100', active);
+      el.classList.toggle('border-transparent', !active);
+      el.classList.toggle('opacity-50', !active);
+      if (active) el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    });
   }
 
   function closeLightbox() {
