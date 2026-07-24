@@ -242,7 +242,7 @@ const kittens = sortKittens(
     });
   });
 
-  // Kitten photo carousels: CSS scroll-snap track, arrows, dots, keyboard nav.
+  // Kitten photo carousels: CSS scroll-snap track, arrows, counter, keyboard nav.
   document.querySelectorAll('[data-kitten-carousel]').forEach(carousel => {
     const el = carousel as HTMLElement;
     if (!el.closest('#kittens')) return;
@@ -251,8 +251,7 @@ const kittens = sortKittens(
     if (!track) return;
 
     const slides = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
-    const dots = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-dot]'));
-    const dotVisuals = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-dot-visual]'));
+    const counterEl = el.querySelector('[data-carousel-counter]') as HTMLElement | null;
     const prevBtn = el.querySelector('[data-carousel-prev]') as HTMLElement | null;
     const nextBtn = el.querySelector('[data-carousel-next]') as HTMLElement | null;
     if (slides.length < 2) return;
@@ -262,10 +261,7 @@ const kittens = sortKittens(
 
     function setActive(idx: number) {
       current = idx;
-      dotVisuals.forEach((dot, i) => {
-        dot.classList.toggle('opacity-90', i === idx);
-        dot.classList.toggle('opacity-40', i !== idx);
-      });
+      if (counterEl) counterEl.textContent = `${idx + 1} / ${slides.length}`;
     }
 
     function goTo(idx: number, smooth = true) {
@@ -285,7 +281,6 @@ const kittens = sortKittens(
 
     prevBtn?.addEventListener('click', () => goTo(current - 1));
     nextBtn?.addEventListener('click', () => goTo(current + 1));
-    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
 
     track.addEventListener('keydown', (e) => {
       const key = (e as KeyboardEvent).key;
