@@ -190,7 +190,7 @@ const dateLabel = formatDate(availableDate);
         data-carousel-track
         tabindex="0"
         aria-roledescription="carousel"
-        aria-label={`Photos of ${name}, ${color} Maine Coon kitten, ${allImages.length} photo${allImages.length === 1 ? "" : "s"}`}
+        aria-label={`Photos of ${name}, ${color} Maine Coon kitten, ${cardImages.length} photo${cardImages.length === 1 ? "" : "s"}`}
       >
         {displayImages.map((src, i) => (
           <div
@@ -200,6 +200,7 @@ const dateLabel = formatDate(availableDate);
             data-lightbox-name={name}
             data-lightbox-trigger=""
             data-lightbox-index={i}
+            aria-label={`View all ${allImages.length} photo${allImages.length === 1 ? "" : "s"} of ${name}`}
           >
             <img
               src={src}
