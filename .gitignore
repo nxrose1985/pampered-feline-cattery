@@ -28,3 +28,18 @@ pnpm-debug.log*
 
 # Private buyer contracts (names and signatures)
 /contracts/
+
+# Local Sanity content backups
+faq-backup-*.json
+siteSettings-backup-*.json
+
+# Claude Code local worktrees and machine-specific settings
+.claude/worktrees/
+.claude/settings.local.json
+
+# Sanity CLI local cache
+.sanity/
+
+# Windows shell artifacts
+Thumbs.db
+desktop.ini
