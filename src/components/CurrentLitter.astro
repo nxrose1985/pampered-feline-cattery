@@ -49,7 +49,7 @@ const kittens = sortKittens(
           Current Litter
         </h2>
         <p class="text-bone/60 text-sm md:text-base tracking-wide">
-          Born March 12, 2026 · CFA x TICA · Ready June 4 – July 8
+          Born March 12, 2026 · CFA x TICA
         </p>
         <p class="text-bone/40 text-xs md:text-sm tracking-wide mt-2">
           European Championship Bloodlines · HCM Echo-Negative Parents
@@ -61,9 +61,13 @@ const kittens = sortKittens(
       </div>
     </ScrollReveal>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="flex flex-wrap justify-center gap-6">
       {kittens.map((kitten: any, i: number) => (
-        <ScrollReveal animation="fadeUp" delay={i * 0.08}>
+        <ScrollReveal
+          animation="fadeUp"
+          delay={i * 0.08}
+          class="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)]"
+        >
           <KittenCard
             name={kitten.name}
             slug={kitten.slug}
