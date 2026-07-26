@@ -412,6 +412,12 @@ Claude Code generates final title tags and meta descriptions once copy is confir
 
 ---
 
+## Standing Rules
+
+- Confirm the working branch is current with origin/staging before starting any code work. Run `git fetch && git log origin/staging..HEAD --oneline`. If the branch is behind, branch fresh from origin/staging instead of continuing on it.
+
+---
+
 ## Session: 2026-03-08
 
 ### Decisions
@@ -2500,7 +2506,7 @@ CLAUDE.md                            (session log appended)
 
 ---
 
-## Session: 2026-07-20 (PR #65 — hero crossfade reduced-motion instant-swap fix)
+## Session: 2026-07-20 (PR #73 — hero crossfade reduced-motion instant-swap fix)
 
 ### Context
 User reported PR #71's rotating hero background (5 images from `heroImages` in Sanity) appeared static in production — one image loads, overlay/text fine, but never crossfades to the others. Diagnosed before touching any code, per the three-hypothesis order given: (1) image count, (2) `prefers-reduced-motion`, (3) GSAP JS actually running.
@@ -2527,8 +2533,39 @@ User reported PR #71's rotating hero background (5 images from `heroImages` in S
 ### Deferred
 All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data, the three duplicate `siteSettings` Sanity documents consolidation follow-up (healthEthics singleton enforcement not yet applied), Google Ads conversion label.
 
-### Files Changed This Session (PR #65 — targeting staging)
+### Files Changed This Session (PR #73 — targeting staging)
 ```
 src/components/Hero.astro   (reduced-motion branch: instant opacity swap instead of skipping rotation entirely; reduced-motion CSS display:none rule removed)
 CLAUDE.md                   (session log appended)
+```
+
+---
+
+## Session: 2026-07-24 (PR #78, #79, #80 — kitten photo cap audit, lightbox filmstrip, full card carousel)
+
+### Context
+A user report that "kitten photos uploaded before a certain date don't appear in the carousel" led to a full audit of every 8-item cap on kitten images across the codebase, followed by three incremental PRs that removed those caps and rebuilt the affected UI to handle uncapped photo counts (up to 26 for Kallias).
+
+### Decisions
+- **PR #78 — split both 8-photo caps from the lightbox array.** Two separate caps existed and were fixed independently:
+  1. `src/pages/kittens/[slug].astro`'s thumbnail strip had `allImageUrls.slice(0, 8)` — removed. The lightbox and "View all N photos" button already used the full array, so this only ever limited inline thumbnail visibility, not actual photo access.
+  2. `src/components/KittenCard.astro`'s home card carousel had `MAX_CARD_PHOTOS = 8` applied to `allImages` itself, which meant the cap also silently capped what was passed to `data-lightbox-images` — opening the lightbox from a home page card was capped at 8 photos too. Fixed by introducing a separate `cardImages` (capped, for the carousel's rendered slides/dots/alt-text) while `allImages` stays the full array for the lightbox and the `aria-label` badge. Confirmed via live Sanity query that no gallery image references were actually broken or missing — the "certain date" symptom traced to code, not data loss.
+- **PR #79 — thumbnail filmstrip added to the kitten lightbox.** No shared lightbox component exists; the markup and script are duplicated identically in `src/components/CurrentLitter.astro` (home page) and `src/pages/kittens/[slug].astro` (detail page), so the filmstrip was added to both. One thumb per image in the full lightbox array, native `overflow-x-auto snap-x snap-mandatory` (no custom touch JS for the strip's own scrolling), active thumb gets a gold border + full opacity, `scrollIntoView` keeps the active thumb visible as arrows/keyboard/swipe change the photo, small `?w=120&q=60&auto=format` thumb URLs distinct from the full-size main image, `loading="lazy"` on every thumb, strip hidden entirely for a single-photo kitten. A `stopPropagation()` guard on the strip's own touch events was added (the only touch-related addition) to stop dragging across the strip from also registering as a swipe on the existing whole-overlay swipe-to-navigate handler — verified this was a real conflict before adding the guard, and confirmed via `git diff` that the arrows, counter, swipe handler, and close button are byte-for-byte unchanged in both files.
+- **PR #80 — removed `MAX_CARD_PHOTOS` entirely; dots replaced with a counter.** Once the lightbox array was already decoupled from the carousel cap (PR #78), the cap itself was removed so the home card carousel renders every photo, matching the lightbox and detail page. The dot-indicator row (`data-carousel-dot`/`data-carousel-dot-visual`) doesn't scale past a handful of photos (Kallias has 26 dots otherwise), so it was replaced with a `data-carousel-counter` div reading "N / M", styled to match the lightbox counter (`text-white/40 text-sm tracking-widest`), in the same position the dots occupied. Since `allImages` now feeds both the carousel and the lightbox identically, the card's slide index maps 1:1 to the lightbox index across the full range — verified live by clicking slide 15 of Tarquin's 20 and confirming the lightbox opened on "16 / 20". Measured real payload impact via live CDN `Content-Length` headers: first-paint payload is unchanged (8 eager image requests, ~1.29 MB, in both the capped and uncapped versions, since only the first slide per card was ever `loading="eager"`); the *potential* payload if a user swipes through every photo in every card on the home page rose from ~1.51 MB (32 images, capped at 8/card) to ~3.35 MB (81 images, uncapped) — this is lazy-loaded on demand, not paid upfront.
+- **Sanity orders the `gallery` array newest-first**, not upload order or oldest-first. Worth keeping in mind for any future feature that assumes `gallery[0]` or the last array entry has date-based significance (e.g. "most recent photo" logic would need index 0, not the last index).
+
+### Conventions
+- **No shared lightbox component.** Any future lightbox change (arrows, counter, swipe, filmstrip, etc.) must be applied identically to both `CurrentLitter.astro` and `[slug].astro` — there is no single file to edit once.
+- **`git diff` showing zero removed/modified lines is the verification bar for "did not touch X"** when a task says not to change specific existing behavior (arrows, counter, swipe handler, close button) — checked explicitly before reporting completion on PR #79.
+- **New standing rule added** (see "Standing Rules" section near the top of this file): confirm the working branch is current with `origin/staging` before starting any code work, via `git fetch && git log origin/staging..HEAD --oneline`; branch fresh from `origin/staging` if behind rather than continuing on a stale branch. This section did not exist before this session — created it, since prior references to "the standing Sanity write-safety policy" in earlier session logs were never actually backed by a written rules section in this file.
+
+### Deferred
+All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data, the three duplicate `siteSettings` Sanity documents consolidation follow-up (healthEthics singleton enforcement not yet applied), Google Ads conversion label.
+
+### Files Changed This Session (PR #78, #79, #80 — merged to staging and main)
+```
+src/pages/kittens/[slug].astro       (PR #78: thumbnail-strip slice(0,8) removed; PR #79: lightbox filmstrip added)
+src/components/KittenCard.astro      (PR #78: cardImages/allImages split, aria-label split; PR #80: MAX_CARD_PHOTOS removed, dots replaced with counter)
+src/components/CurrentLitter.astro   (PR #79: lightbox filmstrip added; PR #80: carousel script updated for counter instead of dots)
+CLAUDE.md                            (Standing Rules section added; session log appended)
 ```
