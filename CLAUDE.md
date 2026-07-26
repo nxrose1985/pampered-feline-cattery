@@ -2506,7 +2506,7 @@ CLAUDE.md                            (session log appended)
 
 ---
 
-## Session: 2026-07-20 (PR #65 — hero crossfade reduced-motion instant-swap fix)
+## Session: 2026-07-20 (PR #73 — hero crossfade reduced-motion instant-swap fix)
 
 ### Context
 User reported PR #71's rotating hero background (5 images from `heroImages` in Sanity) appeared static in production — one image loads, overlay/text fine, but never crossfades to the others. Diagnosed before touching any code, per the three-hypothesis order given: (1) image count, (2) `prefers-reduced-motion`, (3) GSAP JS actually running.
