@@ -2533,7 +2533,7 @@ User reported PR #71's rotating hero background (5 images from `heroImages` in S
 ### Deferred
 All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, parents banner image, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data, the three duplicate `siteSettings` Sanity documents consolidation follow-up (healthEthics singleton enforcement not yet applied), Google Ads conversion label.
 
-### Files Changed This Session (PR #65 — targeting staging)
+### Files Changed This Session (PR #73 — targeting staging)
 ```
 src/components/Hero.astro   (reduced-motion branch: instant opacity swap instead of skipping rotation entirely; reduced-motion CSS display:none rule removed)
 CLAUDE.md                   (session log appended)
