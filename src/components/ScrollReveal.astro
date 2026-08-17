@@ -33,10 +33,18 @@ const {
   gsap.registerPlugin(ScrollTrigger);
 
   function initScrollReveal() {
+    // ScrollReveal wraps nearly every section on the site, so honouring this here
+    // removes roughly forty fade-and-translate animations in one place. Bail out
+    // before gsap.set() rather than after: setting opacity 0 and then never
+    // animating it back would hide the entire page.
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     document.querySelectorAll<HTMLElement>(".scroll-reveal").forEach((el) => {
       // Skip already-initialised elements
       if (el.dataset.srInit) return;
       el.dataset.srInit = "1";
+
+      if (prefersReducedMotion) return;
 
       const animation = el.dataset.animation ?? "fadeUp";
       const delay = parseFloat(el.dataset.delay ?? "0");
