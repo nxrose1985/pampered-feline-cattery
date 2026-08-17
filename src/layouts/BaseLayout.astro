@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import AnnouncementBanner from "../components/AnnouncementBanner.astro";
 import { getSettings } from "../lib/sanity";
 
 interface Props {
@@ -93,6 +94,10 @@ const localBusinessJson = JSON.stringify({
   </head>
   <body class="min-h-screen flex flex-col">
     <Nav />
+    <AnnouncementBanner
+      announcement={settings.announcement}
+      availabilityStatus={settings.availabilityStatus}
+    />
     <main class="flex-1">
       <slot />
     </main>

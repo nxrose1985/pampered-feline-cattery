@@ -406,7 +406,18 @@ Claude Code generates final title tags and meta descriptions once copy is confir
 - Warm but not chatty
 - Refined and confident
 - Luxury brand voice, not hobby breeder voice
-- No em dashes, no semicolons
+- **Em dashes are permitted and expected. Avoid semicolons.** This reverses the
+  original "no em dashes" rule, which the live site had already outgrown. The em
+  dash is a signature device in the published copy — "Daily human interaction —
+  our kittens thrive on affection", "Named for the High Lord of the Day Court —
+  radiant, unhurried", "{phone} — call or text anytime" — and enforcing the old
+  rule would have meant rewriting voice that is already working, in a register
+  that reads as a different author. Semicolons genuinely are near-absent from the
+  site and should stay that way. Rule confirmed by Nick, 2026-08-17.
+- Match the live site over this file wherever the two disagree on voice.
+  Contractions are on. First person plural for the cattery ("we"), second person
+  for the buyer ("you"). Zero exclamation points in editorial copy. Warmth comes
+  from specificity, not adjectives.
 - Specific over vague
 - Numbers 1-9 written as words, 10+ as numerals
 
@@ -2569,3 +2580,108 @@ src/components/KittenCard.astro      (PR #78: cardImages/allImages split, aria-l
 src/components/CurrentLitter.astro   (PR #79: lightbox filmstrip added; PR #80: carousel script updated for counter instead of dots)
 CLAUDE.md                            (Standing Rules section added; session log appended)
 ```
+
+---
+
+## Session: 2026-08-17 (PR — winter litter announcement, live-mismatch repair, a11y fixes)
+
+### Context
+The spring litter sold out in Sanity (1 Reserved, 7 Placed) but every piece of
+site copy still advertised it as available. This PR repairs the mismatch, adds a
+Sanity-editable announcement bar and next-litter section, and clears several
+accessibility defects found during the Phase 1 investigation.
+
+### Decisions
+- **Branched off `origin/staging`, then merged `origin/main` in.** `staging` was
+  one commit behind `main` (`354a539`, the flex-wrap fix for incomplete kitten
+  rows). Building on stale `staging` would have regressed that commit when this
+  work later merged forward. The merge was a clean fast-forward.
+- **Voice rule reversed** in the Notes on Tone and Copy section above: em dashes
+  are now permitted and expected, matching the live site rather than the original
+  spec. Semicolons stay out.
+- **Two new design tokens** in `global.css`. `--color-obsidian-soft: #0f0e0d`
+  replaces the raw hex that was hardcoded in 25 places across 7 files.
+  `--color-amber-warm: #E0A45E` is the seasonal accent, chosen because **no
+  saturated red clears WCAG AA as text on the obsidian background at any
+  saturation** (best case tested: 3.85:1). Amber is 9.09:1 on obsidian, 8.85:1 on
+  obsidian-soft. No red was introduced at all.
+- **`announcement` and `winterLitter` objects added to the `siteSettings`
+  singleton**, both collapsible, with field descriptions written for Sara rather
+  than for a developer.
+- **No code-side default copy for either block, deliberately.** Schema
+  `initialValue` only fires when a document is *created*, and the siteSettings
+  singleton already exists in production, so both blocks will be empty on the
+  live document after deploy and will render nothing until Sara populates them in
+  Studio. That is the intended behaviour: an empty field hides its element, and an
+  empty headline or heading hides the whole block. An earlier draft mirrored the
+  initial values as `defaultAnnouncement` / `defaultWinterLitter` constants in
+  `src/lib/sanity.ts`; those were removed because two copies of the same copy is a
+  drift hazard and silently-rendering placeholder text is worse than nothing.
+  `initialValue` stays in the schema for future document creation only.
+- **Buyer-facing copy never states a birth month.** "Expected December 2026"
+  reads as *born* in December, which implies a March go-home. State the go-home
+  window only. Current window: **December 2026 through January 2027**, held in
+  `winterLitter.goHomeWindow` as free text so it can be narrowed in Studio once
+  the litter is confirmed.
+- **"Furever" in the announcement bar is intentional** and must not be corrected.
+  The winter section uses the correct spelling. The misspelling is banner-only.
+- **`availabilityStatus` is finally wired.** It existed in schema, types, and the
+  GROQ query and rendered nowhere. An unset `announcement.enabled` now falls
+  through to it: the banner shows unless the status is "Kittens Available". An
+  explicit true/false in Studio always wins.
+- **`CurrentLitter` now has three states**, not two, because the live data sits in
+  the middle one: `open` (something Available), `spokenFor` (cards remain but all
+  Reserved), `closed` (nothing to show, zero state renders). Today it renders
+  `spokenFor`.
+- **Fallback arrays no longer carry go-home dates**, and their statuses mirror the
+  live dataset. A Sanity outage now degrades to the sold-out or empty state rather
+  than advertising kittens that are already in their homes. The SEO page fallback
+  is now an empty array for the same reason.
+- **Kitten detail eyebrow is derived**, not hardcoded. `litter` ("march-2026")
+  becomes "March 2026 Litter"; `birthDate` appends "· Born ..." only when set.
+  `birthDate` is currently null on all 8 live kittens, so the second half is
+  omitted rather than guessed.
+- **`ScrollReveal` now honours `prefers-reduced-motion`**, which removes ~61
+  fade-and-translate animations sitewide in one place. The guard returns *before*
+  `gsap.set()` — returning after would leave the whole page at opacity 0.
+- **`ForeverHomesFound` cap raised 6 to 24** and the grid switched to flex-wrap so
+  incomplete rows centre, matching the fix `354a539` made to `CurrentLitter`.
+
+### Fixes
+- **404 page was charcoal text on the obsidian body background: 1.13:1.** It had
+  never been converted when the site went dark. Now bone on obsidian at 15.61:1.
+- **`ForeverHomesFound` was silently dropping the 7th Placed kitten** (cap of 6).
+- **Card meta text was `bone/40` at 11px: 3.25:1.** Raised to `bone/60` (5.92:1).
+- **Voice inconsistency**: `[slug].astro` said "Sara reviews every request
+  personally" three lines above `ReserveRequest.astro`'s "We review every request
+  personally". Now both first person plural.
+
+### Deferred / needs Sara in Studio
+- Live FAQ still advertises the $1,000 pair discount, still says the March litter
+  is available, and still describes a $500 waitlist deposit. All Sanity content.
+- `birthDate` unset on all 8 kittens; fill it to get "Born ..." on detail pages.
+- `healthEthics` has the same singleton gap `siteSettings` had — intended as a
+  singleton but not pinned in `sanity.config.ts`.
+- All prior deferred items carry forward.
+
+### Files Changed This Session
+```
+src/styles/global.css                                (obsidian-soft + amber-warm tokens)
+sanity/schemas/siteSettings.ts                       (announcement + winterLitter objects)
+src/lib/sanity.ts                                    (Announcement + WinterLitter types, GROQ projection)
+src/components/AnnouncementBanner.astro              (NEW)
+src/components/WinterLitter.astro                    (NEW)
+src/layouts/BaseLayout.astro                         (banner mounted between Nav and main)
+src/components/CurrentLitter.astro                   (3 states, zero state, copy, fallback)
+src/components/ForeverHomesFound.astro               (cap 6→24, flex-wrap, CSS overlay, contrast)
+src/components/Hero.astro                            (CTA label)
+src/components/ScrollReveal.astro                    (prefers-reduced-motion guard)
+src/pages/index.astro                                (meta, waitlist copy, WinterLitter placement)
+src/pages/maine-coon-kittens-northern-virginia.astro (meta, conditional heads, empty fallback)
+src/pages/kittens/[slug].astro                       (derived eyebrow, voice, fallback)
+src/pages/404.astro                                  (dark theme, waitlist CTA)
+CLAUDE.md                                            (punctuation rule reversed; session log)
+```
+
+**Schema changed — run `npx sanity deploy` from the project root after merge**, or
+Sara will not see the Announcement Bar or Next Litter fields in Studio.

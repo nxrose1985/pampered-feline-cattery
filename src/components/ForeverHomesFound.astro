@@ -5,13 +5,21 @@ import type { Kitten } from "../lib/sanity";
 
 interface Props {
   litterId?: string;
+  /* Lets the caller keep the page's obsidian / obsidian-soft alternation intact
+     when a section is inserted above this one. */
+  background?: "obsidian" | "obsidian-soft";
 }
 
-const { litterId = "march-2026" } = Astro.props;
+const { litterId = "march-2026", background = "obsidian-soft" } = Astro.props;
+const bgClass = background === "obsidian" ? "bg-obsidian" : "bg-obsidian-soft";
 
 const sanityKittens = await getKittensByLitter(litterId);
 
-const MAX_SHOWN = 6;
+// Was 6, which silently dropped the 7th Placed kitten. Sized to hold the spring
+// litter (8) plus the winter litter (8) plus headroom, and it lands on an exact
+// row boundary at the desktop 6-up wrap. If a future litter ever pushes past
+// this, raise it — the cap exists only so the section can't grow unbounded.
+const MAX_SHOWN = 24;
 
 const placedKittens = sanityKittens
   .filter((k: Kitten) => k.status === "Placed")
@@ -25,7 +33,7 @@ function sanityCardUrl(url: string): string {
 ---
 
 {placedKittens.length > 0 && (
-  <section id="forever-homes-found" class="py-16 md:py-20 bg-[#0f0e0d] text-bone">
+  <section id="forever-homes-found" class={`py-16 md:py-20 ${bgClass} text-bone`}>
     <div class="max-w-6xl mx-auto px-4">
       <ScrollReveal animation="fadeUp">
         <div class="text-center mb-10 md:mb-12">
@@ -47,19 +55,19 @@ function sanityCardUrl(url: string): string {
         </div>
       </ScrollReveal>
 
-      <div class="grid justify-center gap-4 md:gap-5 grid-cols-[repeat(auto-fit,minmax(140px,160px))]">
+      <div class="flex flex-wrap justify-center gap-4 md:gap-5">
         {placedKittens.map((kitten: Kitten, i: number) => (
-          <ScrollReveal animation="fadeUp" delay={i * 0.06}>
+          <ScrollReveal animation="fadeUp" delay={i * 0.06} class="w-[140px] md:w-[160px]">
             <a
               href={kitten.slug ? `/kittens/${kitten.slug}` : "#"}
-              class="group block rounded-sm overflow-hidden bg-bone/[0.03] border border-bone/10"
+              class="group block rounded-sm overflow-hidden bg-bone/[0.03] border border-bone/10 hover:border-amber-warm/30 transition-colors"
             >
               <div class="relative aspect-square overflow-hidden bg-bone/[0.03]">
                 {kitten.image?.asset?.url ? (
                   <img
                     src={sanityCardUrl(kitten.image.asset.url)}
-                    alt={`${kitten.name}, ${kitten.color} Maine Coon kitten`}
-                    class="w-full h-full object-cover opacity-80 grayscale-[15%] group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500"
+                    alt={`${kitten.name}, ${kitten.color} Maine Coon kitten, now in their forever home`}
+                    class="w-full h-full object-cover opacity-75 saturate-[0.8] group-hover:opacity-100 group-hover:saturate-100 transition-all duration-500"
                     loading="lazy"
                   />
                 ) : (
@@ -69,13 +77,20 @@ function sanityCardUrl(url: string): string {
                     </svg>
                   </div>
                 )}
-                <span class="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest rounded-sm bg-bone/5 text-bone/40">
-                  Placed
-                </span>
+                <!-- Pure CSS over the live Sanity image: a scrim that settles the
+                     photo back so the caption reads as the subject, and a hairline
+                     that picks up the seasonal accent. Carries no text, so it has
+                     no contrast requirement of its own. -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-obsidian/75 via-obsidian/10 to-transparent group-hover:from-obsidian/45 transition-all duration-500"
+                  aria-hidden="true"
+                ></div>
+                <div class="absolute inset-x-0 bottom-0 h-px bg-amber-warm/40" aria-hidden="true"></div>
               </div>
               <div class="px-3 py-2.5">
+                <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-amber-warm mb-1">Home</p>
                 <h3 class="font-heading text-sm font-semibold text-bone/80 truncate">{kitten.name}</h3>
-                <p class="text-[11px] text-bone/40 truncate">{kitten.color} · {kitten.sex}</p>
+                <p class="text-[11px] text-bone/60 truncate">{kitten.color} · {kitten.sex}</p>
               </div>
             </a>
           </ScrollReveal>
