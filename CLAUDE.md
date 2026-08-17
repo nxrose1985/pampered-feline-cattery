@@ -2685,3 +2685,37 @@ CLAUDE.md                                            (punctuation rule reversed;
 
 **Schema changed — run `npx sanity deploy` from the project root after merge**, or
 Sara will not see the Announcement Bar or Next Litter fields in Studio.
+
+---
+
+## Session: 2026-08-17 (PR — winter litter sub-CTA moved to Sanity)
+
+Small follow-up to the winter litter PR. The line under the Join the Waitlist
+button was the last piece of hardcoded copy in `WinterLitter.astro`.
+
+- **`subCta` added to `siteSettings.winterLitter`**, after `ctaHref`. Type `text`,
+  3 rows, Sara-facing description in the same style as the other fields in the
+  object. `initialValue` is set but will not fire on the existing singleton, so
+  the value has to be pasted into Studio once.
+- **Button and sub-CTA are now independently conditional.** The wrapper renders
+  when either is present, so an empty `ctaLabel` no longer silently hides
+  populated sub-CTA copy, and an empty `subCta` leaves no orphan `<p>`. The
+  `mt-4` spacing is applied only when the button is actually above it.
+- The requested copy change ("No deposit, no obligation" to the longer waitlist
+  explanation) was **already shipped in the previous PR** and needed no edit —
+  verified as zero occurrences on `origin/staging` before starting.
+
+Verified by temporarily passing literal props to the component and building:
+populated field renders, empty field renders nothing, no-button case drops the
+`mt-4`. The test harness was reverted and `index.astro` confirmed byte-identical
+to `origin/staging` afterwards.
+
+**Schema changed — run `npx sanity deploy` after merge.**
+
+### Files Changed This Session
+```
+sanity/schemas/siteSettings.ts     (subCta field added to winterLitter)
+src/lib/sanity.ts                  (WinterLitter type + GROQ projection)
+src/components/WinterLitter.astro  (subCta wired; button/sub-CTA independently conditional)
+CLAUDE.md                          (session log)
+```

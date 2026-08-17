@@ -111,6 +111,7 @@ export interface WinterLitter {
   goHomeWindow?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  subCta?: string;
 }
 
 export interface SiteSettings {
@@ -230,7 +231,7 @@ const siteSettingsQuery = `*[_id == "siteSettings"][0] {
   "parentsBannerImage": parentsBannerImage { asset-> { url } },
   "heroImages": heroImages[] { asset-> { url }, alt },
   announcement { enabled, eyebrow, headline, body, ctaLabel, ctaHref },
-  winterLitter { enabled, eyebrow, heading, body, goHomeWindow, ctaLabel, ctaHref }
+  winterLitter { enabled, eyebrow, heading, body, goHomeWindow, ctaLabel, ctaHref, subCta }
 }`;
 
 const faqQuery = `*[_type == "faq"] | order(order asc) {

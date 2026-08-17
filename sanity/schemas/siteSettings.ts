@@ -189,6 +189,16 @@ export const siteSettings = defineType({
             "Where the button goes. Use /#waitlist to send people to the waitlist form further down the same page.",
           initialValue: "/#waitlist",
         }),
+        defineField({
+          name: "subCta",
+          title: "Small print under the button",
+          type: "text",
+          rows: 3,
+          description:
+            "The short note directly beneath the button. Use it to say plainly what joining the waitlist does and does not commit someone to, so nobody is surprised later. Leave blank to show nothing.",
+          initialValue:
+            "Joining the waitlist is free. When kittens are confirmed, waitlist families hear first. You can reserve your place in line with a $500 deposit, which applies to your kitten's price.",
+        }),
       ],
     }),
     defineField({
