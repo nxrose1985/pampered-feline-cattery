@@ -161,7 +161,7 @@ export const kitten = defineType({
       name: "dam",
       title: "Dam",
       type: "string",
-      description: 'Mother\'s name, e.g. "Feyra".',
+      description: 'Mother\'s name, e.g. "Feyre".',
     }),
     defineField({
       name: "personalityAssessment",
