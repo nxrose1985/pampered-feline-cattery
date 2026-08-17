@@ -103,6 +103,12 @@ export interface Announcement {
   ctaHref?: string;
 }
 
+export interface WinterLitterParent {
+  name?: string;
+  color?: string;
+  image?: { asset: { url: string } };
+}
+
 export interface WinterLitter {
   enabled?: boolean;
   eyebrow?: string;
@@ -112,6 +118,8 @@ export interface WinterLitter {
   ctaLabel?: string;
   ctaHref?: string;
   subCta?: string;
+  sire?: WinterLitterParent;
+  dam?: WinterLitterParent;
 }
 
 export interface SiteSettings {
@@ -231,7 +239,11 @@ const siteSettingsQuery = `*[_id == "siteSettings"][0] {
   "parentsBannerImage": parentsBannerImage { asset-> { url } },
   "heroImages": heroImages[] { asset-> { url }, alt },
   announcement { enabled, eyebrow, headline, body, ctaLabel, ctaHref },
-  winterLitter { enabled, eyebrow, heading, body, goHomeWindow, ctaLabel, ctaHref, subCta }
+  winterLitter {
+    enabled, eyebrow, heading, body, goHomeWindow, ctaLabel, ctaHref, subCta,
+    sire-> { name, color, "image": image { asset-> { url } } },
+    dam-> { name, color, "image": image { asset-> { url } } }
+  }
 }`;
 
 const faqQuery = `*[_type == "faq"] | order(order asc) {

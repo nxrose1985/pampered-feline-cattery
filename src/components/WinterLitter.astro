@@ -1,16 +1,15 @@
 ---
 import ScrollReveal from "./ScrollReveal.astro";
-import type { Cat, WinterLitter } from "../lib/sanity";
+import type { WinterLitter, WinterLitterParent } from "../lib/sanity";
 
 interface Props {
   winterLitter?: WinterLitter;
-  cats?: Cat[];
   /* Lets the section slot into the page's alternating background rhythm from
      wherever it is placed, without editing the component. */
   background?: "obsidian" | "obsidian-soft";
 }
 
-const { winterLitter, cats = [], background = "obsidian-soft" } = Astro.props;
+const { winterLitter, background = "obsidian-soft" } = Astro.props;
 
 const enabled = winterLitter?.enabled ?? true;
 
@@ -28,20 +27,19 @@ const subCta = winterLitter?.subCta?.trim();
 const show = enabled && Boolean(heading);
 const showCta = Boolean(ctaLabel && ctaHref);
 
-// The pairing is Aedion x Feyra, matched by name against the existing cat
-// documents so the photos stay in sync with whatever is on their profiles.
-// If either name is not found the section still renders, just without portraits.
-function findCat(name: string): Cat | undefined {
-  return cats.find((c) => c.name?.trim().toLowerCase() === name.toLowerCase());
-}
-
-const sire = findCat("Aedion");
-const dam = findCat("Feyra");
+// The parents are Sanity references picked in Studio, not names matched against
+// a string. Matching on "Feyra" silently dropped the dam's card the moment the
+// cat document was renamed to "Feyre" — a reference cannot drift that way, and
+// renaming a cat in Studio now updates this section automatically.
+// The pair is hidden only when a reference is genuinely unset.
+const sire: WinterLitterParent | undefined = winterLitter?.sire;
+const dam: WinterLitterParent | undefined = winterLitter?.dam;
+const showParents = Boolean(sire && dam);
 
 const parents = [
   { cat: sire, role: "Sire" },
   { cat: dam, role: "Dam" },
-].filter((p): p is { cat: Cat; role: string } => Boolean(p.cat?.image?.asset?.url));
+].filter((p): p is { cat: WinterLitterParent; role: string } => Boolean(p.cat));
 
 function sanityCardUrl(url: string): string {
   if (!url || !url.includes("cdn.sanity.io")) return url;
@@ -76,7 +74,7 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
         </div>
       </ScrollReveal>
 
-      {parents.length > 0 && (
+      {showParents && (
         <div class="flex flex-wrap justify-center gap-6 md:gap-8 mb-12 md:mb-14">
           {parents.map((parent, i) => (
             <ScrollReveal
@@ -86,17 +84,27 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
             >
               <figure class="rounded-sm overflow-hidden bg-bone/[0.04] border border-bone/10">
                 <div class="aspect-square overflow-hidden bg-bone/[0.03]">
-                  <img
-                    src={sanityCardUrl(parent.cat.image!.asset.url)}
-                    alt={`${parent.cat.name}, ${parent.cat.color} Maine Coon, ${parent.role.toLowerCase()} of our winter litter`}
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                  {parent.cat.image?.asset?.url ? (
+                    <img
+                      src={sanityCardUrl(parent.cat.image.asset.url)}
+                      alt={`${parent.cat.name}, ${parent.cat.color} Maine Coon, ${parent.role.toLowerCase()} of our winter litter`}
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="w-full h-full flex items-center justify-center">
+                      <svg class="w-10 h-10 text-bone/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
                 <figcaption class="p-5 text-center">
                   <p class="text-xs uppercase tracking-[0.3em] text-gold/70 mb-2">{parent.role}</p>
                   <h3 class="font-heading text-2xl font-semibold text-bone mb-1">{parent.cat.name}</h3>
-                  <p class="text-sm uppercase tracking-widest text-bone/60">{parent.cat.color}</p>
+                  {parent.cat.color && (
+                    <p class="text-sm uppercase tracking-widest text-bone/60">{parent.cat.color}</p>
+                  )}
                 </figcaption>
               </figure>
             </ScrollReveal>

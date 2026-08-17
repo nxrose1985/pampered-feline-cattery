@@ -26,7 +26,7 @@ const fallbackKings = [
   { name: "Rowan", color: "Silver Shaded Tabby", traits: "Rowan is a gentle giant in every sense. He is calm, affectionate, and wonderfully tolerant, the kind of cat who settles beside you without being asked and stays as long as you'll have him. He is exceptional with children and adapts easily to new people and environments.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
 ];
 const fallbackQueens = [
-  { name: "Feyra", color: "Black Tortie with Tabby Markings, Polydactyl", traits: "Feyra is everything a Maine Coon queen should be. She is warm, social, and openly affectionate with everyone she meets. She raises her kittens with the same gentle confidence she brings to every interaction, and her kittens are handled daily from birth. Children adore her. She adores them back.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+  { name: "Feyre", color: "Black Tortie with Tabby Markings, Polydactyl", traits: "Feyre is everything a Maine Coon queen should be. She is warm, social, and openly affectionate with everyone she meets. She raises her kittens with the same gentle confidence she brings to every interaction, and her kittens are handled daily from birth. Children adore her. She adores them back.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
 ];
 
 const useSanity = sanityCats.length > 0;
@@ -124,7 +124,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
        after the sold-out litter. Moving it below ForeverHomesFound means
        swapping this block with the next one and flipping the two `background`
        values so the obsidian / obsidian-soft alternation still holds. -->
-  <WinterLitter winterLitter={settings.winterLitter} cats={sanityCats} background="obsidian-soft" />
+  <WinterLitter winterLitter={settings.winterLitter} background="obsidian-soft" />
 
   <!-- Forever Homes Found (id is set inside the component on its root <section>) -->
   <ForeverHomesFound background="obsidian" />
@@ -242,12 +242,12 @@ function parseFaqAnswer(text: string): FaqBlock[] {
         <div class="relative w-full max-w-5xl mx-auto px-4 pb-12">
           <img
             src={`${settings.parentsBannerImage.asset.url}?w=1200&q=85&auto=format`}
-            alt="Aedion (CFA Champion) and Feyra — Pampered Feline Maine Coons"
+            alt="Aedion (CFA Champion) and Feyre — Pampered Feline Maine Coons"
             class="w-full object-cover rounded-sm"
             loading="lazy"
           />
           <p class="text-center text-bone/40 text-xs tracking-[0.25em] uppercase mt-4">
-            Aedion (CFA Champion) × Feyra — Spring 2026
+            Aedion (CFA Champion) × Feyre — Spring 2026
           </p>
         </div>
       </div>
