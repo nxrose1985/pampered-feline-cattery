@@ -23,6 +23,7 @@ const body = winterLitter?.body?.trim();
 const goHomeWindow = winterLitter?.goHomeWindow?.trim();
 const ctaLabel = winterLitter?.ctaLabel?.trim();
 const ctaHref = winterLitter?.ctaHref?.trim();
+const subCta = winterLitter?.subCta?.trim();
 
 const show = enabled && Boolean(heading);
 const showCta = Boolean(ctaLabel && ctaHref);
@@ -103,18 +104,22 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
         </div>
       )}
 
-      {showCta && (
+      {(showCta || subCta) && (
         <ScrollReveal animation="fadeUp">
           <div class="text-center">
-            <a
-              href={ctaHref}
-              class="inline-block px-8 py-3.5 bg-gold text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-gold/85 transition-colors"
-            >
-              {ctaLabel}
-            </a>
-            <p class="mt-4 mx-auto max-w-lg text-bone/60 text-sm leading-relaxed">
-              Joining the waitlist is free. When kittens are confirmed, waitlist families hear first. You can reserve your place in line with a $500 deposit, which applies to your kitten's price.
-            </p>
+            {showCta && (
+              <a
+                href={ctaHref}
+                class="inline-block px-8 py-3.5 bg-gold text-obsidian text-sm font-medium tracking-widest uppercase hover:bg-gold/85 transition-colors"
+              >
+                {ctaLabel}
+              </a>
+            )}
+            {subCta && (
+              <p class={`mx-auto max-w-lg text-bone/60 text-sm leading-relaxed${showCta ? " mt-4" : ""}`}>
+                {subCta}
+              </p>
+            )}
           </div>
         </ScrollReveal>
       )}
