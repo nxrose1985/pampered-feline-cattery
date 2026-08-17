@@ -10,12 +10,21 @@ const [sanityKittens, settings] = await Promise.all([
   getSettings(),
 ]);
 
-const fallbackKittens = [
-  { name: "Helion",  slug: "helion",  color: "Cream Shaded Silver",                sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3800, availableDate: "2026-06-04", order: 1, image: undefined as { asset: { url: string } } | undefined },
-  { name: "Tarquin", slug: "tarquin", color: "Cream Shaded Silver",                sex: "Male",   status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3800, availableDate: "2026-06-04", order: 2, image: undefined as { asset: { url: string } } | undefined },
-  { name: "Kallias", slug: "kallias", color: "Poly Cream Shaded Silver (6/6/6/6)",  sex: "Male",  status: "Available" as const, isPolydactyl: true,  litter: litterId, price: 3900, availableDate: "2026-06-04", order: 3, image: undefined as { asset: { url: string } } | undefined },
-  { name: "Amren",   slug: "amren",   color: "Blue Tortie",                        sex: "Female", status: "Available" as const, isPolydactyl: false, litter: litterId, price: 3600, availableDate: "2026-07-08", order: 7, image: undefined as { asset: { url: string } } | undefined },
-];
+// Backstop for a Sanity outage only, and deliberately empty: this page lists
+// kittens as available today, so the safe failure mode is the empty state
+// below rather than a hardcoded list that outlives the litter.
+const fallbackKittens: Array<{
+  name: string;
+  slug: string;
+  color: string;
+  sex: string;
+  status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
+  isPolydactyl: boolean;
+  litter: string;
+  price?: number;
+  order: number;
+  image?: { asset: { url: string } };
+}> = [];
 
 const availableKittens = (sanityKittens.length > 0 ? sanityKittens : fallbackKittens)
   .filter((k: any) => k.status === "Available")
@@ -55,7 +64,7 @@ const breadcrumbJson = JSON.stringify({
 
 <BaseLayout
   title="Maine Coon Kittens in Northern Virginia | Pampered Feline Maine Coons"
-  description="CFA-registered Maine Coon kittens in Northern Virginia. European champion bloodlines, HCM cardiac screening, and Wisdom Panel health testing. In-person pickup only, no shipping."
+  description="A CFA-registered Maine Coon cattery in Northern Virginia. European champion bloodlines, HCM cardiac screening, and Wisdom Panel health testing. In-person pickup only, no shipping. Waitlist open for our winter litter."
 >
 
   <!-- Breadcrumb -->
@@ -100,7 +109,7 @@ const breadcrumbJson = JSON.stringify({
 
   <!-- A Small Program in Northern Virginia -->
   <ScrollReveal animation="fadeUp">
-    <section class="py-16 md:py-24 bg-[#0f0e0d]">
+    <section class="py-16 md:py-24 bg-obsidian-soft">
       <div class="max-w-3xl mx-auto px-4">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
           The Cattery
@@ -140,7 +149,7 @@ const breadcrumbJson = JSON.stringify({
 
   <!-- What Sets This Program Apart -->
   <ScrollReveal animation="fadeUp">
-    <section class="py-16 md:py-24 bg-[#0f0e0d]">
+    <section class="py-16 md:py-24 bg-obsidian-soft">
       <div class="max-w-3xl mx-auto px-4">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
           Our Standards
@@ -205,19 +214,23 @@ const breadcrumbJson = JSON.stringify({
   <!-- ═══════════════════════════════════════
        AVAILABLE KITTENS  id="available-kittens"
   ════════════════════════════════════════ -->
-  <section id="available-kittens" class="py-16 md:py-24 bg-[#0f0e0d]">
+  <section id="available-kittens" class="py-16 md:py-24 bg-obsidian-soft">
     <div class="max-w-6xl mx-auto px-4">
       <ScrollReveal animation="fadeUp">
         <div class="text-center mb-12 md:mb-16">
           <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">
-            Available Now
+            {availableKittens.length > 0 ? "Available Now" : "Next Litter"}
           </p>
           <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4 leading-tight">
-            Kittens Available in Northern Virginia
+            {availableKittens.length > 0
+              ? "Kittens Available in Northern Virginia"
+              : "Our Waitlist Is Open"}
           </h2>
-          <p class="text-bone/60 text-base max-w-2xl mx-auto">
-            Every kitten listed here is available today. Click a name to meet them, see their full gallery, and read their story.
-          </p>
+          {availableKittens.length > 0 && (
+            <p class="text-bone/60 text-base max-w-2xl mx-auto">
+              Every kitten listed here is available today. Click a name to meet them, see their full gallery, and read their story.
+            </p>
+          )}
         </div>
       </ScrollReveal>
 
@@ -265,7 +278,7 @@ const breadcrumbJson = JSON.stringify({
       ) : (
         <div class="text-center max-w-xl mx-auto">
           <p class="text-bone/70 text-lg leading-relaxed mb-8">
-            We don't have any kittens available in Northern Virginia right now. Join our waitlist and we'll reach out as soon as our next litter is ready.
+            We don't have any kittens available in Northern Virginia right now. Our spring litter has found its homes, and our winter litter will be ready for their forever homes December 2026 through January 2027. Join our waitlist and we'll reach out as soon as kittens are ready.
           </p>
           <a
             href="/#waitlist"

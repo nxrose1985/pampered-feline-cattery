@@ -1,0 +1,58 @@
+---
+import type { Announcement, SiteSettings } from "../lib/sanity";
+
+interface Props {
+  announcement?: Announcement;
+  availabilityStatus?: SiteSettings["availabilityStatus"];
+}
+
+const { announcement, availabilityStatus } = Astro.props;
+
+// `enabled` unset (never touched in Studio) falls through to availabilityStatus,
+// which is the single control Sara already has and which already reads
+// "Waitlist Open". An explicit true/false in Studio always wins over it.
+const derivedDefault = availabilityStatus !== "Kittens Available";
+const enabled = announcement?.enabled ?? derivedDefault;
+
+// No code-side default copy. Every field is whatever is in Studio, and an empty
+// field renders nothing. Until siteSettings is populated the bar does not
+// appear at all, which is the intended first-deploy behaviour.
+const eyebrow = announcement?.eyebrow?.trim();
+const headline = announcement?.headline?.trim();
+const body = announcement?.body?.trim();
+const ctaLabel = announcement?.ctaLabel?.trim();
+const ctaHref = announcement?.ctaHref?.trim();
+
+const show = enabled && Boolean(headline);
+const showCta = Boolean(ctaLabel && ctaHref);
+---
+
+{show && (
+  <aside
+    class="bg-obsidian-soft border-b border-amber-warm/25"
+    aria-label="Site announcement"
+  >
+    <div class="max-w-6xl mx-auto px-4 py-3 md:py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-x-4 gap-y-2 text-center sm:text-left">
+      <p class="flex flex-col sm:flex-row sm:items-baseline gap-x-3 gap-y-1">
+        {eyebrow && (
+          <span class="text-[10px] md:text-xs font-medium tracking-[0.3em] uppercase text-amber-warm whitespace-nowrap">
+            {eyebrow}
+          </span>
+        )}
+        <span class="text-sm md:text-base text-bone leading-snug">
+          {headline}
+          {body && <span class="text-bone/60">{" "}{body}</span>}
+        </span>
+      </p>
+
+      {showCta && (
+        <a
+          href={ctaHref}
+          class="shrink-0 self-center sm:self-auto inline-block px-5 py-2 border border-amber-warm/40 text-amber-warm text-xs font-medium tracking-widest uppercase hover:border-amber-warm hover:bg-amber-warm hover:text-obsidian transition-colors"
+        >
+          {ctaLabel}
+        </a>
+      )}
+    </div>
+  </aside>
+)}

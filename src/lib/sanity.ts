@@ -94,6 +94,25 @@ export interface HeroImage {
   alt?: string;
 }
 
+export interface Announcement {
+  enabled?: boolean;
+  eyebrow?: string;
+  headline?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+export interface WinterLitter {
+  enabled?: boolean;
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  goHomeWindow?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
 export interface SiteSettings {
   petKittenPriceMin?: number;
   petKittenPriceMax?: number;
@@ -105,6 +124,8 @@ export interface SiteSettings {
   availabilityStatus?: "Kittens Available" | "Waitlist Open" | "No Kittens Available";
   parentsBannerImage?: { asset: { url: string } };
   heroImages?: HeroImage[];
+  announcement?: Announcement;
+  winterLitter?: WinterLitter;
 }
 
 export interface Faq {
@@ -207,7 +228,9 @@ const siteSettingsQuery = `*[_id == "siteSettings"][0] {
   instagramHandle,
   availabilityStatus,
   "parentsBannerImage": parentsBannerImage { asset-> { url } },
-  "heroImages": heroImages[] { asset-> { url }, alt }
+  "heroImages": heroImages[] { asset-> { url }, alt },
+  announcement { enabled, eyebrow, headline, body, ctaLabel, ctaHref },
+  winterLitter { enabled, eyebrow, heading, body, goHomeWindow, ctaLabel, ctaHref }
 }`;
 
 const faqQuery = `*[_type == "faq"] | order(order asc) {
@@ -288,6 +311,8 @@ const fallbackSettings: SiteSettings = {
   availabilityStatus: "Kittens Available",
   parentsBannerImage: undefined,
   heroImages: undefined,
+  announcement: undefined,
+  winterLitter: undefined,
 };
 
 export async function getSettings(): Promise<SiteSettings> {

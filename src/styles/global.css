@@ -10,7 +10,17 @@
   --color-green: #2D5016;
   --color-green-light: #3D6B22;
   --color-obsidian: #0A0A0A;
+  /* The alternating section background. Was hardcoded as bg-[#0f0e0d] in ~25
+     places across 7 files before it was promoted to a token. */
+  --color-obsidian-soft: #0f0e0d;
   --color-bone: #E8E4DC;
+
+  /* Seasonal accent. Sits in the same luminance band as --color-gold but reads
+     warmer and more orange, so the two read as siblings rather than a clash.
+     9.09:1 on obsidian, 8.85:1 on obsidian-soft — AAA as text on both. Chosen
+     because no saturated red clears AA as text on this background at any
+     saturation (best case tested was 3.85:1). */
+  --color-amber-warm: #E0A45E;
 
   --font-heading: "Cormorant Garamond", serif;
   --font-body: "DM Sans", sans-serif;

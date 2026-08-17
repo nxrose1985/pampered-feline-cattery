@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import CurrentLitter from "../components/CurrentLitter.astro";
+import WinterLitter from "../components/WinterLitter.astro";
 import ForeverHomesFound from "../components/ForeverHomesFound.astro";
 import CatCard from "../components/CatCard.astro";
 import ContactForm from "../components/ContactForm.astro";
@@ -110,7 +111,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
 <BaseLayout
   title="Maine Coon Kittens for Sale in Northern Virginia | Pampered Feline Maine Coons"
-  description="Maine Coon kittens available now in Northern Virginia. Spring 2026 litter: silver, polydactyl, and rare colors. CFA registered, HCM echo-tested parents. Prices from $3,600."
+  description="A small CFA-registered Maine Coon cattery in Northern Virginia. European lines, HCM echo-tested parents. Our winter litter will be ready for their forever homes December 2026 through January 2027. Waitlist open."
 >
 
   <Hero phone={settings.phone} heroImages={settings.heroImages} />
@@ -118,15 +119,22 @@ function parseFaqAnswer(text: string): FaqBlock[] {
   <!-- Kittens (id is set inside CurrentLitter component on its root <section>) -->
   <CurrentLitter />
 
+  <!-- Next litter (id="winter-litter" is set inside the component).
+       Placement is provisional: it answers "is there anything for me?" straight
+       after the sold-out litter. Moving it below ForeverHomesFound means
+       swapping this block with the next one and flipping the two `background`
+       values so the obsidian / obsidian-soft alternation still holds. -->
+  <WinterLitter winterLitter={settings.winterLitter} cats={sanityCats} background="obsidian-soft" />
+
   <!-- Forever Homes Found (id is set inside the component on its root <section>) -->
-  <ForeverHomesFound />
+  <ForeverHomesFound background="obsidian" />
 
   <!-- ═══════════════════════════════════════
        QUICK INQUIRY  id="quick-inquiry"
   ════════════════════════════════════════ -->
   <section id="quick-inquiry">
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4 text-left">
           <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
             Quick Inquiry
@@ -153,7 +161,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
   ════════════════════════════════════════ -->
   <section id="waitlist">
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4 text-left">
           <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
             Future Litters
@@ -162,7 +170,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
             Join the Waitlist
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            Our current litter is available now. See the kittens above. Our next litter is expected December 2026 or January 2027. Join the waitlist to be the first to know.
+            Our spring litter has found its homes. Our next litter will be ready for their forever homes December 2026 through January 2027. Join the waitlist and we'll reach out before we announce anywhere else.
           </p>
         </div>
       </div>
@@ -187,7 +195,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
   <!-- Editorial Block -->
   <ScrollReveal animation="fadeUp">
-    <section class="py-16 md:py-24 bg-[#0f0e0d]">
+    <section class="py-16 md:py-24 bg-obsidian-soft">
       <div class="max-w-3xl mx-auto px-4 text-center">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
           Our Philosophy
@@ -274,7 +282,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
     </div>
 
     <!-- Queens -->
-    <div class="py-16 md:py-24 bg-[#0f0e0d]">
+    <div class="py-16 md:py-24 bg-obsidian-soft">
       <div class="max-w-6xl mx-auto px-4">
         <ScrollReveal animation="fadeUp">
           <div class="text-center mb-12">
@@ -432,7 +440,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
     <!-- Genetic Testing -->
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -493,7 +501,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
     <!-- Lifetime Care & Breeding Frequency -->
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -556,7 +564,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
 
     <!-- Daily Care -->
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4">
           <div class="flex items-start gap-4 mb-8">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
@@ -609,7 +617,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
   <section id="faq">
 
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4 text-center">
           <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
             Common Questions
@@ -723,7 +731,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
   <section id="contract">
 
     <ScrollReveal animation="fadeUp">
-      <div class="py-16 md:py-24 bg-[#0f0e0d]">
+      <div class="py-16 md:py-24 bg-obsidian-soft">
         <div class="max-w-3xl mx-auto px-4 text-center">
           <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
             Terms of Sale
@@ -914,7 +922,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
   ════════════════════════════════════════ -->
   <section id="contact">
 
-    <div class="py-16 md:py-24 bg-[#0f0e0d]">
+    <div class="py-16 md:py-24 bg-obsidian-soft">
       <div class="max-w-3xl mx-auto px-4 text-left">
         <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-6">
           Reach Out
@@ -953,7 +961,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
       </div>
     </div>
 
-    <div class="py-16 md:py-24 bg-[#0f0e0d]">
+    <div class="py-16 md:py-24 bg-obsidian-soft">
       <div class="max-w-3xl mx-auto px-4">
         <ContactForm variant="dark" />
       </div>

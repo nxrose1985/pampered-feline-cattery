@@ -25,14 +25,14 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 
 const fallbackKittens: Kitten[] = [
-  { name: "Helion",  slug: "helion",  sex: "Male",   color: "Cream Shaded Silver",               status: "Available", isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 1, personality: "", about: "Helion carries himself like he knows exactly how good-looking he is. His cream shaded silver coat shifts from pale champagne at the tips to a bright silver undercoat — in the right light he almost glows. He is steady and confident without being pushy, the kind of cat who settles into a new home on his own terms and then decides he owns it. He will do well in an active household and is likely to become his person's shadow. Named for the High Lord of the Day Court — radiant, unhurried, and completely sure of himself." },
-  { name: "Tarquin", slug: "tarquin", sex: "Male",   color: "Cream Shaded Silver",               status: "Available", isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 500, availableDate: "2026-06-04", order: 2, personality: "", about: "Tarquin is the easygoing one. Where his cream shaded silver littermates are bold, Tarquin is warm — quick to purr, slow to startle, and genuinely happy in anyone's lap. His coat has the same luminous silver-cream shimmer as Helion's but his personality is softer, more collaborative. He would thrive as a companion for another cat or as the gentle anchor of a busy family home. Named for the High Lord of the Summer Court — generous, open, and deeply kind." },
-  { name: "Kallias", slug: "kallias", sex: "Male",   color: "Poly Cream Shaded Silver (6/6/6/6)", status: "Available", isPolydactyl: true,  litter: "march-2026", price: 4500, reservationFee: 500, availableDate: "2026-06-04", order: 3, personality: "", about: "Kallias is the one who stops people mid-scroll. The cream shaded silver coat is already striking, but add six toes on each front paw and he becomes something genuinely rare. He is curious and physical — the kitten who investigates everything, climbs everything, and figures things out faster than you expect. His extra toes give him remarkable dexterity; don't be surprised if he learns to open things. He needs a home that will keep up with him. Named for the High Lord of the Winter Court — precise, capable, and quietly extraordinary." },
-  { name: "Azriel",  slug: "azriel",  sex: "Male",   color: "Poly Blue Silver Tabby (6/6/6/6)",  status: "Available", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 500, availableDate: "2026-06-04", order: 4, personality: "", about: "Azriel is cool-toned and watchful, with a blue silver tabby coat that photographs like smoke and steel. His tabby stripes are crisp, his silver undercoat deep, and his six-toed front paws give him a presence that is hard to ignore. He takes his time warming up to new people but once he decides you're his, he is loyal and close. He will likely bond deeply with one or two people in the household. Named for the shadowsinger — quiet, observant, and fiercely devoted to those he loves." },
-  { name: "Lucien",  slug: "lucien",  sex: "Male",   color: "Poly Red Tabby (7/7/6/6)",          status: "Available", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 500, availableDate: "2026-07-08", order: 5, personality: "", about: "Lucien is the warm one. His red tabby coat is rich and saturated — copper and amber in sunlight, deep auburn in shadow — and his seven-toed front paws make him look like he was built for adventure. He is outgoing and social, the first to greet a stranger and the last to stop playing. Red tabbies have a reputation for personality and Lucien earns it. He would do well in a home with kids, dogs, or other cats. Named for Elain's mate — resilient, vivid, and impossible not to love." },
-  { name: "Morrigan", slug: "morrigan", sex: "Female", color: "Blue Tortie",                      status: "Available", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 500, availableDate: "2026-07-08", order: 6, personality: "", about: "Morrigan's coat is a study in contrasts — soft blue-grey patches against warm cream, scattered in the random, unrepeatable pattern that makes every tortie one of a kind. She is sharp and spirited, with the classic tortitude that tortie owners know well: she has opinions, she will share them, and she will make you laugh doing it. She is also deeply affectionate with the people she chooses. Named for the most powerful High Fae in the Night Court — fierce, funny, and completely herself." },
-  { name: "Amren",   slug: "amren",   sex: "Female", color: "Blue Tortie",                       status: "Available", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 500, availableDate: "2026-07-08", order: 7, personality: "", about: "Amren is compact, watchful, and quietly intense. Her blue tortie coat is softer in tone than Morrigan's — more muted blue, less contrast — which gives her a silvery, ethereal quality that suits her personality. She observes before she engages, sizes up a room before she enters it, and reserves her affection for people who have earned it. When she decides you're worth her time, you'll know. Named for the ancient, unknowable second-in-command of the Night Court — small, still, and not to be underestimated." },
-  { name: "Elain",   slug: "elain",   sex: "Female", color: "Poly Blue Shaded Silver (6/6/6/6)", status: "Reserved",  isPolydactyl: true,  litter: "march-2026", price: undefined, reservationFee: undefined, availableDate: "2026-06-04", order: 8, personality: "", about: "Elain is reserved — both in temperament and status. Her blue shaded silver polydactyl coat is soft and cool-toned, and her six-toed paws give her a quiet elegance that matches her personality. She warms slowly, prefers gentle handling, and rewards patience with deep loyalty. She is the kind of cat who will choose you, not the other way around." },
+  { name: "Helion",  slug: "helion",  sex: "Male",   color: "Cream Shaded Silver",               status: "Reserved", isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 500, order: 1, personality: "", about: "Helion carries himself like he knows exactly how good-looking he is. His cream shaded silver coat shifts from pale champagne at the tips to a bright silver undercoat — in the right light he almost glows. He is steady and confident without being pushy, the kind of cat who settles into a new home on his own terms and then decides he owns it. He will do well in an active household and is likely to become his person's shadow. Named for the High Lord of the Day Court — radiant, unhurried, and completely sure of himself." },
+  { name: "Tarquin", slug: "tarquin", sex: "Male",   color: "Cream Shaded Silver",               status: "Placed", isPolydactyl: false, litter: "march-2026", price: 4000, reservationFee: 500, order: 2, personality: "", about: "Tarquin is the easygoing one. Where his cream shaded silver littermates are bold, Tarquin is warm — quick to purr, slow to startle, and genuinely happy in anyone's lap. His coat has the same luminous silver-cream shimmer as Helion's but his personality is softer, more collaborative. He would thrive as a companion for another cat or as the gentle anchor of a busy family home. Named for the High Lord of the Summer Court — generous, open, and deeply kind." },
+  { name: "Kallias", slug: "kallias", sex: "Male",   color: "Poly Cream Shaded Silver (6/6/6/6)", status: "Placed", isPolydactyl: true,  litter: "march-2026", price: 4500, reservationFee: 500, order: 3, personality: "", about: "Kallias is the one who stops people mid-scroll. The cream shaded silver coat is already striking, but add six toes on each front paw and he becomes something genuinely rare. He is curious and physical — the kitten who investigates everything, climbs everything, and figures things out faster than you expect. His extra toes give him remarkable dexterity; don't be surprised if he learns to open things. He needs a home that will keep up with him. Named for the High Lord of the Winter Court — precise, capable, and quietly extraordinary." },
+  { name: "Azriel",  slug: "azriel",  sex: "Male",   color: "Poly Blue Silver Tabby (6/6/6/6)",  status: "Placed", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 500, order: 4, personality: "", about: "Azriel is cool-toned and watchful, with a blue silver tabby coat that photographs like smoke and steel. His tabby stripes are crisp, his silver undercoat deep, and his six-toed front paws give him a presence that is hard to ignore. He takes his time warming up to new people but once he decides you're his, he is loyal and close. He will likely bond deeply with one or two people in the household. Named for the shadowsinger — quiet, observant, and fiercely devoted to those he loves." },
+  { name: "Lucien",  slug: "lucien",  sex: "Male",   color: "Poly Red Tabby (7/7/6/6)",          status: "Placed", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 500, order: 5, personality: "", about: "Lucien is the warm one. His red tabby coat is rich and saturated — copper and amber in sunlight, deep auburn in shadow — and his seven-toed front paws make him look like he was built for adventure. He is outgoing and social, the first to greet a stranger and the last to stop playing. Red tabbies have a reputation for personality and Lucien earns it. He would do well in a home with kids, dogs, or other cats. Named for Elain's mate — resilient, vivid, and impossible not to love." },
+  { name: "Morrigan", slug: "morrigan", sex: "Female", color: "Blue Tortie",                      status: "Placed", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 500, order: 6, personality: "", about: "Morrigan's coat is a study in contrasts — soft blue-grey patches against warm cream, scattered in the random, unrepeatable pattern that makes every tortie one of a kind. She is sharp and spirited, with the classic tortitude that tortie owners know well: she has opinions, she will share them, and she will make you laugh doing it. She is also deeply affectionate with the people she chooses. Named for the most powerful High Fae in the Night Court — fierce, funny, and completely herself." },
+  { name: "Amren",   slug: "amren",   sex: "Female", color: "Blue Tortie",                       status: "Placed", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 500, order: 7, personality: "", about: "Amren is compact, watchful, and quietly intense. Her blue tortie coat is softer in tone than Morrigan's — more muted blue, less contrast — which gives her a silvery, ethereal quality that suits her personality. She observes before she engages, sizes up a room before she enters it, and reserves her affection for people who have earned it. When she decides you're worth her time, you'll know. Named for the ancient, unknowable second-in-command of the Night Court — small, still, and not to be underestimated." },
+  { name: "Elain",   slug: "elain",   sex: "Female", color: "Poly Blue Shaded Silver (6/6/6/6)", status: "Placed",  isPolydactyl: true,  litter: "march-2026", price: undefined, reservationFee: undefined, order: 8, personality: "", about: "Elain is reserved — both in temperament and status. Her blue shaded silver polydactyl coat is soft and cool-toned, and her six-toed paws give her a quiet elegance that matches her personality. She warms slowly, prefers gentle handling, and rewards patience with deep loyalty. She is the kind of cat who will choose you, not the other way around." },
 ];
 
 let kitten: Kitten | null = await getKittenBySlug(slug);
@@ -72,6 +72,32 @@ function formatDate(d?: string): string | null {
 
 const priceLabel = formatPrice(kitten.price);
 const dateLabel = formatDate(kitten.availableDate);
+
+// Was hardcoded "Spring 2026 · Born March 12" on every kitten page. Derived now
+// so a winter kitten renders "December 2026 Litter" without a code change.
+// birthDate is currently unset on every live kitten, so the "Born ..." half is
+// omitted until Sara fills it in rather than printing a guess.
+const MONTHS = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+
+function litterLabel(litter?: string): string | null {
+  if (!litter?.trim()) return null;
+  const raw = litter.trim();
+  const parts = /^([a-zA-Z]+)-(\d{4})$/.exec(raw);
+  if (!parts) return raw;
+  const idx = MONTHS.indexOf(parts[1].toLowerCase());
+  if (idx === -1) return raw;
+  const month = MONTHS[idx][0].toUpperCase() + MONTHS[idx].slice(1);
+  return `${month} ${parts[2]}`;
+}
+
+const litterText = litterLabel(kitten.litter);
+const bornText = kitten.birthDate ? `Born ${formatDate(kitten.birthDate)}` : null;
+const eyebrowText = [litterText ? `${litterText} Litter` : null, bornText]
+  .filter(Boolean)
+  .join(" · ");
 const pa = kitten.personalityAssessment;
 const hasAssessment = pa && (pa.personalitySummary || pa.confidenceLevel || pa.energyLevel);
 
@@ -220,9 +246,11 @@ function formatAssessmentDate(d?: string) {
 
         <!-- Details -->
         <div>
-          <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-3">
-            Spring 2026 · Born March 12
-          </p>
+          {eyebrowText && (
+            <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-3">
+              {eyebrowText}
+            </p>
+          )}
           <h1 class="font-heading text-5xl md:text-6xl font-semibold text-bone mb-2">
             {kitten.name}
           </h1>
@@ -339,7 +367,7 @@ function formatAssessmentDate(d?: string) {
 
   <!-- Personality Assessment -->
   {hasAssessment && (
-    <section class="bg-[#0f0e0d] py-16 md:py-20">
+    <section class="bg-obsidian-soft py-16 md:py-20">
       <div class="max-w-3xl mx-auto px-4">
         <p class="text-xs font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">Temperament</p>
         <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-10">
@@ -462,7 +490,7 @@ function formatAssessmentDate(d?: string) {
   )}
 
   <!-- Bottom CTA -->
-  <section id="reserve-request" class="bg-[#0f0e0d] py-16 md:py-20 text-center">
+  <section id="reserve-request" class="bg-obsidian-soft py-16 md:py-20 text-center">
     <div class="max-w-xl mx-auto px-4">
       {kitten.status === "Available" ? (
         <>
@@ -470,7 +498,7 @@ function formatAssessmentDate(d?: string) {
             Reserve {kitten.name}
           </h2>
           <p class="text-bone/60 mb-8 leading-relaxed text-left">
-            Fill out a short form to start the process. Sara reviews every request personally.
+            Fill out a short form to start the process. We review every request personally.
           </p>
           <ReserveRequest variant="dark" kittenName={kitten.name} />
           {settings.phone && (
