@@ -163,7 +163,7 @@ export const siteSettings = defineType({
           description:
             "The main paragraph under the heading. Two or three sentences is about right. Press Enter twice to start a new paragraph.",
           initialValue:
-            "Aedion and Feyra are expecting again. It's the pairing that gave us our spring litter — European championship lines, health-tested on both sides, raised underfoot in our home.",
+            "Aedion and Feyre are expecting again. It's the pairing that gave us our spring litter — European championship lines, health-tested on both sides, raised underfoot in our home.",
         }),
         defineField({
           name: "goHomeWindow",
@@ -172,6 +172,24 @@ export const siteSettings = defineType({
           description:
             'Shown on its own line, under the paragraph. Always describe when kittens go home, never when they are born. Narrow it here once the litter is confirmed. Example: "Ready for their forever homes December 2026 through January 2027".',
           initialValue: "Ready for their forever homes December 2026 through January 2027",
+        }),
+        defineField({
+          name: "sire",
+          title: "Father of this litter",
+          type: "reference",
+          to: [{ type: "cat" }],
+          options: { filter: 'role == "king"' },
+          description:
+            "Pick the father from your cats. His photo, name, and colour come straight from his profile under Cat, so updating him there updates this section too. Leave either parent empty and the pair of photos is hidden, while the rest of the section still shows.",
+        }),
+        defineField({
+          name: "dam",
+          title: "Mother of this litter",
+          type: "reference",
+          to: [{ type: "cat" }],
+          options: { filter: 'role == "queen"' },
+          description:
+            "Pick the mother from your cats. Her photo, name, and colour come from her profile in the same way.",
         }),
         defineField({
           name: "ctaLabel",

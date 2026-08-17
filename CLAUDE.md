@@ -195,7 +195,7 @@ Copy CLAUDE.md into the root folder before starting the first Claude Code sessio
 ### 2. Our Cats
 - Intro paragraph on selection philosophy
 - Kings: Rowan (silver shaded tabby), Aedion (black silver shaded)
-- Queens: Feyra (black tortie with tabby markings, polydactyl), Lilith (silver shaded)
+- Queens: Feyre (black tortie with tabby markings, polydactyl), Lilith (silver shaded)
 - Each cat: name, color/type, temperament notes, health/testing blurb
 - Photography: portrait-style, close crops, clean backgrounds
 
@@ -560,7 +560,7 @@ public/images/og-default.svg     (OG social share image placeholder)
 ### Pre-Launch Content Audit (21 items needed from Sara)
 | Category | Count | Details |
 |---|---|---|
-| Cat profiles | 8 | Temperament notes + health testing for Rowan, Aedion, Feyra, Lilith |
+| Cat profiles | 8 | Temperament notes + health testing for Rowan, Aedion, Feyre, Lilith |
 | Kitten listings | 6 | Names, sexes, colors, personalities (or manage via Sanity Studio) |
 | Pricing | 3 | Pet kitten price, reservation fee, payment methods |
 | FAQ policies | 3 | Shipping, breeding rights, payment methods |
@@ -600,17 +600,17 @@ package.json                     (added react, react-dom, react-is, styled-compo
 - **Shipping policy confirmed:** No air cargo. Flight nanny in-cabin only, or in-person pickup in Northern Virginia. Flight nanny fees are the buyer's responsibility. Nationwide service.
 - **Breeding rights policy confirmed:** All kittens sold on spay/neuter contract as default. Breeding rights available case-by-case to approved CFA or TICA registered catteries with documented health testing programs. Priced separately.
 - **Health testing protocol confirmed:** Echo by board-certified cardiologist — annually for males, biennially for females. Full Wisdom Panel covering 50 conditions. Both parents' results documented and provided at pickup. Old placeholder paragraph replaced with approved copy.
-- **Cat profiles confirmed:** Temperament and health text filled in for Aedion, Rowan, and Feyra. Lilith removed from the fallback array — she is spayed and no longer in the breeding program.
+- **Cat profiles confirmed:** Temperament and health text filled in for Aedion, Rowan, and Feyre. Lilith removed from the fallback array — she is spayed and no longer in the breeding program.
 - **Cat schema verified complete:** `name`, `role`, `color`, `traits` (temperament), `health`, `image` (hotspot enabled), `order`. No schema changes needed.
 - **Sanity Studio entry deferred to Sara:** Step-by-step paste-ready instructions provided for entering the three cats with real photos. Sara must do this manually.
 - **Webhook confirmed active:** Sanity → Netlify webhook was configured in the March 2026 session. Verification steps provided (manage.sanity.io → project k6e71wky → API → Webhooks).
 
 ### Conventions
 - **Fallback data is now real copy, not placeholders.** The fallback arrays in `sanity.ts` and `our-cats.astro` now contain approved content and serve as an accurate backstop if Sanity is unreachable. Future content changes should go through Sanity Studio first; update fallbacks only if the content is finalized and permanent.
-- **Sanity Studio display order:** Aedion = 1, Rowan = 2, Feyra = 3. Set the Display Order field when entering each cat in Studio so ordering is deterministic.
+- **Sanity Studio display order:** Aedion = 1, Rowan = 2, Feyre = 3. Set the Display Order field when entering each cat in Studio so ordering is deterministic.
 
 ### Deferred
-- **Sanity Studio cat entry:** Sara needs to log into pampered-feline.sanity.studio, create three Cat documents (Aedion, Rowan, Feyra), upload real photos, and publish. Once published, the Our Cats page pulls live data and fallback becomes unreachable backstop only.
+- **Sanity Studio cat entry:** Sara needs to log into pampered-feline.sanity.studio, create three Cat documents (Aedion, Rowan, Feyre), upload real photos, and publish. Once published, the Our Cats page pulls live data and fallback becomes unreachable backstop only.
 - **Instagram handle:** Still TBD. Update `fallbackSettings.instagramHandle` in `src/lib/sanity.ts` and the Sanity siteSettings document once confirmed.
 - **Google Workspace email:** Not yet set up for Sara.
 - **Plausible analytics:** Not yet installed.
@@ -622,7 +622,7 @@ Items resolved this session are marked done. Remaining items still need Sara's i
 
 | Category | Status | Details |
 |---|---|---|
-| Cat profiles — Aedion, Rowan, Feyra | Done (fallback filled, Studio entry pending) | Temperament + health copy finalized |
+| Cat profiles — Aedion, Rowan, Feyre | Done (fallback filled, Studio entry pending) | Temperament + health copy finalized |
 | Cat profiles — Lilith | Done | Removed from program; removed from codebase |
 | Payment methods | Done | Zelle + wire, $400 deposit, balance 1 week before pickup |
 | Shipping policy | Done | Flight nanny in-cabin, no air cargo, nationwide |
@@ -641,7 +641,7 @@ Items resolved this session are marked done. Remaining items still need Sara's i
 src/lib/sanity.ts                (fallbackSettings: email + paymentMethods; FAQ q2, q5, q7 answers)
 src/pages/health-ethics.astro   (health protocol placeholder replaced with approved paragraph)
 src/pages/kittens.astro         (step 5 shipping text updated)
-src/pages/our-cats.astro        (Aedion, Rowan, Feyra fallback filled in; Lilith removed)
+src/pages/our-cats.astro        (Aedion, Rowan, Feyre fallback filled in; Lilith removed)
 CLAUDE.md                       (session log appended)
 ```
 
@@ -685,7 +685,7 @@ None. Fix was `git pull` + `npx sanity deploy` only.
 - **FAQPage JSON-LD:** Added to faq.astro. Serialized dynamically from the Sanity/fallback FAQ array using `set:html`. All 10 questions and answers included.
 - **Sitemap and canonical URLs confirmed already present:** `@astrojs/sitemap` configured in astro.config.mjs with site URL; canonical link in BaseLayout; robots.txt in public/. No changes needed.
 - **Navigation confirmed complete:** All 7 nav items including Contract already present in Nav.astro. No changes needed.
-- **Our Cats page confirmed correct:** Aedion, Rowan, Feyra fallback data already filled from the April 21 session. Lilith already removed. No changes needed.
+- **Our Cats page confirmed correct:** Aedion, Rowan, Feyre fallback data already filled from the April 21 session. Lilith already removed. No changes needed.
 - **Build verification:** `astro build` passes cleanly in worktree after `npm install`. All 8 pages generated. Sitemap generated at dist/sitemap-index.xml.
 
 ### Deferred
@@ -753,7 +753,7 @@ CLAUDE.md                        (session log appended)
 - **CurrentLitter always shows Available kittens only:** The `filter(status === "Available").slice(0, 3)` pattern ensures reserved kittens never appear in the homepage preview regardless of order.
 
 ### Deferred
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos entered in Studio. Our Cats page falls back to hardcoded copy.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos entered in Studio. Our Cats page falls back to hardcoded copy.
 - **Instagram handle:** Still TBD. Update `fallbackSettings.instagramHandle` in `src/lib/sanity.ts` and the Sanity siteSettings document once confirmed.
 - **Google Workspace email:** Not yet set up.
 - **Plausible analytics:** Not yet installed.
@@ -829,7 +829,7 @@ kitten-elain     color → "Poly Blue Shaded Silver (6/6/6/6)", isPolydactyl →
 - **Run `node scripts/upload-gallery.mjs`:** Must be run from project root after Netlify deploys to populate gallery images in Sanity. Requires `SANITY_WRITE_TOKEN` in `.env`.
 - **Run `npx sanity deploy`:** Must be run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated Studio schema with the gallery field. Sara will not see the gallery upload UI in Studio until this is done.
 - **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos entered in Studio.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos entered in Studio.
 - **Mobile testing on real device:** Not yet done.
 
 ### Files Changed This Session (PR #11 — merged)
@@ -865,7 +865,7 @@ CLAUDE.md                        (session log appended)
 - **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root to expose the gallery field in Studio UI (carry-forward from PR #11 session).
 - **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` to populate gallery arrays in Sanity (carry-forward from PR #11 session).
 - **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carousel and lightbox should be tested on an actual phone.
 
 ### Files Changed This Session (PR #13 — merged)
@@ -944,7 +944,7 @@ CLAUDE.md                           (session log appended)
 - **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root (carry-forward from PR #11). Sara cannot see the gallery upload field in Studio until this is done.
 - **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` to populate gallery arrays in Sanity (carry-forward from PR #11).
 - **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carousel, lightbox, and 8-card grid should be tested on an actual phone.
 
 ### Files Changed This Session (PR #17 — merged)
@@ -1000,7 +1000,7 @@ CLAUDE.md                           (session log appended)
 - **Sanity Studio deploy:** Still needs `npx sanity deploy` from project root (carry-forward). Sara cannot see gallery upload field until deployed.
 - **Gallery upload:** Still needs `node scripts/upload-gallery.mjs` (carry-forward).
 - **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** All new dark theme and touch target changes should be verified on an actual phone.
 
 ### Files Changed This Session (PR #19 — merged)
@@ -1083,9 +1083,9 @@ CLAUDE.md                          (session log appended)
 - **"View Genetic Report" PDF link:** Renders below health text in CatCard when `wisdomPanelPdf` URL is present. Opens in new tab with `rel="noopener noreferrer"`. Dark/light variant styling.
 - **Cat lightbox added to index.astro:** `<div id="cat-lightbox">` with full keyboard/swipe/click-outside handling. Scoped to `#our-cats` section via `el.closest('#our-cats')` guard to avoid conflicting with kitten lightbox.
 - **Kitten lightbox scoped to `#kittens`:** `CurrentLitter.astro` lightbox registration now has `if (!el.closest('#kittens')) return;` guard. Without this, cat card clicks would open the kitten lightbox with cat photos (bug fixed).
-- **Parents banner added:** Optional full-width banner above cat cards, conditionally rendered when `settings.parentsBannerImage?.asset?.url` is set. Caption: "Aedion × Feyra — Spring 2026". Uses `?w=1200&q=85&auto=format` CDN params.
+- **Parents banner added:** Optional full-width banner above cat cards, conditionally rendered when `settings.parentsBannerImage?.asset?.url` is set. Caption: "Aedion × Feyre — Spring 2026". Uses `?w=1200&q=85&auto=format` CDN params.
 - **upload-cats.mjs created and run:** Uploads hero photo, gallery array, and Wisdom Panel PDF for each cat. Three documents created/replaced in Sanity: `cat-aedion`, `cat-rowan`, `cat-feyra`. Script searches `public/images/cats/{CatName}/` in both worktree and main project root. Hero = first non-`_parents` image (alphabetical). Gallery = remaining images. PDF match is case-insensitive.
-- **All three cat documents live in Sanity:** Aedion (1 hero + 9 gallery + PDF), Rowan (1 hero, no gallery, no PDF), Feyra (1 hero + 3 gallery + PDF).
+- **All three cat documents live in Sanity:** Aedion (1 hero + 9 gallery + PDF), Rowan (1 hero, no gallery, no PDF), Feyre (1 hero + 3 gallery + PDF).
 - **No `_parents` banner image found:** None of the cat image files have `_parents` in the filename. The banner section will not render until a `parentsBannerImage` is uploaded via Sanity Studio or the script.
 - **`@astrojs/check` and `typescript` added as devDependencies:** Installed during TypeScript validation in development.
 
@@ -1109,7 +1109,7 @@ src/lib/sanity.ts                  (Cat type + catQuery + SiteSettings type + si
 src/components/CatCard.astro       (rewritten: gallery carousel, lightbox trigger, wisdomPanelPdf link)
 src/components/CurrentLitter.astro (kitten lightbox scoped to #kittens)
 src/pages/index.astro              (gallery/wisdomPanelPdf props wired; parents banner; cat lightbox HTML+JS)
-scripts/upload-cats.mjs            (NEW — uploads hero/gallery/PDF for Aedion, Rowan, Feyra)
+scripts/upload-cats.mjs            (NEW — uploads hero/gallery/PDF for Aedion, Rowan, Feyre)
 package.json                       (@astrojs/check + typescript added as devDependencies)
 package-lock.json                  (updated)
 ```
@@ -1200,7 +1200,7 @@ CLAUDE.md                          (session log appended)
 - **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated schema (slug + about fields) to Sanity Studio UI. Sara cannot see or edit these fields in Studio until deployed.
 - **Parents banner image:** Still no `_parents` photo. Upload via Sanity Studio → Site Settings → Parents Together Banner Image.
 - **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos entered in Studio.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos entered in Studio.
 - **Mobile testing on real device:** Kitten detail page layout (two-column, thumbnail strip, gallery grid) should be verified on an actual phone.
 
 ### Files Changed This Session (PR #26 — merged)
@@ -1243,7 +1243,7 @@ kitten-elain     slug: elain,    about: "Elain is reserved — both in temperame
 ### Deferred
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics, mobile testing:** Carry forward from previous sessions.
 - **`npx sanity deploy`:** Still needed from project root to push kitten slug + about schema fields to Studio UI (carry-forward from PR #26).
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 
 ### Files Changed This Session (PR #28 — merged)
 ```
@@ -1275,7 +1275,7 @@ CLAUDE.md                          (session log appended)
 - **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the `healthEthics` schema to Sanity Studio UI. Sara cannot see or edit the Health & Ethics fields in Studio until this is deployed.
 - **`echocardiogramSection` and `geneticTestingSection` wiring:** Fields exist in schema and TypeScript type but are not yet rendered on the page. Future session can wire these if Sara wants to manage that content from Studio.
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 - **Kitten slug + about schema fields in Studio:** `npx sanity deploy` also needed to expose those fields (carry-forward from PR #26).
 
@@ -1311,7 +1311,7 @@ PR #29 (previous session) already created the `healthEthics` Sanity schema, wire
 ### Deferred
 - **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` to push the `healthEthics` schema to Sanity Studio UI (carry-forward from PR #29). Also pushes kitten slug + about fields (carry-forward from PR #26).
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 - **`echocardiogramSection` and `geneticTestingSection` wiring:** These Sanity fields exist but the page HTML still uses hardcoded text for those sections. Future session can wire if Sara wants Studio control over them.
 
@@ -1347,7 +1347,7 @@ CLAUDE.md                          (session log appended)
 - **Run `node scripts/create-health-ethics.mjs`:** Must be run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (or worktree) to seed the Sanity `healthEthics` document with approved content. Requires `SANITY_WRITE_TOKEN` in `.env` or active Sanity CLI session.
 - **Run `npx sanity deploy`:** Must be run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the `healthEthics` schema to Studio. Sara cannot see or edit Health & Ethics content in Studio until this is deployed.
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 
 ### Files Changed This Session (PR #30 — merged)
@@ -1376,7 +1376,7 @@ CLAUDE.md                          (session log appended)
 - **PDF contract manual update:** Nick needs to update the PDF to include "Pampered Feline LLC" in the title, party line, and above Sara's signature. Replace the file at `public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf` and push.
 - **`npx sanity deploy` from project root:** Still needed to push healthEthics + kitten schema fields to Studio (carry-forward from PR #29 / PR #26).
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 
 ### Files Changed This Session (PR #33 — merged)
@@ -1391,15 +1391,15 @@ CLAUDE.md                          (session log appended)
 
 ### Decisions
 - **All 8 kitten photos replaced with watermarked versions:** Hero and gallery images for Helion, Tarquin, Kallias, Azriel, Lucien, Morrigan, Amren, and Elain replaced in Sanity. Old (non-watermarked) assets deleted.
-- **All 3 cat photos replaced with watermarked versions:** Hero and gallery images for Aedion, Rowan, and Feyra replaced in Sanity. Old assets deleted where possible.
-- **`siteSettings.parentsBannerImage` updated:** Feyra's `_parents_result.jpg` (watermarked) uploaded and set on the `siteSettings` document. `createIfNotExists` used to handle the case where `siteSettings` had not yet been created as a Sanity document.
+- **All 3 cat photos replaced with watermarked versions:** Hero and gallery images for Aedion, Rowan, and Feyre replaced in Sanity. Old assets deleted where possible.
+- **`siteSettings.parentsBannerImage` updated:** Feyre's `_parents_result.jpg` (watermarked) uploaded and set on the `siteSettings` document. `createIfNotExists` used to handle the case where `siteSettings` had not yet been created as a Sanity document.
 - **`replace-with-watermarked.mjs` script created and committed:** Handles full replacement flow: reads watermarked files from `public/images/kittens/watermarked/` and `public/images/cats/{Name}/watermarked/`, uploads assets, patches Sanity documents, deletes old assets. Supports `--kittens Name,Name` and `--cats [Name,Name]` flags to target specific animals. Retry logic: 4 attempts with 3s/6s/9s backoff for transient network errors.
 
 ### Issues Encountered
 - **Persistent network error on Morrigan during initial runs:** `"An invalid response was received from the upstream server"` at `Morrigan_1799_result.jpg` on both first and second attempts. Fixed by adding retry logic with exponential backoff. Third attempt (run with `--kittens Morrigan,Tarquin`) succeeded on the first try — the error was transient Sanity API instability, not a file-specific issue.
-- **Feyra old-asset deletion blocked by draft references:** Three Feyra assets could not be deleted because `drafts.cat-feyra` still references them. Logged as warnings. The published `cat-feyra` document is fully updated with watermarked photos. Draft references will resolve when Sara publishes or discards the draft in Studio.
+- **Feyre old-asset deletion blocked by draft references:** Three Feyre assets could not be deleted because `drafts.cat-feyra` still references them. Logged as warnings. The published `cat-feyra` document is fully updated with watermarked photos. Draft references will resolve when Sara publishes or discards the draft in Studio.
 - **`siteSettings` document did not exist:** The `client.patch("siteSettings")` call failed with "document not found". Fixed by calling `createIfNotExists` before patching.
-- **Orphaned assets from failed retry runs:** The first two failed runs uploaded watermarked assets for Amren, Azriel, Elain, Helion, Kallias, Lucien before failing. The subsequent successful run uploaded a second set, making the first set orphaned. These can be cleaned up via Sanity Studio → Media Library → filter "Unused assets". The cat (Feyra) re-run similarly left orphaned watermarked assets. No functional impact — published documents point to the correct watermarked assets.
+- **Orphaned assets from failed retry runs:** The first two failed runs uploaded watermarked assets for Amren, Azriel, Elain, Helion, Kallias, Lucien before failing. The subsequent successful run uploaded a second set, making the first set orphaned. These can be cleaned up via Sanity Studio → Media Library → filter "Unused assets". The cat (Feyre) re-run similarly left orphaned watermarked assets. No functional impact — published documents point to the correct watermarked assets.
 
 ### Kitten counts uploaded
 - Amren: 1 hero + 11 gallery = 12
@@ -1414,7 +1414,7 @@ CLAUDE.md                          (session log appended)
 ### Cat counts uploaded (final successful run)
 - Aedion: 1 hero + 9 gallery = 10
 - Rowan: 1 hero = 1
-- Feyra: 1 hero + 2 gallery + 1 parents banner = 4
+- Feyre: 1 hero + 2 gallery + 1 parents banner = 4
 
 ### Conventions
 - **`--kittens` flag:** Comma-separated kitten names (case-insensitive prefix matching). Skips cats unless `--cats` also present.
@@ -1425,7 +1425,7 @@ CLAUDE.md                          (session log appended)
 
 ### Deferred
 - **Orphaned asset cleanup:** Use Sanity Studio → Media Library → "Unused assets" filter to find and delete the duplicate watermarked uploads from failed retry runs. This is cosmetic only — no functional impact.
-- **Feyra draft cleanup:** Sara can discard or publish the `drafts.cat-feyra` draft in Studio to release the blocked old asset references, then the old assets can be deleted manually or via script.
+- **Feyre draft cleanup:** Sara can discard or publish the `drafts.cat-feyra` draft in Studio to release the blocked old asset references, then the old assets can be deleted manually or via script.
 - **`npx sanity deploy` from project root:** Still needed to push healthEthics + kitten slug/about schema fields to Studio UI (carry-forward from PR #29 / PR #26).
 - **Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
 - **Mobile testing on real device:** Carry forward.
@@ -1479,7 +1479,7 @@ siteSettings     parentsBannerImage → watermarked _parents_result.jpg (documen
 ### Deferred
 - **`npx sanity deploy` required after merge:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the updated `healthEthics` schema (new `socializationSection` field) to Sanity Studio UI. Sara cannot see or edit these fields in Studio until deployed.
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 - **Kitten slug + about schema fields in Studio:** `npx sanity deploy` also needed to expose those fields (carry-forward from PR #26).
 
@@ -1514,7 +1514,7 @@ CLAUDE.md                          (session log appended)
 - **`npx sanity deploy` required after merge:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the `showResult` schema and the updated `cat` schema (`championshipCertificate` field) to Sanity Studio. Sara cannot create show results or upload championship certificates in Studio until deployed.
 - **Additional show results:** Enter future CFA/TICA results directly in Sanity Studio after deploy. The fallback (Aedion CFA Champion) will be superseded once Sanity has live data.
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward from previous sessions.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 
 ### Files Changed This Session (PR #38 — targeting staging)
@@ -1550,7 +1550,7 @@ CLAUDE.md                          (session log appended)
 - **Sara to update Sanity FAQ entry (order 9):** "What is included with my kitten?" should include the bringing-home guide link in Studio.
 - **`npx sanity deploy` from project root:** Still needed (carry-forward from PR #35 / PR #26 / PR #29).
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 
 ### Files Changed This Session
@@ -1679,7 +1679,7 @@ CLAUDE.md                    (session log appended)
 ### Deferred
 - **`npx sanity deploy` required:** Run from `C:\Users\nxros\PROJECTS\pampered-feline-cattery` (after `git pull`) to push the showResult schema, cat `championshipCertificate` field, and kitten slug/about fields to Sanity Studio UI.
 - **Parents banner image, Instagram handle, Google Workspace email, Plausible analytics:** Carry forward.
-- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyra still need real photos.
+- **Sara's cat entries in Sanity Studio:** Aedion, Rowan, Feyre still need real photos.
 - **Mobile testing on real device:** Carry forward.
 
 ### Files Changed This Session
@@ -1796,7 +1796,7 @@ CLAUDE.md                      (session log appended)
 ### Decisions
 - **`/contracts/` added to `.gitignore`:** Root-level `contracts/` folder contains private buyer documents (`PamperedFeline-KittenPurchaseAgreement-Mawyer_Lucien_5.7.2026-signed.pdf` and an unsigned copy with the buyer's name). These must never be committed. Distinct from `public/contracts/` which holds the public template PDF (already tracked and deployed).
 - **Aedion's CFA Championship Certificate moved:** `Aedion_CFA_Champion-Certificate.jpeg` was at the repo root (untracked). Moved to `public/images/certificates/` — a new folder created for this purpose.
-- **All cat photos committed:** `public/images/cats/Aedion/`, `public/images/cats/Feyra/`, `public/images/cats/Rowan/` including originals, watermarked versions, Wisdom Panel PDFs, and the Feyra parents photo.
+- **All cat photos committed:** `public/images/cats/Aedion/`, `public/images/cats/Feyra/`, `public/images/cats/Rowan/` including originals, watermarked versions, Wisdom Panel PDFs, and the Feyre parents photo.
 - **All kitten photos committed:** `public/images/kittens/2026 kitten photos/` (originals) and `public/images/kittens/watermarked/` (watermarked versions) for all 8 kittens. These are the source files used by `scripts/upload-kittens.mjs` and `scripts/replace-with-watermarked.mjs`.
 - **Logo files committed:** `public/images/logos/CFA-Stacked-Logo-Tag_White-1024x925.png` and `public/images/logos/White-Globe-Name-Cat-Website.png`.
 - **No code changes.** This PR is assets and `.gitignore` only.
@@ -2124,7 +2124,7 @@ CLAUDE.md                                               (session log appended)
 ## Session: 2026-07-18 (folded into PR #57 — updated kitten purchase agreement PDF)
 
 ### Decisions
-- **`public/kitten-purchase-agreement.pdf` added:** Copied from `contracts/PamperedFeline-KittenPurchaseAgreement_Draft.pdf` in the main checkout (the private, gitignored `contracts/` folder — read before copying to confirm it was the blank template and not one of the buyer-specific signed copies also in that folder). It's a clean, unsigned template: no buyer name, no kitten name, no signatures filled in. Sire/Dam fields are pre-filled (Aedion, Feyra) with a March 12, 2026 date of birth, consistent with the current litter.
+- **`public/kitten-purchase-agreement.pdf` added:** Copied from `contracts/PamperedFeline-KittenPurchaseAgreement_Draft.pdf` in the main checkout (the private, gitignored `contracts/` folder — read before copying to confirm it was the blank template and not one of the buyer-specific signed copies also in that folder). It's a clean, unsigned template: no buyer name, no kitten name, no signatures filled in. Sire/Dam fields are pre-filled (Aedion, Feyre) with a March 12, 2026 date of birth, consistent with the current litter.
 - **Link added to `src/pages/kitten-application.astro`'s hero,** mirroring `bringing-home-your-kitten.astro`'s existing PDF download pattern exactly: same `inline-flex` button styling (`border border-bone/20 text-bone/70`, hover `border-bone/50 text-bone`), same download SVG icon, `target="_blank" rel="noopener noreferrer"`. Labeled "Kitten Purchase Agreement (PDF)" per the request. Placed here (not the FAQ) because a buyer reviewing this page is about to apply — reading the contract terms right before starting the application is the natural moment, and it avoids introducing a second, differently-labeled contract link into the FAQ accordion.
 - **Did not touch the two existing links to the OLD contract PDF** (`public/contracts/PamperedFeline-KittenPurchaseAgreement.pdf`, referenced from the Nav "Info" dropdown and the homepage's own "Download Contract (PDF)" button in the `#contract` accordion) — out of scope for this request, which only asked to add a new link, not replace the old one. Flagging this because the site now has two different contract PDFs live at two different paths; worth a decision on whether the old links should be repointed to the new file in a follow-up, once Sara confirms the new draft is final.
 - **Did not edit `$400`/`$500` deposit language anywhere on the site.** Explicitly out of scope per this session's instructions — there's a separate, already-known "$500 deposit fix" task (the homepage's `#contract` accordion still says "$400 non-refundable deposit," inconsistent with the `$500` figure introduced in PR #56's `ReserveRequest` component). Not touched here.
@@ -2167,7 +2167,7 @@ CLAUDE.md                              (session log appended)
   - **Historical seed script:** `scripts/upload-kittens.mjs` seeds `reservationFee: 400` for all 8 kittens — this is very likely how `400` ended up in the live Sanity documents in the first place (a one-time migration script, already run). Flagged so nobody re-runs it and regresses a future fix without updating the script first.
   - **Not a hit / explicitly excluded:** kitten prices ($3,600/$4,000/$4,200/$4,500 — untouched per instruction), `400ms`/`4000ms` CSS/JS timing values, `400` font-weight values in Google Fonts URLs, `?w=400` image-resize query params, `package-lock.json` hash fragments, and CLAUDE.md's own historical session-log prose (left as a historical record, not live copy).
 - **Sire naming investigated, not changed.** Traced where "Aedion" comes from across the site:
-  - **Live Sanity `cat` document** (role `king`): `name` field is literally `"Aedion"` — confirmed live (not fallback) by checking the built homepage's "Meet the Parents" cards, which render Aedion, Rowan, Feyra.
+  - **Live Sanity `cat` document** (role `king`): `name` field is literally `"Aedion"` — confirmed live (not fallback) by checking the built homepage's "Meet the Parents" cards, which render Aedion, Rowan, Feyre.
   - **Live Sanity `showResult` document:** `catName: "Aedion"`, title "Champion," CFA, Baltimore MD, December 7, 2025 — with a real uploaded certificate PDF (`cdn.sanity.io/files/...`). The date and location text differ slightly from the old code fallback, confirming this is genuinely live data Sara entered in Studio, not leftover fallback.
   - **Historical evidence the two names refer to the same cat:** `scripts/upload-cats.mjs` references a Wisdom Panel PDF filename, `Aedion_WisdomPanelProfile_FormerName-Eyktan Navarro.pdf` — the filename itself labels "Eyktan Navarro" as Aedion's **former** name. That strongly suggests "Aedion" is the cat's current call name / cattery name, and "Eyktan Navarro" (or "CH Eyktan Navarro" per the user's records) is his prior registered/pedigree name from before acquisition — not a second cat.
   - **`cat` schema has one `name` field only** — no separate field for a registered/pedigree name distinct from the display name, so there's no way today for the site to show both "Aedion" and "CH Eyktan Navarro" at once without a schema change.
@@ -2351,7 +2351,7 @@ CLAUDE.md                             (session log appended)
 - `astro build`: 13 pages generated cleanly, no regressions.
 - `astro check`: same 8 pre-existing baseline errors (Sanity schema typing, Google Ads `dataLayer` typing), none in touched files.
 - Built HTML: `href="sms:+19496065919"` present on the homepage (both placements), and on `/kittens/helion`, `/kitten-application`, and `/404` — confirms the sticky button is genuinely site-wide, not homepage-only.
-- Confirmed no unintended side effects from the `getSettings()` patch: `mailto:pamperedfelinemainecoons@gmail.com` still renders (contact email unaffected); zero occurrences of `parentsBannerImage`/"Aedion × Feyra" newly appearing on the homepage (banner behavior unchanged).
+- Confirmed no unintended side effects from the `getSettings()` patch: `mailto:pamperedfelinemainecoons@gmail.com` still renders (contact email unaffected); zero occurrences of `parentsBannerImage`/"Aedion × Feyre" newly appearing on the homepage (banner behavior unchanged).
 - Live dev server, desktop viewport: screenshot confirms hero line rendered directly below the CTA buttons, sticky pill anchored bottom-right, not overlapping any content.
 - Live dev server, mobile viewport (375×812): screenshot + `getBoundingClientRect()` confirms the sticky pill is centered at the bottom of the viewport; scroll-indicator overlap caught, fixed, and re-verified as resolved (negative overlap = clearance, ~18.8px).
 
@@ -2451,7 +2451,7 @@ This session executed the previously-approved 5-step siteSettings consolidation 
 - `astro build`: 13 pages generated cleanly, no regressions.
 - `astro check`: same 8 pre-existing baseline errors (Sanity schema typing, Google Ads `dataLayer` typing), none touching the changed files.
 - Built HTML: `sms:+19496065919` link present (phone still resolves correctly through the new deterministic query); `mailto:pamperedfelinemainecoons@gmail.com` present (contact email still resolves); "A $500 non-refundable deposit" present (reservationFee still resolves).
-- **New, previously-dormant behavior surfaced by the consolidation:** the parents banner (`parentsBannerImage`) now renders on the homepage — one occurrence of the "Aedion × Feyra — Spring 2026" caption in the built HTML, where previously zero occurrences ever rendered (the old unordered query consistently picked a document without this field). Confirmed live in a dev server: the banner image loads a real photo (not broken), positioned correctly above the cat cards. **This is expected and correct** — the canonical document has always had this field set, it just was never being read before. Flagged to the user to spot-check the live site after this PR deploys, since it's a new visible element, not previously reviewed on production.
+- **New, previously-dormant behavior surfaced by the consolidation:** the parents banner (`parentsBannerImage`) now renders on the homepage — one occurrence of the "Aedion × Feyre — Spring 2026" caption in the built HTML, where previously zero occurrences ever rendered (the old unordered query consistently picked a document without this field). Confirmed live in a dev server: the banner image loads a real photo (not broken), positioned correctly above the cat cards. **This is expected and correct** — the canonical document has always had this field set, it just was never being read before. Flagged to the user to spot-check the live site after this PR deploys, since it's a new visible element, not previously reviewed on production.
 
 ### Deferred
 - All prior deferred items carry forward: sire naming decision (Aedion vs. CH Eyktan Navarro), reconcile shipping-policy copy sitewide, Netlify dashboard visual confirmation of the wildcard notification rule, `npx sanity deploy` for show results + kitten slug/about schema fields, Instagram handle, Google Workspace email, Plausible analytics, Sara's cat entries in Studio, mobile testing on a real device, bow tie chip visual confirmation against live data.
@@ -2719,3 +2719,64 @@ src/lib/sanity.ts                  (WinterLitter type + GROQ projection)
 src/components/WinterLitter.astro  (subCta wired; button/sub-CTA independently conditional)
 CLAUDE.md                          (session log)
 ```
+
+---
+
+## Session: 2026-08-17 (PR — Feyre name correction and parent references)
+
+### The bug
+`WinterLitter.astro` matched the winter litter's parents by name string
+(`findCat("Feyra")`). The queen's Sanity document was renamed to the correct
+spelling **Feyre**, the string stopped matching, and her card was **silently
+dropped from production** — only Aedion rendered. A `.filter()` on a failed
+lookup fails quietly, which is what made it invisible.
+
+### Decisions
+- **Name matching replaced with Sanity references.** `winterLitter.sire` and
+  `winterLitter.dam` are now `type: "reference"` to `cat`, filtered by `role` so
+  Studio offers kings for sire and queens for dam. GROQ dereferences name, color,
+  and image. Renaming a cat can no longer break this, and Sara picks the pair
+  from a dropdown instead of the pairing being hardcoded.
+- **The block hides only when a reference is genuinely unset.** A referenced cat
+  with no photo now renders a placeholder rather than vanishing — silent dropping
+  was the whole failure mode being fixed.
+- **`cats` prop removed** from `WinterLitter`; it existed only to support the
+  name lookup.
+
+### Feyra → Feyre
+Corrected in code (`index.astro` fallback queen, banner alt text, banner caption;
+`kitten.ts` field description; `siteSettings.ts` initialValue) and in **live
+Sanity content** (`winterLitter.body`, `faq-9`, and the `dam` field on all 8
+kitten documents, which still read "Feyra" and rendered on every kitten page).
+
+**Deliberately NOT changed — these are real identifiers, not the cat's name:**
+- `public/images/cats/Feyra/` — an actual directory on disk
+- `Feyra_WisdomPanelProfile_FormerName-Ulya.pdf` — an actual filename
+- `cat-feyra` / `drafts.cat-feyra` — the actual Sanity document `_id`
+
+The CLAUDE.md replace used `/(?<!cats\/)Feyra(?!_WisdomPanel)/g` to protect them.
+Renaming any of the three would make the docs point at things that don't exist.
+
+### Convention
+**`grep dist/` after a production build is the authoritative check, not GROQ
+`match`.** A `pt::text(@) match "Feyra"` query returned zero documents while
+`faq-9` still contained the string — GROQ `match` is token/prefix-based and also
+matches "Feyre". The built output caught what the query missed.
+
+### Remaining name-string coupling (reported, not changed)
+No other component *looks up* a Sanity document by name. Three fields still
+duplicate a cat's name as free text and can drift the same way:
+`kitten.sire`, `kitten.dam`, and `showResult.catName`. Converting them to
+references would close the class of bug entirely.
+
+### Files Changed This Session
+```
+sanity/schemas/siteSettings.ts     (sire + dam reference fields; body initialValue)
+sanity/schemas/kitten.ts           (dam description example)
+src/lib/sanity.ts                  (WinterLitterParent type; dereferencing projection)
+src/components/WinterLitter.astro  (references replace findCat; placeholder for missing photo)
+src/pages/index.astro              (fallback queen, alt text, caption; cats prop dropped)
+CLAUDE.md                          (session log; protected name replace)
+```
+
+**Schema changed — run `npx sanity deploy` after the merge reaches main.**
