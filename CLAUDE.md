@@ -2780,3 +2780,50 @@ CLAUDE.md                          (session log; protected name replace)
 ```
 
 **Schema changed — run `npx sanity deploy` after the merge reaches main.**
+
+---
+
+## Session: 2026-09-26 (waitlist → Apps Script via Netlify event-triggered function)
+
+### Root Cause
+Netlify's dashboard HTTP POST notification to Google Apps Script kept getting
+auto-disabled. Apps Script answers every POST with a 302 redirect, and Netlify
+counts any non-2xx response from an outgoing webhook as a failure.
+
+### Decisions
+- **Waitlist submissions now reach Apps Script through
+  `netlify/functions/submission-created.js`.** The filename is what makes Netlify
+  run it on every verified form submission. It filters to `form_name === "waitlist"`,
+  POSTs the submission `payload` as JSON with `redirect: "follow"`, and logs the
+  Apps Script status. The function's `fetch` follows the 302 itself, so the
+  redirect can no longer count against a webhook.
+- **The function always returns 200.** A bad body, a non-waitlist form, a missing
+  URL, or an Apps Script failure logs an error and returns 200. It never blocks or
+  fails the form submission.
+- **ESM `export const handler`, not `exports.handler`.** `package.json` sets
+  `"type": "module"`, so a `.js` file is ESM and `exports` would be undefined at
+  runtime. The handler signature and body are unchanged.
+- **The Apps Script URL and key live only in the Netlify environment variable
+  `WAITLIST_WEBHOOK_URL`**, set by Nick in the dashboard. Nothing in the repo.
+- **The Netlify dashboard HTTP POST notification to Apps Script was removed.**
+  Keeping it would send each waitlist entry twice.
+- `netlify.toml` already set `functions = "netlify/functions"`. No config change.
+- No form markup changed.
+
+### Verified
+- All five handler branches exercised locally with a mocked `fetch`: bad body,
+  non-waitlist form, missing env var, success, and network failure. Every one
+  returned 200. Only the waitlist success case called `fetch`.
+- `npm run build` completes with no errors.
+
+### Deferred
+- **Confirm in production:** submit the waitlist form once, then check Netlify →
+  Logs → Functions → `submission-created` for `Apps Script responded 200` and the
+  new row in the sheet. `WAITLIST_WEBHOOK_URL` must be set before this deploy.
+- All prior deferred items carry forward.
+
+### Files Changed This Session (committed to staging, merged to main)
+```
+netlify/functions/submission-created.js   (NEW — forwards waitlist submissions to Apps Script)
+CLAUDE.md                                 (session log appended)
+```
