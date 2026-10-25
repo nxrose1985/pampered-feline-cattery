@@ -1,6 +1,7 @@
 ---
 import ScrollReveal from "./ScrollReveal.astro";
-import type { WinterLitter, WinterLitterParent } from "../lib/sanity";
+import LitterPhotos from "./LitterPhotos.astro";
+import type { WinterLitter, WinterLitterParent, LitterUpdate } from "../lib/sanity";
 
 interface Props {
   winterLitter?: WinterLitter;
@@ -46,7 +47,49 @@ function sanityCardUrl(url: string): string {
   return `${url}?w=600&q=80&auto=format`;
 }
 
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+// Dates are parsed by hand: new Date("2026-10-11") is UTC midnight, which
+// renders as October 10 for anyone west of Greenwich.
+function parseYmd(d?: string): [number, number, number] | null {
+  const m = d ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(d) : null;
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : null;
+}
+
+function formatMonthDay(d: string): string {
+  const p = parseYmd(d);
+  return p ? `${MONTHS[p[1] - 1]} ${p[2]}` : d;
+}
+
+const birthDate = winterLitter?.birthDate?.trim();
+const birth = parseYmd(birthDate);
+const factLine = birth ? `Born ${MONTHS[birth[1] - 1]} ${birth[2]}, ${birth[0]} · CFA x TICA` : null;
+
+// Kittens go home at 12 weeks, so the last milestone is labelled with the
+// month that lands in. Only the ages are fixed here. Which milestone is lit up
+// is decided in the visitor's browser, so the built page never goes stale.
+const goHomeMonth = birth ? MONTHS[new Date(Date.UTC(birth[0], birth[1] - 1, birth[2] + 84)).getUTCMonth()] : "";
+const milestones = birth
+  ? [
+      { week: 0, label: "Born", when: formatMonthDay(birthDate!) },
+      { week: 2, label: "Eyes open", when: "Around week 2" },
+      { week: 4, label: "Up and about", when: "Around week 4" },
+      { week: 8, label: "Vaccines and personality", when: "Around week 8" },
+      { week: 12, label: "Going home", when: goHomeMonth },
+    ]
+  : [];
+
+// Newest first, whatever order Sara added them in. An update with no photos
+// or no date is skipped rather than rendered as an empty block.
+const updates: LitterUpdate[] = (winterLitter?.updates ?? [])
+  .filter((u) => u.date && (u.photos?.length ?? 0) > 0)
+  .sort((a, b) => b.date.localeCompare(a.date));
+const latest = updates[0];
+const older = updates.slice(1);
+const photoLabel = "Our winter litter";
+
 const bgClass = background === "obsidian" ? "bg-obsidian" : "bg-obsidian-soft";
+const dotBgClass = background === "obsidian" ? "bg-obsidian" : "bg-obsidian-soft";
 const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolean);
 ---
 
@@ -57,22 +100,118 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
     <div class="max-w-6xl mx-auto px-4">
       <ScrollReveal animation="fadeUp">
         <div class="text-center mb-12 md:mb-16 max-w-3xl mx-auto">
-          <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">
-            {eyebrow}
-          </p>
-          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-6 leading-tight">
+          {eyebrow && (
+            <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-4">
+              {eyebrow}
+            </p>
+          )}
+          <h2 class="font-heading text-4xl md:text-5xl font-semibold text-bone mb-4 leading-tight">
             {heading}
           </h2>
-          {paragraphs.map((p) => (
-            <p class="text-bone/70 text-lg leading-relaxed mb-4 last:mb-0">{p}</p>
-          ))}
-          {goHomeWindow && (
+          {factLine && (
+            <p class="text-bone/60 text-sm md:text-base tracking-wide">{factLine}</p>
+          )}
+          {birth && (
+            <p
+              class="mt-6 inline-block border-t border-b border-amber-warm/30 py-3 px-6 text-amber-warm text-sm md:text-base tracking-wide"
+              data-litter-age
+              data-birth-date={birthDate}
+              hidden
+            ></p>
+          )}
+          {paragraphs.length > 0 && (
+            <div class="mt-6">
+              {paragraphs.map((p) => (
+                <p class="text-bone/70 text-lg leading-relaxed mb-4 last:mb-0">{p}</p>
+              ))}
+            </div>
+          )}
+          {!birth && goHomeWindow && (
             <p class="mt-8 inline-block border-t border-b border-amber-warm/30 py-3 px-6 text-amber-warm text-sm md:text-base tracking-wide">
               {goHomeWindow}
             </p>
           )}
         </div>
       </ScrollReveal>
+
+      {milestones.length > 0 && (
+        <ScrollReveal animation="fadeUp">
+          <div class="relative max-w-4xl mx-auto mb-12 md:mb-16" data-litter-timeline data-birth-date={birthDate}>
+            <div
+              class="absolute left-[7px] top-2 bottom-2 w-px bg-bone/15 md:left-[10%] md:right-[10%] md:top-[7px] md:bottom-auto md:w-auto md:h-px"
+              aria-hidden="true"
+            ></div>
+            <ol class="relative grid gap-6 md:grid-cols-5 md:gap-0">
+              {milestones.map((m) => (
+                <li
+                  class="group relative pl-8 md:pl-0 md:px-2 md:text-center"
+                  data-milestone
+                  data-week={String(m.week)}
+                  data-state={m.week === 0 ? "past" : "upcoming"}
+                >
+                  <span
+                    class={`absolute left-0 top-1 md:static md:mx-auto md:mb-4 block w-[15px] h-[15px] rounded-full border border-bone/25 ${dotBgClass} group-data-[state=past]:bg-gold/70 group-data-[state=past]:border-gold/70 group-data-[state=current]:bg-amber-warm group-data-[state=current]:border-amber-warm`}
+                    aria-hidden="true"
+                  ></span>
+                  <p class="font-heading text-lg md:text-xl font-semibold text-bone/50 leading-snug group-data-[state=past]:text-bone/80 group-data-[state=current]:text-bone">
+                    {m.label}
+                  </p>
+                  <p class="text-xs uppercase tracking-widest text-bone/40 mt-1 group-data-[state=current]:text-amber-warm">
+                    {m.when}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </ScrollReveal>
+      )}
+
+      <div class="mb-12 md:mb-16">
+        {latest ? (
+          <ScrollReveal animation="fadeUp">
+            <div class="text-center max-w-3xl mx-auto mb-8">
+              <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-3">
+                {formatMonthDay(latest.date)}
+              </p>
+              {latest.caption && (
+                <p class="text-bone/70 text-lg leading-relaxed">{latest.caption}</p>
+              )}
+            </div>
+            <LitterPhotos photos={latest.photos!} label={photoLabel} />
+          </ScrollReveal>
+        ) : (
+          <ScrollReveal animation="fadeUp">
+            <div class="max-w-3xl mx-auto rounded-sm bg-bone/[0.04] border border-bone/10 px-6 py-10 md:py-14 text-center">
+              <p class="text-bone/70 text-lg leading-relaxed">
+                First photos coming soon. <a href="#waitlist" class="text-bone/90 underline underline-offset-2 hover:text-gold/80 transition-colors">Join the waitlist</a> and we'll let you know when they're posted.
+              </p>
+            </div>
+          </ScrollReveal>
+        )}
+
+        {older.length > 0 && (
+          <div class="max-w-3xl mx-auto mt-12 divide-y divide-bone/[0.08] border-t border-bone/[0.08]">
+            {older.map((u) => (
+              <details class="group py-6">
+                <summary class="flex items-center justify-between cursor-pointer list-none min-h-[44px]">
+                  <span class="pr-4">
+                    <span class="block font-heading text-xl md:text-2xl font-semibold text-bone">
+                      {formatMonthDay(u.date)}
+                    </span>
+                    {u.caption && <span class="block text-bone/60 text-sm mt-1">{u.caption}</span>}
+                  </span>
+                  <svg class="w-5 h-5 text-bone/50 flex-shrink-0 transition-transform group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6" />
+                  </svg>
+                </summary>
+                <div class="mt-6">
+                  <LitterPhotos photos={u.photos!} label={photoLabel} />
+                </div>
+              </details>
+            ))}
+          </div>
+        )}
+      </div>
 
       {showParents && (
         <div class="flex flex-wrap justify-center gap-6 md:gap-8 mb-12 md:mb-14">
@@ -135,9 +274,59 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
   </section>
 )}
 
+<script>
+  // Age and timeline are computed here, in the visitor's browser, from the
+  // birth date alone. The built HTML never holds an age, so a page built today
+  // is still right next week without a rebuild.
+  const DAY = 24 * 60 * 60 * 1000;
+  const MAX_WEEKS = 13;
+
+  function ageInDays(ymd: string): number | null {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd);
+    if (!m) return null;
+    const birth = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // Rounded, not floored: a daylight-saving change makes one day 23 or 25 hours.
+    return Math.round((today.getTime() - birth.getTime()) / DAY);
+  }
+
+  function initLitterAge() {
+    document.querySelectorAll<HTMLElement>("[data-litter-age]").forEach((el) => {
+      const days = ageInDays(el.dataset.birthDate ?? "");
+      if (days === null || days < 1) return;
+      const weeks = Math.floor(days / 7);
+      if (weeks > MAX_WEEKS) return;
+      el.textContent = days <= 13 ? `${days} ${days === 1 ? "day" : "days"} old` : `${weeks} weeks old`;
+      el.hidden = false;
+    });
+
+    document.querySelectorAll<HTMLElement>("[data-litter-timeline]").forEach((timeline) => {
+      const days = ageInDays(timeline.dataset.birthDate ?? "");
+      if (days === null || days < 0) return;
+      const weeks = Math.floor(days / 7);
+      const items = Array.from(timeline.querySelectorAll<HTMLElement>("[data-milestone]"));
+      const reached = items.filter((li) => Number(li.dataset.week) <= weeks);
+      const current = reached[reached.length - 1];
+      items.forEach((li) => {
+        const state = li === current ? "current" : reached.includes(li) ? "past" : "upcoming";
+        li.dataset.state = state;
+        if (state === "current") li.setAttribute("aria-current", "step");
+        else li.removeAttribute("aria-current");
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initLitterAge);
+  } else {
+    initLitterAge();
+  }
+</script>
+
 <style>
-  /* The only new motion in this PR: a slow, low-contrast sheen travelling along
-     the hairline at the top of the section. Decorative and aria-hidden. */
+  /* A slow, low-contrast sheen travelling along the hairline at the top of the
+     section. Decorative and aria-hidden. */
   .frost-rule {
     background: linear-gradient(
       90deg,

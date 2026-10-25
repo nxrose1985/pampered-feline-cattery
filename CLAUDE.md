@@ -420,6 +420,14 @@ Claude Code generates final title tags and meta descriptions once copy is confir
   from specificity, not adjectives.
 - Specific over vague
 - Numbers 1-9 written as words, 10+ as numerals
+- **Stating a litter's actual birth date is allowed** once the litter is born
+  (e.g. "Born October 11, 2026"). This replaces the 2026-08-17 rule that copy
+  must never state a birth month, which only applied before the winter litter
+  arrived. Rule confirmed by Nick, 2026-10-25. Never state or imply whether a
+  kitten from a litter that is not listed yet is available, reserved, or spoken for.
+- **Waitlist copy never mentions a deposit or holding a place in line.** We have
+  never taken waitlist holds. The $500 purchase deposit (application step 4,
+  deposit and payment FAQ, contract summary) is a separate thing and stays.
 
 ---
 
@@ -2618,7 +2626,8 @@ accessibility defects found during the Phase 1 investigation.
   `src/lib/sanity.ts`; those were removed because two copies of the same copy is a
   drift hazard and silently-rendering placeholder text is worse than nothing.
   `initialValue` stays in the schema for future document creation only.
-- **Buyer-facing copy never states a birth month.** "Expected December 2026"
+- **(Superseded 2026-10-25: birth dates may now be stated. See Notes on Tone.)**
+  **Buyer-facing copy never states a birth month.** "Expected December 2026"
   reads as *born* in December, which implies a March go-home. State the go-home
   window only. Current window: **December 2026 through January 2027**, held in
   `winterLitter.goHomeWindow` as free text so it can be narrowed in Studio once

@@ -109,11 +109,27 @@ export interface WinterLitterParent {
   image?: { asset: { url: string } };
 }
 
+export interface LitterUpdatePhoto {
+  asset: {
+    url: string;
+    metadata?: { dimensions?: { width: number; height: number } };
+  };
+}
+
+export interface LitterUpdate {
+  _key: string;
+  date: string;
+  caption?: string;
+  photos?: LitterUpdatePhoto[];
+}
+
 export interface WinterLitter {
   enabled?: boolean;
   eyebrow?: string;
   heading?: string;
   body?: string;
+  birthDate?: string;
+  updates?: LitterUpdate[];
   goHomeWindow?: string;
   ctaLabel?: string;
   ctaHref?: string;
@@ -240,7 +256,11 @@ const siteSettingsQuery = `*[_id == "siteSettings"][0] {
   "heroImages": heroImages[] { asset-> { url }, alt },
   announcement { enabled, eyebrow, headline, body, ctaLabel, ctaHref },
   winterLitter {
-    enabled, eyebrow, heading, body, goHomeWindow, ctaLabel, ctaHref, subCta,
+    enabled, eyebrow, heading, body, birthDate, goHomeWindow, ctaLabel, ctaHref, subCta,
+    "updates": updates[] {
+      _key, date, caption,
+      "photos": photos[] { asset-> { url, metadata { dimensions { width, height } } } }
+    },
     sire-> { name, color, "image": image { asset-> { url } } },
     dam-> { name, color, "image": image { asset-> { url } } }
   }
@@ -344,7 +364,8 @@ export async function getSettings(): Promise<SiteSettings> {
 const fallbackFaqs: Faq[] = [
   { question: "Where are you located?", answer: "We are located in Northern Virginia.", order: 1 },
   { question: "Do you ship kittens?", answer: "We do not ship kittens as air cargo. Kittens travel with a professional flight nanny in-cabin, or can be picked up in person at our Northern Virginia location. Flight nanny fees vary by destination and are the buyer's responsibility. We serve families nationwide. Contact us to discuss transport options for your location.", order: 2 },
-  { question: "When do kittens go home?", answer: "Kittens go home at 12 weeks of age. This allows time for proper socialization, vaccines, and development.", order: 3 },
+  { question: "When can my kitten come home?", answer: "Kittens go home at 12 weeks of age. Our winter litter was born October 11, 2026 and goes home in January 2027. Our next litter is planned for spring or summer 2027. Kittens may be held longer if a health concern arises.", order: 3 },
+  { question: "Do you have a waiting list?", answer: "Yes. Our winter litter was born October 11, 2026, and our next litter is planned for spring or summer 2027. Kittens go home at 12 weeks after their vaccinations and vet clearance. Joining the waiting list is free. Reach us at 949-606-5919 or pamperedfelinemainecoons@gmail.com with any questions.", order: 3.5 },
   { question: "How are kittens socialized?", answer: "Kittens are raised in our home with daily hands-on interaction from birth. They are exposed to household sounds, people, and gentle handling throughout their first weeks.", order: 4 },
   { question: "Do you offer breeding rights?", answer: "All kittens are sold on a spay/neuter contract as pet-only companions unless otherwise agreed in writing prior to purchase. Breeding rights are available on a case-by-case basis to approved CFA or TICA registered catteries with documented health testing programs. Breeding rights kittens are priced separately. Contact us to discuss.", order: 5 },
   { question: "What does a kitten cost?", answer: "Pricing is tiered by color rarity and polydactyl status. Standard pet kittens start at $3,600. Rare color kittens (silver, smoke, shaded) are $4,000. Polydactyl kittens are $4,200. Rare color polydactyl kittens are $4,500. A $500 non-refundable deposit secures your reservation and is applied to the purchase price.", order: 6 },
