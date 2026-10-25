@@ -21,6 +21,8 @@ Five one-off scripts that wrote directly to production Sanity with no `--dry-run
 
 They're recoverable from git history if a specific one is ever needed again as a reference — but any script rebuilt from them must add the dry-run and dump-first steps before it's allowed to run against production.
 
+`update-winter-litter-content.mjs` (2026-10-25, PR #90) was the first script written to this rule: dry run, dump-first backup, explicit `_id`s guarded by `_rev`, and an abort if a target has an unpublished draft. It ran once and was removed in the same PR. Recover it from history as a template for the next content update.
+
 ## `generate-bringing-home-pdf.py`
 
 Local-only. Generates `public/bringing-home-guide.pdf` from hardcoded content. Touches no Sanity data — the standing rule above doesn't apply to it.

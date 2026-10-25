@@ -2836,3 +2836,61 @@ counts any non-2xx response from an outgoing webhook as a failure.
 netlify/functions/submission-created.js   (NEW — forwards waitlist submissions to Apps Script)
 CLAUDE.md                                 (session log appended)
 ```
+
+---
+
+## Session: 2026-10-25 (PR #90, winter litter has arrived)
+
+### Context
+The winter litter (Aedion x Feyre) was born October 11, 2026, eight kittens. The site still said "ready December 2026 through January 2027", so visitors kept asking when the kittens would be born. Built Option A from the same day's read-only proposal: grow the existing WinterLitter section instead of adding per-kitten cards.
+
+### Decisions
+- **WinterLitter moved directly under Hero** and became a "litter has arrived" section: eyebrow, H2, fact line "Born October 11, 2026 · CFA x TICA", age pill, body, milestone timeline, photo updates, parent cards, waitlist button.
+- **Age pill is computed in the visitor's browser** from `winterLitter.birthDate`. The built HTML holds only the birth date, so the page never goes stale without a rebuild. "N days old" through day 13, then "N weeks old", hidden once the litter is past 13 weeks. Dates parsed by hand as local dates to avoid the UTC off-by-one.
+- **Milestone timeline ages are constants in code** (Born, Eyes open ~wk 2, Up and about ~wk 4, Vaccines and personality ~wk 8, Going home in the month 12 weeks after birth). The browser marks each one past, current or upcoming from the computed age. Every label says "around" so nothing claims a milestone happened. Horizontal on desktop, vertical on mobile.
+- **Photo updates live on the siteSettings singleton** (`winterLitter.updates[]`: date, caption, photos[]), not on kitten documents. One publish per batch, and no kitten documents exist for this litter, so nothing can leak status, price, or a Reserve form through `/kittens/[slug]`, CurrentLitter, or the sitemap.
+- **New `LitterPhotos.astro`** renders one update: a single photo shows large (capped at 80vh so a portrait photo doesn't take over), several show as up to six square tiles in the ForeverHomesFound frame style (without its desaturation, which suits placed kittens, not new ones) plus "View all N photos". Older updates fold into `<details>`, newest first. Empty state is a quiet panel with a waitlist link, rendered by code only while `updates` is empty.
+- **CurrentLitter renders nothing when closed** (every spring kitten Placed). Its section id is now `current-litter`. Its lightbox and script still render, and the trigger guard now accepts `#current-litter, #kittens, #winter-litter`. The filmstrip's `sanityThumbUrl()` strips any existing query so pre-sized winter URLs (`?w=1600`) get clean thumbnails.
+- **`#kittens` now sits on a wrapper div around WinterLitter in index.astro**, so the nav link, hero "Meet Our Kittens" button, `/kittens` redirect, and spring pages' "Back to the Litter" link all land on the litter being raised now. The section inside keeps `#winter-litter` for the announcement button.
+- **Quick Inquiry default options** are now Winter litter, A future litter, General question. They were hardcoded defaults, not a Sanity query. Field name, form name, and honeypot unchanged.
+- **No em dashes in any new or edited copy this session** (Nick's instruction for this task). The 2026-08-17 rule that em dashes are permitted is otherwise unchanged; confirm with Nick before treating "no em dashes" as standing.
+- **Birth date rule recorded** in Notes on Tone above, plus a rule that waitlist copy never mentions a deposit or a place in line.
+
+### Sanity content changed (one transaction, `rJll81KLRD1gd3J3RAiFau`)
+Backup: `winter-litter-backup-2026-10-25T17-50-27-517Z.json` in the project root (gitignored).
+```
+siteSettings   announcement: eyebrow "Winter Litter", headline "Our winter litter is here. Eight kittens, born October 11.", body unset, button "Meet the Litter" -> /#winter-litter
+               winterLitter: birthDate 2026-10-11, eyebrow, heading, body, subCta (deposit/place-in-line language removed), updates [], goHomeWindow unset
+faq-6          "When can my kitten come home?" answer rewritten
+faq-15         "Do you have a waiting list?" answer rewritten, waitlist deposit removed
+6ebe5d2e-...   pair discount: "Yes!" -> "Yes.", "a $1,000 discount off the total" -> "We take $1,000 off the total"
+```
+The Sanity -> Netlify webhook has no filter and fires once per changed document, so this transaction sent four build pings.
+
+### Verified
+- `npm run build`: 13 pages, no errors. `astro check`: the same 8 baseline errors, none in changed files.
+- Playwright at 1280 and 375: empty state, one update with one photo, and a newest update with eight photos plus an older single-photo update in `<details>`. Mocks removed before commit. Lightbox opens from tiles and "View all", counter "1 / 8", filmstrip thumbs at `?w=120`, arrows, Escape, and keyboard Enter all work. No horizontal scroll at 375. In-app browser screenshots still time out, so Playwright was used.
+- Built HTML grep: no "December 2026", "spoken for", "sold out", or "place in line". "January 2027" appears only in the new FAQ answer. "reserved" only in the footer copyright on the homepage. "Tarquin" and "Kallias" only in Forever Homes Found and their own spring pages.
+
+### Deferred
+- **`npx sanity deploy`** (after `git pull origin main`) so Sara sees Birth date and Photo updates in Studio.
+- `scripts/update-winter-litter-content.mjs` removed in the same PR per scripts/README.md; recover from history as a template.
+- Parents banner caption still reads "Aedion (CFA Champion) × Feyre — Spring 2026" (index.astro). Out of scope.
+- faq-16 "Can I get updates and photos before pickup?" still opens with "Yes!". Out of scope.
+- All prior deferred items carry forward.
+
+### Files Changed This Session (PR #90)
+```
+sanity/schemas/siteSettings.ts                       (birthDate, updates[]; descriptions and initial values; deposit language removed)
+src/lib/sanity.ts                                    (LitterUpdate types, GROQ projection, fallback FAQs)
+src/components/WinterLitter.astro                    (header, age pill, timeline, updates, client script)
+src/components/LitterPhotos.astro                    (NEW: single large photo or tiles + View all)
+src/components/CurrentLitter.astro                   (renders nothing when closed; id current-litter; lightbox guard; thumb URL fix)
+src/components/QuickInquiry.astro                    (default kitten options)
+src/components/ForeverHomesFound.astro               (waitlist line)
+src/pages/index.astro                                (order, #kittens wrapper, meta description, waitlist intro)
+src/pages/maine-coon-kittens-northern-virginia.astro (eyebrow and no-kittens copy)
+scripts/README.md                                    (history note)
+.gitignore                                           (winter-litter-backup-*.json)
+CLAUDE.md                                            (tone rules; session log)
+```
