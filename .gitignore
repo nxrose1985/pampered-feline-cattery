@@ -32,6 +32,7 @@ pnpm-debug.log*
 # Local Sanity content backups
 faq-backup-*.json
 siteSettings-backup-*.json
+winter-litter-backup-*.json
 
 # Claude Code local worktrees and machine-specific settings
 .claude/worktrees/

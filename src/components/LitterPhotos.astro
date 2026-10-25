@@ -1,0 +1,87 @@
+---
+import type { LitterUpdatePhoto } from "../lib/sanity";
+
+interface Props {
+  photos: LitterUpdatePhoto[];
+  /* Used in alt text and as the lightbox label. */
+  label: string;
+}
+
+const { photos, label } = Astro.props;
+
+// Tiles are capped so a big batch never turns into a wall of thumbnails.
+// Every photo is still reachable through "View all N photos".
+const MAX_TILES = 6;
+
+const urls = photos.map((p) => p.asset?.url).filter(Boolean) as string[];
+
+// The lightbox gets a sized URL, not the phone original. Its filmstrip strips
+// the query string before adding its own thumbnail params.
+const lightboxImages = urls.map((u) => `${u}?w=1600&q=80&auto=format`);
+const single = photos.length === 1 ? photos[0] : null;
+const dims = single?.asset?.metadata?.dimensions;
+const tiles = urls.slice(0, MAX_TILES);
+const lightboxJson = JSON.stringify(lightboxImages);
+---
+
+{single ? (
+  <div class="max-w-3xl mx-auto">
+    <div
+      class="w-fit max-w-full mx-auto rounded-sm overflow-hidden border border-bone/10 hover:border-amber-warm/30 transition-colors cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+      role="button"
+      tabindex="0"
+      aria-label={`View photo of ${label} larger`}
+      data-lightbox-trigger=""
+      data-lightbox-images={lightboxJson}
+      data-lightbox-name={label}
+      data-lightbox-index="0"
+    >
+      <img
+        src={`${urls[0]}?w=1200&q=80&auto=format`}
+        alt={`${label}, Maine Coon kittens`}
+        width={dims?.width}
+        height={dims?.height}
+        class="block w-auto h-auto max-w-full max-h-[80vh]"
+        loading="lazy"
+      />
+    </div>
+  </div>
+) : (
+  <div>
+    <div class="flex flex-wrap justify-center gap-3 md:gap-5">
+      {tiles.map((url, i) => (
+        <div
+          class="group relative w-[calc((100%-1.5rem)/3)] sm:w-[160px] aspect-square rounded-sm overflow-hidden bg-bone/[0.03] border border-bone/10 hover:border-amber-warm/30 transition-colors cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+          role="button"
+          tabindex="0"
+          aria-label={`View photo ${i + 1} of ${urls.length}`}
+          data-lightbox-trigger=""
+          data-lightbox-images={lightboxJson}
+          data-lightbox-name={label}
+          data-lightbox-index={String(i)}
+        >
+          <img
+            src={`${url}?w=360&h=360&fit=crop&q=75&auto=format`}
+            alt={`${label}, Maine Coon kittens, photo ${i + 1} of ${urls.length}`}
+            class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+            loading="lazy"
+          />
+          <div class="absolute inset-x-0 bottom-0 h-px bg-amber-warm/40" aria-hidden="true"></div>
+        </div>
+      ))}
+    </div>
+    <div class="text-center mt-6">
+      <span
+        class="inline-block text-sm font-medium tracking-widest uppercase text-gold/70 hover:text-gold underline underline-offset-4 transition-colors cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+        role="button"
+        tabindex="0"
+        data-lightbox-trigger=""
+        data-lightbox-images={lightboxJson}
+        data-lightbox-name={label}
+        data-lightbox-index="0"
+      >
+        View all {urls.length} photos
+      </span>
+    </div>
+  </div>
+)}
