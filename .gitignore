@@ -44,3 +44,12 @@ winter-litter-backup-*.json
 # Windows shell artifacts
 Thumbs.db
 desktop.ini
+
+# Local tooling and private documents
+.playwright-mcp/
+/*.pdf
+/Insurance/
+
+# Local working copies of watermarked photos (live photos are in Sanity)
+public/images/cats/*/watermarked/
+public/images/kittens/watermarked/

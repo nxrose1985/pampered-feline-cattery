@@ -406,14 +406,9 @@ Claude Code generates final title tags and meta descriptions once copy is confir
 - Warm but not chatty
 - Refined and confident
 - Luxury brand voice, not hobby breeder voice
-- **Em dashes are permitted and expected. Avoid semicolons.** This reverses the
-  original "no em dashes" rule, which the live site had already outgrown. The em
-  dash is a signature device in the published copy — "Daily human interaction —
-  our kittens thrive on affection", "Named for the High Lord of the Day Court —
-  radiant, unhurried", "{phone} — call or text anytime" — and enforcing the old
-  rule would have meant rewriting voice that is already working, in a register
-  that reads as a different author. Semicolons genuinely are near-absent from the
-  site and should stay that way. Rule confirmed by Nick, 2026-08-17.
+- **No em dashes in new or edited copy.** Existing copy that uses em dashes stays
+  until that section is edited for another reason. Use periods or commas instead.
+  Avoid semicolons. (Replaces the 2026-08-17 "em dashes permitted" rule, 2026-10-26.)
 - Match the live site over this file wherever the two disagree on voice.
   Contractions are on. First person plural for the cattery ("we"), second person
   for the buyer ("you"). Zero exclamation points in editorial copy. Warmth comes
@@ -2893,4 +2888,26 @@ src/pages/maine-coon-kittens-northern-virginia.astro (eyebrow and no-kittens cop
 scripts/README.md                                    (history note)
 .gitignore                                           (winter-litter-backup-*.json)
 CLAUDE.md                                            (tone rules; session log)
+```
+
+---
+
+## Session: 2026-10-26 (waitlist form split, housekeeping)
+
+### Decisions
+- **Waitlist form now sends `sex`, `color`, and `polydactyl` instead of `looking-for`.** Three required selects, first option preselected, option values identical to visible text (a Google Apps Script reads them by exact string). Stacked at all widths because the form is `max-w-xl` and the uppercase labels do not fit three across. Notes placeholder updated. Form name, honeypot, and the name, email, phone, notes fields unchanged. Confirmed in built `dist/index.html`: the three new names present, `looking-for` gone.
+- **Em dash rule replaced** in Notes on Tone: no em dashes in new or edited copy, existing copy stays until edited for another reason.
+- **.gitignore:** added `.playwright-mcp/`, `/*.pdf` (root only; `public/kitten-purchase-agreement.pdf` confirmed still tracked), `/Insurance/`, and the two watermarked photo folders. 106 watermarked files were already tracked and stay tracked; the ignore only covers new ones.
+- **Sanity webhook filter** recommended (applied by hand by Nick): `_type in ["siteSettings","kitten","cat","showResult","faq","healthEthics"]`.
+
+### Deferred
+- Apps Script and the sheet must accept the new columns (`sex`, `color`, `polydactyl`).
+- Certificates PDFs and `public/qr-code (1).png` remain untracked, unreferenced.
+- All prior deferred items carry forward.
+
+### Files Changed This Session
+```
+src/components/Waitlist.astro   (looking-for replaced by sex/color/polydactyl selects; notes placeholder)
+.gitignore                      (playwright, root PDFs, Insurance, watermarked folders)
+CLAUDE.md                       (em dash rule; session log)
 ```

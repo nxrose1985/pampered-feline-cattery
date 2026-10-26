@@ -8,7 +8,15 @@ const isDark = variant === "dark";
 const labelClass = `block text-sm font-medium tracking-widest uppercase mb-2 ${isDark ? "text-bone/60" : "text-charcoal-light"}`;
 const inputClass = `w-full px-4 py-3 text-base border transition-colors focus:outline-none ${isDark ? "bg-obsidian border-bone/15 text-bone placeholder-bone/30 focus:border-gold" : "bg-ivory-warm border-charcoal/15 text-charcoal placeholder-charcoal/30 focus:border-gold-dark"}`;
 
-const lookingForOptions = ["Any", "Male", "Female", "Polydactyl", "Silver", "Smoke"];
+const selects = [
+  { name: "sex", label: "Kitten sex", options: ["No preference", "Male", "Female"] },
+  {
+    name: "color",
+    label: "Coat color",
+    options: ["No preference", "Silver or shaded", "Smoke", "Tabby", "Red or cream", "Tortie", "Black or blue solid", "Other (see notes)"],
+  },
+  { name: "polydactyl", label: "Polydactyl (extra toes)", options: ["No preference", "Yes please", "Standard paws"] },
+];
 ---
 
 <form
@@ -61,16 +69,14 @@ const lookingForOptions = ["Any", "Male", "Female", "Polydactyl", "Silver", "Smo
       />
     </div>
 
-    <div>
-      <label for="waitlist-looking-for" class={labelClass}>Looking For</label>
-      <select
-        id="waitlist-looking-for"
-        name="looking-for"
-        class={inputClass}
-      >
-        {lookingForOptions.map((o) => <option value={o}>{o}</option>)}
-      </select>
-    </div>
+    {selects.map((f) => (
+      <div>
+        <label for={`waitlist-${f.name}`} class={labelClass}>{f.label}</label>
+        <select id={`waitlist-${f.name}`} name={f.name} required class={inputClass}>
+          {f.options.map((o) => <option value={o} selected={o === f.options[0]}>{o}</option>)}
+        </select>
+      </div>
+    ))}
 
     <div>
       <label for="waitlist-notes" class={labelClass}>Notes</label>
@@ -79,7 +85,7 @@ const lookingForOptions = ["Any", "Male", "Female", "Polydactyl", "Silver", "Smo
         name="notes"
         rows="4"
         class={`${inputClass} resize-vertical`}
-        placeholder="Anything else we should know?"
+        placeholder="Anything else you'd like us to know? Other colors, your household, a cat you're missing."
       ></textarea>
     </div>
   </div>
