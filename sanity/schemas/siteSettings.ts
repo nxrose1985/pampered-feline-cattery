@@ -266,6 +266,42 @@ export const siteSettings = defineType({
             }),
           ],
         }),
+        defineField({
+          name: "weeklyNotes",
+          title: "This week notes",
+          type: "array",
+          description:
+            "One note per week of age, week 0 to week 12. The site works out the current week from the birth date and shows that week's note under the timeline. A week with no note shows the week and countdown only.",
+          of: [
+            defineArrayMember({
+              type: "object",
+              name: "weeklyNote",
+              title: "Week note",
+              fields: [
+                defineField({
+                  name: "week",
+                  title: "Week",
+                  type: "number",
+                  validation: (rule) => rule.required().integer().min(0).max(12),
+                }),
+                defineField({
+                  name: "text",
+                  title: "Text",
+                  type: "text",
+                  rows: 2,
+                  description: "One or two short lines.",
+                  validation: (rule) => rule.required().max(160),
+                }),
+              ],
+              preview: {
+                select: { week: "week", text: "text" },
+                prepare({ week, text }) {
+                  return { title: `Week ${week ?? "?"}`, subtitle: text };
+                },
+              },
+            }),
+          ],
+        }),
       ],
     }),
     defineField({
