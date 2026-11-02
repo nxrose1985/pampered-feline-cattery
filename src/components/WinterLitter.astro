@@ -65,17 +65,18 @@ const birthDate = winterLitter?.birthDate?.trim();
 const birth = parseYmd(birthDate);
 const factLine = birth ? `Born ${MONTHS[birth[1] - 1]} ${birth[2]}, ${birth[0]} · CFA x TICA` : null;
 
-// Kittens go home at 12 weeks, so the last milestone is labelled with the
-// month that lands in. Only the ages are fixed here. Which milestone is lit up
-// is decided in the visitor's browser, so the built page never goes stale.
+// Kittens go home at 12 weeks (day 84), so the last milestone is labelled with
+// the month that lands in. Only the day marks are fixed here. Which milestones
+// are reached, and how far the line is filled, is decided in the visitor's
+// browser, so the built page never goes stale.
 const goHomeMonth = birth ? MONTHS[new Date(Date.UTC(birth[0], birth[1] - 1, birth[2] + 84)).getUTCMonth()] : "";
 const milestones = birth
   ? [
-      { week: 0, label: "Born", when: formatMonthDay(birthDate!) },
-      { week: 2, label: "Eyes open", when: "Around week 2" },
-      { week: 4, label: "Up and about", when: "Around week 4" },
-      { week: 8, label: "Vaccines and personality", when: "Around week 8" },
-      { week: 12, label: "Going home", when: goHomeMonth },
+      { day: 0, label: "Born", when: formatMonthDay(birthDate!) },
+      { day: 14, label: "Eyes open", when: "Around week 2" },
+      { day: 28, label: "Up and about", when: "Around week 4" },
+      { day: 56, label: "Vaccines and personality", when: "Around week 8" },
+      { day: 84, label: "Going home", when: goHomeMonth },
     ]
   : [];
 
@@ -141,15 +142,23 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
               class="absolute left-[7px] top-2 bottom-2 w-px bg-bone/15 md:left-[10%] md:right-[10%] md:top-[7px] md:bottom-auto md:w-auto md:h-px"
               aria-hidden="true"
             ></div>
+            <!-- Progress fill. Zero size in the built HTML, so without JavaScript
+                 there is no fill. The script sizes it to the dot positions. -->
+            <div
+              class="absolute left-[7px] top-0 w-px h-0 bg-gold/70 md:top-[7px] md:h-px md:w-0"
+              data-litter-fill
+              aria-hidden="true"
+            ></div>
             <ol class="relative grid gap-6 md:grid-cols-5 md:gap-0">
               {milestones.map((m) => (
                 <li
                   class="group relative pl-8 md:pl-0 md:px-2 md:text-center"
                   data-milestone
-                  data-week={String(m.week)}
-                  data-state={m.week === 0 ? "past" : "upcoming"}
+                  data-day={String(m.day)}
+                  data-state="upcoming"
                 >
                   <span
+                    data-milestone-dot
                     class={`absolute left-0 top-1 md:static md:mx-auto md:mb-4 block w-[15px] h-[15px] rounded-full border border-bone/25 ${dotBgClass} group-data-[state=past]:bg-gold/70 group-data-[state=past]:border-gold/70 group-data-[state=current]:bg-amber-warm group-data-[state=current]:border-amber-warm`}
                     aria-hidden="true"
                   ></span>
@@ -304,9 +313,8 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
     document.querySelectorAll<HTMLElement>("[data-litter-timeline]").forEach((timeline) => {
       const days = ageInDays(timeline.dataset.birthDate ?? "");
       if (days === null || days < 0) return;
-      const weeks = Math.floor(days / 7);
       const items = Array.from(timeline.querySelectorAll<HTMLElement>("[data-milestone]"));
-      const reached = items.filter((li) => Number(li.dataset.week) <= weeks);
+      const reached = items.filter((li) => Number(li.dataset.day) <= days);
       const current = reached[reached.length - 1];
       items.forEach((li) => {
         const state = li === current ? "current" : reached.includes(li) ? "past" : "upcoming";
@@ -314,8 +322,46 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
         if (state === "current") li.setAttribute("aria-current", "step");
         else li.removeAttribute("aria-current");
       });
+      sizeFill(timeline, items, days);
     });
   }
+
+  // The fill runs from the Born dot towards the Going home dot. Between two
+  // milestones it grows by day, so it meets each dot on that milestone's day.
+  // Dot positions are measured rather than assumed, because on phones the
+  // timeline is vertical and the rows are not evenly spaced.
+  function sizeFill(timeline: HTMLElement, items: HTMLElement[], days: number) {
+    const fill = timeline.querySelector<HTMLElement>("[data-litter-fill]");
+    if (!fill || items.length < 2) return;
+    const horizontal = window.matchMedia("(min-width: 768px)").matches;
+    const box = timeline.getBoundingClientRect();
+    const centers = items.map((li) => {
+      const r = (li.querySelector("[data-milestone-dot]") ?? li).getBoundingClientRect();
+      return horizontal ? r.left + r.width / 2 - box.left : r.top + r.height / 2 - box.top;
+    });
+    const marks = items.map((li) => Number(li.dataset.day));
+    let end = centers[centers.length - 1];
+    for (let i = 0; i < marks.length - 1; i++) {
+      if (days < marks[i + 1]) {
+        end = centers[i] + ((centers[i + 1] - centers[i]) * (days - marks[i])) / (marks[i + 1] - marks[i]);
+        break;
+      }
+    }
+    const length = Math.max(0, end - centers[0]);
+    fill.style.top = horizontal ? "" : `${centers[0]}px`;
+    fill.style.left = horizontal ? `${centers[0]}px` : "";
+    fill.style.width = horizontal ? `${length}px` : "";
+    fill.style.height = horizontal ? "" : `${length}px`;
+  }
+
+  // Web fonts change the row heights on phones, so measure again once they load.
+  document.fonts?.ready.then(initLitterAge);
+
+  let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+  window.addEventListener("resize", () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(initLitterAge, 150);
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initLitterAge);

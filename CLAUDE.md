@@ -2963,3 +2963,42 @@ src/pages/{bringing-home-your-kitten,kitten-application,maine-coon-kittens-north
 src/layouts/BaseLayout.astro, sanity/schemas/{kitten,siteSettings}.ts
 scripts/generate-bringing-home-pdf.py, public/bringing-home-guide.pdf, .gitignore, CLAUDE.md
 ```
+
+---
+
+## Session: 2026-11-02 (timeline progress fill, vet line, footer alt text, contract PDF report)
+
+### Decisions
+- **Winter litter timeline was already computed in the browser** from `siteSettings.winterLitter.birthDate`, but by whole weeks, and "Born" was pre-marked `past` in the built HTML. Now milestones carry day marks (Born 0, Eyes open 14, Up and about 28, Vaccines and personality 56, Going home 84). A milestone is reached when days since birth >= its mark. The latest reached one gets the `current` style.
+- **Progress fill** (`[data-litter-fill]`, `bg-gold/70`, same 1px line as the track) runs from the Born dot towards Going home. Between two milestones it grows linearly by day, so it meets each dot on that milestone's day. Dot centres are measured, not assumed, because the phone layout is vertical with uneven rows. Re-measured on `document.fonts.ready` and on resize (150ms debounce).
+- **No-JS state:** every milestone renders `data-state="upcoming"` and the fill is zero size. The fill is absolutely positioned, so the script causes no layout shift.
+- **Vet line** is now "Our cats see the vets at Signal Hill Animal Clinic." (`index.astro`, Ethical Practices).
+- **Footer logo alt text:** "CFA, Cat Fanciers' Association" and "TICA, The International Cat Association".
+
+### Verified
+- Fake dates through a temporary `?today=` hook (removed before commit), at 1280px and 375px. Fill end matches the interpolation exactly:
+  - Day 22: Born past, Eyes open current; fill 8/14 of the way from Eyes open to Up and about. Pill "3 weeks old".
+  - Day 30: Born and Eyes open past, Up and about current; fill 2/28 past Up and about. Pill "4 weeks old".
+  - Day 60: Up and about past, Vaccines and personality current; fill 4/28 past it. Pill "8 weeks old".
+  - Day 90: all past, Going home current, line full. Pill "12 weeks old" (it hides after 13 weeks).
+- No horizontal scroll at 375px. `npm run build` against live Sanity: 13 pages, no errors. `astro check`: same 8 baseline errors. Built HTML: no visitor-facing em dashes (one remains inside an HTML comment in `Nav.astro`).
+
+### Purchase agreement PDF (report only, not changed)
+- `public/kitten-purchase-agreement.pdf`, linked from `Nav.astro`, `index.astro`, `bringing-home-your-kitten.astro`, `kitten-application.astro`.
+- 9 pages, 23 fillable fields (19 text, 2 dropdown, 2 signature). Exported from Word, fields added afterwards in a PDF editor.
+- No generation script in the repo. Word sources live in the gitignored `contracts/` folder (`PamperedFeline-KittenPurchaseAgreement_Template.docx`, `...WORKING.docx`). Their payment clause differs again ("…cash, or card" with a 2.9 percent card fee). Re-exporting from Word would drop the 23 fields.
+- The payment line is one literal `Tj` string in its own text block on page 2 (`72 713 Tm`, Cambria, WinAnsi). The only field on page 2 sits far below it. Proposed fix: replace that one string in the page 2 content stream with pypdf, leaving the AcroForm untouched, then verify the field count and the extracted text. Waiting on Nick's go.
+- Also noticed: the PDF says the balance is due "upon scheduled pickup date". The site says one week before pickup.
+
+### Deferred
+- Contract PDF payment line (pending go).
+- `npx sanity deploy` for the "Staying with us" status (from the previous session).
+- All prior deferred items carry forward.
+
+### Files Changed This Session
+```
+src/components/WinterLitter.astro   (day marks, progress fill, no-JS state, fonts/resize re-measure)
+src/pages/index.astro               (vet line)
+src/components/Footer.astro         (logo alt text)
+CLAUDE.md                           (session log)
+```
