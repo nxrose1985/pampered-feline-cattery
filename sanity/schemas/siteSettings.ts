@@ -26,7 +26,7 @@ export const siteSettings = defineType({
       name: "paymentMethods",
       title: "Payment Methods",
       type: "string",
-      description: 'e.g. "Zelle, Venmo, cash"',
+      description: 'e.g. "Zelle or bank wire"',
     }),
     defineField({
       name: "contactEmail",

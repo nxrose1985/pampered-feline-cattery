@@ -337,7 +337,7 @@ const fallbackSettings: SiteSettings = {
   petKittenPriceMin: 3600,
   petKittenPriceMax: 4500,
   reservationFee: 500,
-  paymentMethods: "We accept Zelle and bank wire transfer. A $500 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.",
+  paymentMethods: "We accept Zelle or bank wire. A $500 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.",
   contactEmail: "pamperedfelinemainecoons@gmail.com",
   phone: undefined,
   instagramHandle: undefined,
@@ -369,7 +369,7 @@ const fallbackFaqs: Faq[] = [
   { question: "How are kittens socialized?", answer: "Kittens are raised in our home with daily hands-on interaction from birth. They are exposed to household sounds, people, and gentle handling throughout their first weeks.", order: 4 },
   { question: "Do you offer breeding rights?", answer: "All kittens are sold on a spay/neuter contract as pet-only companions unless otherwise agreed in writing prior to purchase. Breeding rights are available on a case-by-case basis to approved CFA or TICA registered catteries with documented health testing programs. Breeding rights kittens are priced separately. Contact us to discuss.", order: 5 },
   { question: "What does a kitten cost?", answer: "Pricing is tiered by color rarity and polydactyl status. Standard pet kittens start at $3,600. Rare color kittens (silver, smoke, shaded) are $4,000. Polydactyl kittens are $4,200. Rare color polydactyl kittens are $4,500. A $500 non-refundable deposit secures your reservation and is applied to the purchase price.", order: 6 },
-  { question: "What payment methods do you accept?", answer: "We accept Zelle and bank wire transfer. A $500 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.", order: 7 },
+  { question: "What payment methods do you accept?", answer: "We accept Zelle or bank wire. A $500 non-refundable deposit is due upon signing your purchase agreement. The remaining balance is due one week before your kitten goes home.", order: 7 },
   { question: "Why do Maine Coon kittens cost $3,600 to $4,500?", answer: "Breeding Maine Coons the right way is expensive. The national average for a well-bred Maine Coon kitten in the U.S. is around $4,000, with most reputable breeders charging $3,500 to $7,500 for pet kittens from European lines.\n\nOur pricing reflects what goes into each kitten before it ever goes home. Both parents receive cardiac ultrasounds by a board-certified veterinary cardiologist, not just a DNA swab. Those echocardiograms cost $300 to $550 per scan and are repeated annually or biennially for every breeding cat. On top of that, every cat in our program receives a Wisdom Panel genetic health screen covering 50+ conditions. We maintain CFA registration, European championship bloodlines, and a small program with limited litters and hands-on care from birth.\n\nKittens priced below $1,000 are almost always scams or backyard operations with no health testing, no pedigree, and no support after sale. If a price looks too good to be true, it is.\n\nWe price by coat rarity and polydactyly, not by sex. Every kitten gets the same health testing, socialization, veterinary care, and contract protections regardless of gender.", order: 8 },
   { question: "What is included with my kitten?", answer: "Every Pampered Feline kitten goes home with a veterinary health certificate, full vaccination records, both parents' health testing documentation (HCM echocardiogram results and Wisdom Panel genetic reports), a signed purchase agreement, a kitten care guide, a sample of their current food, transition litter, a familiar toy or blanket, and a personality assessment card describing your kitten's temperament. CFA pedigree papers are provided after you submit proof of spay or neuter from your veterinarian. For detailed care instructions, see our Bringing Home Your Kitten guide at /bringing-home-your-kitten.", order: 9 },
   { question: "Do you have a contract? What does it cover?", answer: "Yes. Every kitten is sold with a written purchase agreement that protects the kitten first. The contract covers spay/neuter requirements (by 10 months for both sexes), indoor-only housing, no declawing, first right of refusal if you can ever no longer keep your cat, a 72-hour veterinary exam requirement, a one-year genetic health guarantee, and vaccination guidance. CFA registration papers are withheld until we receive proof of alteration from your veterinarian. A summary of our contract terms is available on our contract page. The full contract is signed at the time of deposit.", order: 10 },
@@ -391,33 +391,33 @@ export async function getFaqs(): Promise<Faq[]> {
 const fallbackHealthEthics: HealthEthics = {
   title: "Health & Ethical Practices",
   introduction:
-    "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats.",
+    "Here is exactly how we test and care for our cats.",
   geneticTestingSection: {
     title: "Genetic Testing",
     content:
-      "Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions.",
+      "Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. All breeding cats also get a full Wisdom Panel screen covering 50 heritable conditions.",
   },
   echocardiogramSection: {
     title: "Heart and Joint Health",
     content:
-      "DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.\n\nHearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.\n\nHip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.",
+      "DNA tests miss some heart and joint problems, so we keep checking as our cats age.\n\nHearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.\n\nHip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.",
   },
   retirementPolicy:
     "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family.",
   breedingFrequency:
-    "Each queen is limited to 2 litters per year maximum, with appropriate rest between litters.",
+    "Each queen has at most two litters a year, with rest between them.",
   socializationSection: {
     title: "Kitten Socialization & Preparation",
     intro:
-      "We spend significant time training and loving your future furry family member. Every kitten receives:",
+      "Before they go home, every kitten gets:",
     items: [
       "Bi-weekly nail trimming starting at 4 weeks of age",
-      "Extensive paw handling and toe bean play to ensure comfort with grooming",
-      "Cat carrier acclimation for stress-free vet visits",
+      "Daily paw and toe-bean handling, so nail trims are easy",
+      "Time in the carrier, so vet trips are calm",
       "Bite inhibition training and litter box training",
       "Socialization with children and exposure to household noises",
-      "Daily human interaction — our kittens thrive on affection and will not do well without it",
-      "Kitten face massage techniques to build trust and bonding",
+      "Time with people every day",
+      "Face massage, so they're used to being handled",
     ],
   },
   additionalPractices: [],
