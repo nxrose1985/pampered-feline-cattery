@@ -3002,3 +3002,36 @@ src/pages/index.astro               (vet line)
 src/components/Footer.astro         (logo alt text)
 CLAUDE.md                           (session log)
 ```
+
+---
+
+## Session: 2026-11-02 (contract PDF payment and balance lines, "This week" card)
+
+### Decisions
+- **Purchase agreement PDF edited in place with pypdf.** Two literal `Tj` strings on page 2 were swapped: the payment line is now "Accepted payment methods: Zelle or bank wire." The balance line is now "The remaining balance is due one week before the scheduled pickup date. If the". The AcroForm was not touched. The new balance line ends at x=445pt (full-width lines end at 537pt), and every glyph already exists in the embedded Cambria subset.
+- **PDF checks:** 23 fields with the same names and per-page widget counts (19 text, 2 dropdown, 2 signature). A test fill of all 21 text and dropdown fields read back correctly. No Venmo, ACH, cash, credit, or debit in the text. Ghostscript pixel diff against the original shows only page 2 changed. Ghostscript (`C:\Program Files\gs\gs10.06.0\bin\gswin64c`) is the local PDF renderer. PyMuPDF and poppler are not installed.
+- **Word sources** in the gitignored `contracts/` (`_Template.docx`, `WORKING.docx`): payment paragraph now "Accepted payment methods. Zelle or bank wire."; the 2.9 percent card fee and the "Credit card processing fee: waived…" line removed; the "Balance Due By" table cell set to "One week before pickup". There is no balance sentence in the Word files. Originals were backed up outside the repo before editing.
+- **"This week" card** under the winter litter timeline. New field `siteSettings.winterLitter.weeklyNotes` ("This week notes"): array of `{ week: 0 to 12, text }`. The card shows "Week N · D days old", that week's note, and "N weeks until going home" (rounded up, "1 week" singular, "Going home soon" in week 12). Hidden before birth and after day 84. A week with no note shows the week line and countdown only.
+- **The card uses an inline script** placed right after its markup. It runs during parsing, before anything below is laid out, so unhiding it causes no layout shift. Without JavaScript the card stays `hidden`.
+
+### Sanity content changed
+`siteSettings.winterLitter.weeklyNotes` seeded with 13 notes (`_key` `week-0` to `week-12`), rev `ruKjXdTl0OtEwF38mf5brR`. Backup: `weekly-notes-backup-2026-11-02T15-19-57-217Z.json` (gitignored). Script deleted after use.
+
+### Verified
+- Card at day 22, 30, 60, 83 via a temporary `?today=` hook (removed): Week 3 / 9 weeks, Week 4 / 8 weeks, Week 8 / 4 weeks, Week 11 / 1 week, each with the matching note. Day 84 shows "Going home soon". Day -1 and day 85 are hidden. No horizontal scroll at 375px.
+- Live (today, day 22, real Sanity data): "Week 3 · 22 days old | First wobbly steps. Baby teeth coming in. | 9 weeks until going home".
+- `npm run build` against live Sanity: 13 pages, no errors. `astro check`: same 8 baseline errors. Built HTML: no visitor-facing em dashes (one remains in an HTML comment in `Nav.astro`).
+
+### Deferred
+- **`npx sanity deploy`** (after `git pull origin main`) so Studio shows "This week notes" and the "Staying with us" status.
+- All prior deferred items carry forward.
+
+### Files Changed This Session
+```
+public/kitten-purchase-agreement.pdf   (payment and balance lines on page 2)
+sanity/schemas/siteSettings.ts         (weeklyNotes field)
+src/lib/sanity.ts                      (WinterLitterWeeklyNote type, GROQ projection)
+src/components/WinterLitter.astro      (This week card)
+.gitignore                             (weekly-notes-backup-*.json)
+CLAUDE.md                              (session log)
+```
