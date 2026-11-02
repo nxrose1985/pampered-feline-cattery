@@ -32,7 +32,7 @@ const fallbackKittens: Kitten[] = [
   { name: "Lucien",  slug: "lucien",  sex: "Male",   color: "Poly Red Tabby (7/7/6/6)",          status: "Placed", isPolydactyl: true,  litter: "march-2026", price: 4200, reservationFee: 500, order: 5, personality: "", about: "Lucien is the warm one. His red tabby coat is rich and saturated — copper and amber in sunlight, deep auburn in shadow — and his seven-toed front paws make him look like he was built for adventure. He is outgoing and social, the first to greet a stranger and the last to stop playing. Red tabbies have a reputation for personality and Lucien earns it. He would do well in a home with kids, dogs, or other cats. Named for Elain's mate — resilient, vivid, and impossible not to love." },
   { name: "Morrigan", slug: "morrigan", sex: "Female", color: "Blue Tortie",                      status: "Placed", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 500, order: 6, personality: "", about: "Morrigan's coat is a study in contrasts — soft blue-grey patches against warm cream, scattered in the random, unrepeatable pattern that makes every tortie one of a kind. She is sharp and spirited, with the classic tortitude that tortie owners know well: she has opinions, she will share them, and she will make you laugh doing it. She is also deeply affectionate with the people she chooses. Named for the most powerful High Fae in the Night Court — fierce, funny, and completely herself." },
   { name: "Amren",   slug: "amren",   sex: "Female", color: "Blue Tortie",                       status: "Placed", isPolydactyl: false, litter: "march-2026", price: 3600, reservationFee: 500, order: 7, personality: "", about: "Amren is compact, watchful, and quietly intense. Her blue tortie coat is softer in tone than Morrigan's — more muted blue, less contrast — which gives her a silvery, ethereal quality that suits her personality. She observes before she engages, sizes up a room before she enters it, and reserves her affection for people who have earned it. When she decides you're worth her time, you'll know. Named for the ancient, unknowable second-in-command of the Night Court — small, still, and not to be underestimated." },
-  { name: "Elain",   slug: "elain",   sex: "Female", color: "Poly Blue Shaded Silver (6/6/6/6)", status: "Placed",  isPolydactyl: true,  litter: "march-2026", price: undefined, reservationFee: undefined, order: 8, personality: "", about: "Elain is reserved — both in temperament and status. Her blue shaded silver polydactyl coat is soft and cool-toned, and her six-toed paws give her a quiet elegance that matches her personality. She warms slowly, prefers gentle handling, and rewards patience with deep loyalty. She is the kind of cat who will choose you, not the other way around." },
+  { name: "Elain",   slug: "elain",   sex: "Female", color: "Poly Blue Shaded Silver (6/6/6/6)", status: "Staying with us",  isPolydactyl: true,  litter: "march-2026", price: undefined, reservationFee: undefined, order: 8, personality: "", about: "Elain is reserved — both in temperament and status. Her blue shaded silver polydactyl coat is soft and cool-toned, and her six-toed paws give her a quiet elegance that matches her personality. She warms slowly, prefers gentle handling, and rewards patience with deep loyalty. She is the kind of cat who will choose you, not the other way around." },
 ];
 
 let kitten: Kitten | null = await getKittenBySlug(slug);
@@ -106,6 +106,7 @@ const statusColors: Record<string, string> = {
   "Reserved": "bg-gold/20 text-gold",
   "Under Evaluation": "bg-bone/10 text-bone/70",
   "Placed": "bg-bone/5 text-bone/40",
+  "Staying with us": "bg-bone/5 text-bone/40",
 };
 const statusClass = statusColors[kitten.status] ?? statusColors["Available"];
 
@@ -127,6 +128,7 @@ const availabilityMap: Record<string, string> = {
   "Reserved": "https://schema.org/PreOrder",
   "Under Evaluation": "https://schema.org/PreOrder",
   "Placed": "https://schema.org/SoldOut",
+  "Staying with us": "https://schema.org/Discontinued",
 };
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? "https://pamperedfelinemainecoons.com").href;
@@ -517,12 +519,18 @@ function formatAssessmentDate(d?: string) {
       ) : (
         <>
           <h2 class="font-heading text-3xl md:text-4xl font-semibold text-bone mb-4">
-            {kitten.status === "Placed" ? `${kitten.name} Has Found a Home` : `${kitten.name} Is Reserved`}
+            {kitten.status === "Placed"
+              ? `${kitten.name} Has Found a Home`
+              : kitten.status === "Staying with us"
+                ? `${kitten.name} Stayed With Us`
+                : `${kitten.name} Is Reserved`}
           </h2>
           <p class="text-bone/60 mb-8 leading-relaxed">
             {kitten.status === "Placed"
               ? `${kitten.name} has found ${pronoun} forever home. Join the waitlist to hear about our future litters first.`
-              : `${kitten.name} is currently reserved. Join the waitlist to hear about our future litters first.`}
+              : kitten.status === "Staying with us"
+                ? `${kitten.name} stayed with us. Join the waitlist to hear about our future litters first.`
+                : `${kitten.name} is currently reserved. Join the waitlist to hear about our future litters first.`}
           </p>
           <a
             href="/#waitlist"

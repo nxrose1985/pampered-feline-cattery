@@ -21,7 +21,7 @@ interface Props {
   personality?: string;
   shortStory?: string;
   about?: string;
-  status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
+  status: "Available" | "Reserved" | "Under Evaluation" | "Placed" | "Staying with us";
   image?: string;
   gallery?: Array<{ asset: { url: string } }>;
   price?: number;
@@ -141,6 +141,7 @@ const statusColorsLight: Record<string, string> = {
   "Reserved": "bg-gold/10 text-gold-dark",
   "Under Evaluation": "bg-charcoal/10 text-charcoal-light",
   "Placed": "bg-charcoal/5 text-charcoal-light/50",
+  "Staying with us": "bg-charcoal/5 text-charcoal-light/50",
 };
 
 const statusColorsDark: Record<string, string> = {
@@ -148,6 +149,7 @@ const statusColorsDark: Record<string, string> = {
   "Reserved": "bg-gold/20 text-gold",
   "Under Evaluation": "bg-bone/10 text-bone/70",
   "Placed": "bg-bone/5 text-bone/40",
+  "Staying with us": "bg-bone/5 text-bone/40",
 };
 
 const statusClass = (isDark ? statusColorsDark : statusColorsLight)[status];
