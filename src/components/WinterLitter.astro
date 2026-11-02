@@ -86,6 +86,11 @@ const updates: LitterUpdate[] = (winterLitter?.updates ?? [])
   .filter((u) => u.date && (u.photos?.length ?? 0) > 0)
   .sort((a, b) => b.date.localeCompare(a.date));
 const latest = updates[0];
+
+// Only week and text go to the browser, which picks the note for the current week.
+const weeklyNotes = (winterLitter?.weeklyNotes ?? [])
+  .filter((n) => Number.isInteger(n.week) && n.text?.trim())
+  .map((n) => ({ week: n.week, text: n.text.trim() }));
 const older = updates.slice(1);
 const photoLabel = "Our winter litter";
 
@@ -172,6 +177,50 @@ const paragraphs = (body ?? "").split("\n\n").map((p) => p.trim()).filter(Boolea
               ))}
             </ol>
           </div>
+
+          {/* "This week" card. Hidden in the built HTML, so it never renders
+              without JavaScript. The inline script below runs while the page is
+              parsed, before anything under it is laid out, so showing it causes
+              no layout shift. */}
+          <div
+            class="max-w-xl mx-auto mb-12 md:mb-16 rounded-sm bg-bone/[0.04] border border-bone/10 px-6 py-6 md:py-8 text-center"
+            data-litter-week
+            data-birth-date={birthDate}
+            data-notes={JSON.stringify(weeklyNotes)}
+            hidden
+          >
+            <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-gold/70 mb-3" data-week-line></p>
+            <p class="text-bone/70 text-lg leading-relaxed mb-3" data-week-note hidden></p>
+            <p class="text-xs uppercase tracking-widest text-amber-warm" data-week-countdown></p>
+          </div>
+          <script is:inline>
+            (function () {
+              var card = document.currentScript && document.currentScript.previousElementSibling;
+              if (!card) return;
+              var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(card.getAttribute("data-birth-date") || "");
+              if (!m) return;
+              var birth = new Date(+m[1], +m[2] - 1, +m[3]);
+              var now = new Date();
+              var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+              var days = Math.round((today - birth) / 86400000);
+              if (days < 0 || days > 84) return;
+              var week = Math.floor(days / 7);
+              var notes = [];
+              try { notes = JSON.parse(card.getAttribute("data-notes") || "[]"); } catch (e) {}
+              var note = notes.filter(function (n) { return n.week === week; })[0];
+              var age = days === 0 ? "born today" : days === 1 ? "1 day old" : days + " days old";
+              card.querySelector("[data-week-line]").textContent = "Week " + week + " · " + age;
+              if (note && note.text) {
+                var el = card.querySelector("[data-week-note]");
+                el.textContent = note.text;
+                el.hidden = false;
+              }
+              var left = Math.ceil((84 - days) / 7);
+              card.querySelector("[data-week-countdown]").textContent =
+                week >= 12 ? "Going home soon" : left + (left === 1 ? " week" : " weeks") + " until going home";
+              card.hidden = false;
+            })();
+          </script>
         </ScrollReveal>
       )}
 

@@ -123,6 +123,11 @@ export interface LitterUpdate {
   photos?: LitterUpdatePhoto[];
 }
 
+export interface WinterLitterWeeklyNote {
+  week: number;
+  text: string;
+}
+
 export interface WinterLitter {
   enabled?: boolean;
   eyebrow?: string;
@@ -130,6 +135,7 @@ export interface WinterLitter {
   body?: string;
   birthDate?: string;
   updates?: LitterUpdate[];
+  weeklyNotes?: WinterLitterWeeklyNote[];
   goHomeWindow?: string;
   ctaLabel?: string;
   ctaHref?: string;
@@ -261,6 +267,7 @@ const siteSettingsQuery = `*[_id == "siteSettings"][0] {
       _key, date, caption,
       "photos": photos[] { asset-> { url, metadata { dimensions { width, height } } } }
     },
+    "weeklyNotes": weeklyNotes[] { week, text },
     sire-> { name, color, "image": image { asset-> { url } } },
     dam-> { name, color, "image": image { asset-> { url } } }
   }
