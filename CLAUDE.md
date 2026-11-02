@@ -2911,3 +2911,55 @@ src/components/Waitlist.astro   (looking-for replaced by sex/color/polydactyl se
 .gitignore                      (playwright, root PDFs, Insurance, watermarked folders)
 CLAUDE.md                       (em dash rule; session log)
 ```
+
+---
+
+## Session: 2026-11-02 (AI-tell copy pass, Zelle or bank wire, "Staying with us" status)
+
+### Context
+Audited every built page (live Sanity data) against the Wikipedia "Signs of AI writing" catalogue and listed 52 rows. Nick approved most rows, edited several, and held #16 (vet line) for Sara. Same pass: payment methods, kitten pronouns, Amren typos, Northern Virginia button, FAQ "Yes!", and Elain's status.
+
+### Decisions
+- **Fact rule for rewrites:** use only facts already on the site, in Sanity, or in the purchase agreement PDF. Checked sources: #8 December 2025 (showResult `showDate` 2025-12-07), #10 50 conditions (`healthEthics.geneticTestingSection`), #15 Purina ONE +Plus (`faq-18`), #29 good with children (`kitten-tarquin.about`). "And wet food" in #15 had no source for adult cats and was dropped. #17 was changed to match the contract's first-right-of-refusal clause: "If you ever can't keep your cat, you offer it back to us first."
+- **Payment is "Zelle or bank wire" everywhere** (homepage contract summary, `sanity.ts` fallbacks, `faq-5`, `siteSettings.paymentMethods`, schema hint). Deposit was already $500 everywhere.
+- **Purchase agreement PDF not edited.** It states a $500 deposit and "Zelle, Venmo, ACH transfer, cash". Nick regenerates it in a separate session.
+- **New kitten status `Staying with us`** for kept kittens. Elain stayed as a breeding queen. Her page heading is "Elain Stayed With Us", her spring litter card label is "Stayed with us", and her product schema availability is `Discontinued`. ForeverHomesFound shows Placed and Staying with us kittens. The spring section reads "Seven are in their new homes. Elain stayed with us." (hardcoded copy, update it if the slate changes).
+- **Kitten pages use his/her from `sex`** for "has found {his/her} forever home" and the Forever Homes alt text.
+- **Northern Virginia hero button** is "Meet the Winter Litter" linking to `/#winter-litter`.
+- **`bringing-home-guide.pdf` regenerated** so it matches the edited web guide.
+- **Em dashes removed** from page titles, banner alt, request-to-reserve success text, application placeholder and option, guide headings, hero and footer phone line.
+
+### Sanity content changed (one transaction, `aq0vzZgcNWnEV3eZXrO7eZ`, 20 documents)
+Backup: `de-ai-backup-2026-11-02T14-03-05-147Z.json` in the project root (gitignored). Script deleted after use.
+```
+cat-aedion, cat-rowan, cat-feyra   traits rewritten
+healthEthics                       introduction, geneticTestingSection.content, echocardiogramSection.content, breedingFrequency, socializationSection.intro/items
+faq-2, faq-9, faq-14               em dashes removed (faq-14 opener rewritten)
+faq-5                              payment: Zelle or bank wire
+faq-16                             "Yes!" removed
+faq-17                             "comprehensive" removed
+6ebe5d2e-...                       pair discount opener sentence removed
+siteSettings                       paymentMethods: "Zelle or bank wire"
+kitten-* (all 8)                   about rewritten; Amren typos fixed; Elain status -> "Staying with us"
+```
+
+### Verified
+- `npm run build` against live Sanity: 13 pages, no errors. `astro check`: same 8 baseline errors.
+- Built HTML has no "spoken for", "sold out", "forever families", "Yes!", "joinwhatever", "in-in", "Venmo", or "credit card". "available" hits are all non-kitten uses. Remaining em dashes: the CFA and TICA logo alt text in `Footer.astro` (existing copy, not in scope) and one HTML comment.
+- Elain's page has no "Found a Home" or "forever home".
+
+### Deferred
+- **`npx sanity deploy`** (after `git pull origin main`) so Studio lists "Staying with us" in the Status dropdown.
+- **Builds are stopped in Netlify.** Nick reactivates after Sara reviews the before/after table. One deploy covers code and content.
+- #16 vet line held for Sara.
+- Purchase agreement PDF payment methods (separate session).
+- Footer logo alt text em dashes.
+- All prior deferred items carry forward.
+
+### Files Changed This Session
+```
+src/pages/index.astro, src/lib/sanity.ts, src/components/{Hero,Footer,ShowResults,ForeverHomesFound,ReserveRequest,KittenCard}.astro
+src/pages/{bringing-home-your-kitten,kitten-application,maine-coon-kittens-northern-virginia}.astro, src/pages/kittens/[slug].astro
+src/layouts/BaseLayout.astro, sanity/schemas/{kitten,siteSettings}.ts
+scripts/generate-bringing-home-pdf.py, public/bringing-home-guide.pdf, .gitignore, CLAUDE.md
+```
