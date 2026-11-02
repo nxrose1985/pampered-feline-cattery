@@ -53,3 +53,4 @@ desktop.ini
 # Local working copies of watermarked photos (live photos are in Sanity)
 public/images/cats/*/watermarked/
 public/images/kittens/watermarked/
+de-ai-backup-*.json

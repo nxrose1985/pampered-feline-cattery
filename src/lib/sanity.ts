@@ -68,7 +68,7 @@ export interface Kitten {
   personality: string;
   shortStory?: string;
   about?: string;
-  status: "Available" | "Reserved" | "Under Evaluation" | "Placed";
+  status: "Available" | "Reserved" | "Under Evaluation" | "Placed" | "Staying with us";
   image?: {
     asset: {
       url: string;

@@ -80,6 +80,7 @@ export const kitten = defineType({
           { title: "Reserved", value: "Reserved" },
           { title: "Under Evaluation", value: "Under Evaluation" },
           { title: "Placed", value: "Placed" },
+          { title: "Staying with us", value: "Staying with us" },
         ],
       },
       validation: (rule) => rule.required(),

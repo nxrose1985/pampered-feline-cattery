@@ -22,7 +22,7 @@ const sanityKittens = await getKittensByLitter(litterId);
 const MAX_SHOWN = 24;
 
 const placedKittens = sanityKittens
-  .filter((k: Kitten) => k.status === "Placed")
+  .filter((k: Kitten) => k.status === "Placed" || k.status === "Staying with us")
   .sort((a: Kitten, b: Kitten) => (a.order ?? 99) - (b.order ?? 99))
   .slice(0, MAX_SHOWN);
 
@@ -66,7 +66,7 @@ function sanityCardUrl(url: string): string {
                 {kitten.image?.asset?.url ? (
                   <img
                     src={sanityCardUrl(kitten.image.asset.url)}
-                    alt={`${kitten.name}, ${kitten.color} Maine Coon kitten, now in ${kitten.sex === "Female" ? "her" : "his"} new home`}
+                    alt={`${kitten.name}, ${kitten.color} Maine Coon kitten, ${kitten.status === "Staying with us" ? "who stayed with us" : `now in ${kitten.sex === "Female" ? "her" : "his"} new home`}`}
                     class="w-full h-full object-cover opacity-75 saturate-[0.8] group-hover:opacity-100 group-hover:saturate-100 transition-all duration-500"
                     loading="lazy"
                   />
@@ -88,7 +88,7 @@ function sanityCardUrl(url: string): string {
                 <div class="absolute inset-x-0 bottom-0 h-px bg-amber-warm/40" aria-hidden="true"></div>
               </div>
               <div class="px-3 py-2.5">
-                <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-amber-warm mb-1">Home</p>
+                <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-amber-warm mb-1">{kitten.status === "Staying with us" ? "Stayed with us" : "Home"}</p>
                 <h3 class="font-heading text-sm font-semibold text-bone/80 truncate">{kitten.name}</h3>
                 <p class="text-[11px] text-bone/60 truncate">{kitten.color} · {kitten.sex}</p>
               </div>
