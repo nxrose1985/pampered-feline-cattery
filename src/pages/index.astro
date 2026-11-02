@@ -22,11 +22,11 @@ const [sanityCats, faqs, settings, healthEthicsData, showResults] = await Promis
 ]);
 
 const fallbackKings = [
-  { name: "Aedion", color: "Black Silver Shaded", traits: "Aedion is our foundation sire and the heart of our program. He is deeply affectionate, endlessly patient, and completely at ease with children, other cats, and household chaos. He follows his people from room to room, greets every visitor like an old friend, and has never met a lap he didn't want to occupy. His temperament sets the tone for every kitten we produce.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
-  { name: "Rowan", color: "Silver Shaded Tabby", traits: "Rowan is a gentle giant in every sense. He is calm, affectionate, and wonderfully tolerant, the kind of cat who settles beside you without being asked and stays as long as you'll have him. He is exceptional with children and adapts easily to new people and environments.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+  { name: "Aedion", color: "Black Silver Shaded", traits: "Aedion (show name Eyktan Navarro) is our foundation sire. He's patient and easy with children, other cats, and a noisy house. He follows his people from room to room and greets every visitor.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+  { name: "Rowan", color: "Silver Shaded Tabby", traits: "Rowan is big and calm. He settles beside you without being asked and stays as long as you'll have him. He's very good with children and settles in quickly with new people and places.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
 ];
 const fallbackQueens = [
-  { name: "Feyre", color: "Black Tortie with Tabby Markings, Polydactyl", traits: "Feyre is everything a Maine Coon queen should be. She is warm, social, and openly affectionate with everyone she meets. She raises her kittens with the same gentle confidence she brings to every interaction, and her kittens are handled daily from birth. Children adore her. She adores them back.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
+  { name: "Feyre", color: "Black Tortie with Tabby Markings, Polydactyl", traits: "Feyre is affectionate with everyone she meets. She's a calm, confident mother, and her kittens are handled daily from birth. She's good with children.", health: "HCM echocardiogram negative, Wisdom Panel genetic panel clear, CFA registered." },
 ];
 
 const useSanity = sanityCats.length > 0;
@@ -145,7 +145,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
             Ask About a Kitten
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            Leave your name and number and we'll text or call you back — no long form required.
+            Leave your name and number and we'll text or call you back. No long form.
           </p>
         </div>
       </div>
@@ -209,7 +209,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
           Pampered Feline is a home-based Maine Coon cattery in Northern Virginia. We breed selectively, with limited litters, careful pairings, and hands-on care from birth. Every kitten leaves with a health guarantee, a written contract, and a family that knows their name.
         </p>
         <p class="text-bone/70 text-lg leading-relaxed">
-          Our kittens are raised underfoot from day one, with DNA-tested parents screened for the conditions that matter in the breed, and temperaments selected for confidence and steady company.
+          Our kittens are raised underfoot in our home. Both parents are DNA-tested, and we select for confident, steady temperaments.
         </p>
       </div>
     </section>
@@ -244,12 +244,12 @@ function parseFaqAnswer(text: string): FaqBlock[] {
         <div class="relative w-full max-w-5xl mx-auto px-4 pb-12">
           <img
             src={`${settings.parentsBannerImage.asset.url}?w=1200&q=85&auto=format`}
-            alt="Aedion (CFA Champion) and Feyre — Pampered Feline Maine Coons"
+            alt="Aedion (CFA Champion) and Feyre, Pampered Feline Maine Coons"
             class="w-full object-cover rounded-sm"
             loading="lazy"
           />
           <p class="text-center text-bone/40 text-xs tracking-[0.25em] uppercase mt-4">
-            Aedion (CFA Champion) × Feyre — Spring 2026
+            Aedion (CFA Champion) × Feyre, Spring 2026
           </p>
         </div>
       </div>
@@ -434,7 +434,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
             Health, Ethics, and Care
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            {healthEthicsData.introduction ?? "We hold ourselves to a transparent standard. Every decision in our program starts with the health and welfare of our cats."}
+            {healthEthicsData.introduction ?? "Here is exactly how we test and care for our cats."}
           </p>
         </div>
       </div>
@@ -470,7 +470,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 </li>
               </ul>
               <p class="text-bone/70 leading-relaxed mt-4">
-                {healthEthicsData.geneticTestingSection?.content ?? "Our health testing program goes beyond the industry standard. Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. In addition to cardiac screening, all breeding cats receive a full Wisdom Panel genetic health screen covering 50 heritable conditions."}
+                {healthEthicsData.geneticTestingSection?.content ?? "Both parents in every litter receive echocardiographic screening by a board-certified veterinary cardiologist, repeated annually for males and biennially for females. This cardiac ultrasound detects structural heart changes that DNA tests cannot, since HCM in Maine Coons involves over 100 genetic variants, only one of which has an available DNA test. All breeding cats also get a full Wisdom Panel screen covering 50 heritable conditions."}
               </p>
             </div>
           </div>
@@ -492,7 +492,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
               <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">
                 {healthEthicsData.echocardiogramSection?.title ?? "Heart and Joint Health"}
               </h3>
-              {(healthEthicsData.echocardiogramSection?.content ?? "DNA testing catches genetic markers. Ongoing monitoring catches what genetics alone cannot.\n\nHearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.\n\nHip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.").split("\n\n").map((para: string) => (
+              {(healthEthicsData.echocardiogramSection?.content ?? "DNA tests miss some heart and joint problems, so we keep checking as our cats age.\n\nHearts are monitored by cardiac ultrasound as cats mature. We track results over time and adjust breeding decisions based on findings.\n\nHip assessments are part of our evaluation process. Maine Coons are a large breed, and joint health matters for long-term quality of life.").split("\n\n").map((para: string) => (
                 <p class="text-bone/70 leading-relaxed mb-4">{para}</p>
               ))}
             </div>
@@ -512,12 +512,12 @@ function parseFaqAnswer(text: string): FaqBlock[] {
               </svg>
             </div>
             <div>
-              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Our Commitment to Our Cats</h3>
+              <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Our Cats Stay With Us</h3>
               <p class="text-bone/70 leading-relaxed mb-4">
                 {healthEthicsData.retirementPolicy ?? "Our breeding cats stay with us for life. We do not retire or rehome our kings and queens. They are family."}
               </p>
               <p class="text-bone/70 leading-relaxed">
-                {healthEthicsData.breedingFrequency ?? "Each queen is limited to 2 litters per year maximum, with appropriate rest between litters."}
+                {healthEthicsData.breedingFrequency ?? "Each queen has at most two litters a year, with rest between them."}
               </p>
             </div>
           </div>
@@ -540,17 +540,17 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 {healthEthicsData.socializationSection?.title ?? "Kitten Socialization & Preparation"}
               </h3>
               <p class="text-bone/70 leading-relaxed mb-4">
-                {healthEthicsData.socializationSection?.intro ?? "We spend significant time training and loving your future furry family member. Every kitten receives:"}
+                {healthEthicsData.socializationSection?.intro ?? "Before they go home, every kitten gets:"}
               </p>
               <ul class="space-y-2">
                 {(healthEthicsData.socializationSection?.items ?? [
                   "Bi-weekly nail trimming starting at 4 weeks of age",
-                  "Extensive paw handling and toe bean play to ensure comfort with grooming",
-                  "Cat carrier acclimation for stress-free vet visits",
+                  "Daily paw and toe-bean handling, so nail trims are easy",
+                  "Time in the carrier, so vet trips are calm",
                   "Bite inhibition training and litter box training",
                   "Socialization with children and exposure to household noises",
-                  "Daily human interaction — our kittens thrive on affection and will not do well without it",
-                  "Kitten face massage techniques to build trust and bonding",
+                  "Time with people every day",
+                  "Face massage, so they're used to being handled",
                 ]).map((item: string) => (
                   <li class="flex items-start gap-2 text-bone/70 leading-relaxed">
                     <span class="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-gold/50"></span>
@@ -577,7 +577,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
             <div>
               <h3 class="font-heading text-2xl md:text-3xl font-semibold text-bone mb-4">Daily Care</h3>
               <p class="text-bone/70 leading-relaxed">
-                Our cats live indoors in a clean, enriched environment. They receive a balanced diet formulated for the nutritional needs of Maine Coons.
+                Our cats live indoors. They eat Purina ONE +Plus.
               </p>
             </div>
           </div>
@@ -600,7 +600,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
               <ul class="space-y-3">
                 <li class="text-bone/70 leading-relaxed">We do not declaw and require adopters to agree to the same.</li>
                 <li class="text-bone/70 leading-relaxed">We work with a feline-friendly veterinarian who understands breed-specific needs.</li>
-                <li class="text-bone/70 leading-relaxed">Every kitten is placed with a written contract outlining our commitment to their lifelong care.</li>
+                <li class="text-bone/70 leading-relaxed">Every kitten goes home with a written contract. If you ever can't keep your cat, you offer it back to us first.</li>
                 {healthEthicsData.additionalPractices?.map((practice) => (
                   <li class="text-bone/70 leading-relaxed">{practice.content}</li>
                 ))}
@@ -742,7 +742,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
             Kitten Purchase Agreement - Pampered Feline LLC
           </h2>
           <p class="text-bone/70 text-lg leading-relaxed">
-            Every Pampered Feline kitten is sold with a written purchase agreement. Below is a summary of the key terms, covering deposits, health guarantees, spay/neuter requirements, and our policies for breeding rights and rehoming.
+            Every Pampered Feline kitten is sold with a written purchase agreement. Here's a summary of the main terms.
           </p>
         </div>
       </div>
@@ -763,7 +763,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 </svg>
               </summary>
               <p class="text-bone/70 leading-relaxed mt-4 pr-10">
-                A $500 non-refundable deposit is due upon signing your purchase agreement. This deposit secures your reservation and is applied toward the total purchase price. The remaining balance is due one week before your kitten goes home. We accept Zelle, bank transfers, and cash.
+                A $500 non-refundable deposit is due upon signing your purchase agreement. This deposit secures your reservation and is applied toward the total purchase price. The remaining balance is due one week before your kitten goes home. We accept Zelle or bank wire.
               </p>
             </details>
           </ScrollReveal>
@@ -811,7 +811,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 </svg>
               </summary>
               <p class="text-bone/70 leading-relaxed mt-4 pr-10">
-                All Pampered Feline kittens are placed as indoor-only companions. Free-roaming outdoor access is not permitted. Supervised harness walks and enclosed catios are acceptable. This protects the health, safety, and longevity of your cat.
+                All Pampered Feline kittens are placed as indoor-only companions. Free-roaming outdoor access is not permitted. Supervised harness walks and enclosed catios are acceptable.
               </p>
             </details>
           </ScrollReveal>
@@ -827,7 +827,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 </svg>
               </summary>
               <p class="text-bone/70 leading-relaxed mt-4 pr-10">
-                Declawing is prohibited under our contract. It is an amputation procedure with documented long-term physical and behavioral consequences. Regular nail trimming and quality scratching posts are the appropriate alternatives.
+                Declawing is prohibited under our contract. It is an amputation procedure with documented long-term physical and behavioral consequences. Trim nails and provide good scratching posts instead.
               </p>
             </details>
           </ScrollReveal>
@@ -843,7 +843,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 </svg>
               </summary>
               <p class="text-bone/70 leading-relaxed mt-4 pr-10">
-                We retain first right of refusal if you can no longer keep your cat at any point in its life. Surrendering a Pampered Feline cat to a shelter or rescue is not permitted. Transfers to another household require our written approval. We take this responsibility seriously and will work with you to find the right solution.
+                We retain first right of refusal if you can no longer keep your cat at any point in its life. Surrendering a Pampered Feline cat to a shelter or rescue is not permitted. Transfers to another household require our written approval. If you need to rehome your cat, call us and we'll work it out together.
               </p>
             </details>
           </ScrollReveal>
@@ -859,7 +859,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
                 </svg>
               </summary>
               <p class="text-bone/70 leading-relaxed mt-4 pr-10">
-                All kittens are sold as pet-only companions unless a separate written breeding rights agreement is executed prior to purchase. Breeding rights are available on a case-by-case basis to approved CFA or TICA registered catteries with documented health testing programs. Unauthorized breeding is a breach of contract and will be prosecuted to the fullest extent of the law.
+                All kittens are sold as pet-only companions unless a separate written breeding rights agreement is signed before purchase. Breeding rights are available on a case-by-case basis to approved CFA or TICA registered catteries with documented health testing programs. Unauthorized breeding is a breach of contract and will be prosecuted to the fullest extent of the law.
               </p>
             </details>
           </ScrollReveal>
@@ -944,7 +944,7 @@ function parseFaqAnswer(text: string): FaqBlock[] {
           Ready to Apply?
         </h3>
         <p class="text-bone/70 leading-relaxed mb-8">
-          Send a quick inquiry with your name and number for the fastest response, or complete the full application if you're ready to take the next step.
+          Send a quick inquiry with your name and number for the fastest response, or complete the full application if you know you're ready.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a

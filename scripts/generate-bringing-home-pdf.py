@@ -224,11 +224,11 @@ def cover_block(styles):
 
 
 # ---------------------------------------------------------------------------
-# Section 1: Before Pickup — Must-Have Supplies
+# Section 1: Before Pickup: Supplies
 # ---------------------------------------------------------------------------
 def section_1(s):
     items = []
-    items += section_start("Section 1", "Before Pickup — Must-Have Supplies", s)
+    items += section_start("Section 1", "Before Pickup: Supplies", s)
     items.append(Paragraph(
         "Get these items before your kitten arrives:", s["body"]
     ))
@@ -341,7 +341,7 @@ def section_3(s):
 # ---------------------------------------------------------------------------
 def section_4(s):
     items = [rule(s)]
-    items += section_start("Section 4", "The First Few Days — What to Expect", s)
+    items += section_start("Section 4", "The First Few Days", s)
     items.append(Paragraph("Transitioning stress is normal", s["h3"]))
     items.append(Paragraph(
         "Going home is the most stressful time in your kitten's life. They're leaving their "
@@ -465,8 +465,8 @@ def section_6(s):
     items.append(Paragraph("Vaccine schedule", s["h3"]))
     items.append(Paragraph("Your kitten has received before going home:", s["body"]))
     for txt in [
-        "FVRCP — one dose",
-        "Rabies — one dose",
+        "FVRCP: one dose",
+        "Rabies: one dose",
     ]:
         items.append(bullet_item(txt, s))
     items.append(Paragraph("Next vaccines due:", s["body"]))
@@ -571,7 +571,7 @@ def section_8(s):
     items += section_start("Section 8", "Toys & Enrichment", s)
     items.append(Paragraph("Safe toys", s["h3"]))
     for txt in [
-        "Feather wands (supervise play, put away after use — kittens can swallow feathers)",
+        "Feather wands (supervise play, put away after use. Kittens can swallow feathers.)",
         "Balls (ping pong balls, jingle balls, foam balls)",
         "Interactive toys (puzzle feeders, treat balls)",
         "Catnip toys (some cats love catnip, others don't react until 6+ months)",
@@ -726,9 +726,9 @@ def build_pdf(output_path):
 
     # Intro paragraph
     story.append(Paragraph(
-        "Congratulations on your new family member! This guide covers everything you need to know "
-        "to prepare for your kitten's arrival and help them settle into their new home. "
-        "Keep it somewhere handy — you'll reference it often in the first few weeks.",
+        "Congratulations. This guide covers what to buy before pickup, the first few days, "
+        "vet care, and long-term care. Keep it somewhere handy. You'll reference it often "
+        "in the first few weeks.",
         s["body"]
     ))
 
